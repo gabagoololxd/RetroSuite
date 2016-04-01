@@ -9,9 +9,9 @@
     }
   } catch (err) {}
 
-  http.createServer(function (req, res) {
-
+  var server = window.server = http.createServer(function (req, res) {
     router(req, res);
+  });
 
-  }).listen(port, host);
+  server.listen(port, host);
   console.log('Server running at ' + host + ':' + port + '/');

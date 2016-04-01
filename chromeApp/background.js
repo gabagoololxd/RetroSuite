@@ -21,8 +21,9 @@ function launch(file) {
 }
 
 chrome.app.runtime.onLaunched.addListener(function(launchData) {
-  if (launchData.items)
+  if (launchData.items) {
     launchData.items.forEach(launch)
-  else
-    newWindow()
-})
+  } else {
+    newWindow();
+  }
+});

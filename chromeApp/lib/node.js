@@ -826,6 +826,7 @@ net.Server.prototype._accept = function(acceptInfo) {
 };
 
 net.Server.prototype.close = function(callback) {
+  var self = this;
   self.on("close", callback || function() {});
   self._serverSocket.destroy();
   self.emit("close");
@@ -938,6 +939,9 @@ net.Socket.prototype.setKeepAlive = function(enable, delay) {
 
 net.Socket.prototype._read = function() {
   var self = this;
+  if (self._socketInfo.socketId === undefined) {
+    chrome.runtime.reload();
+  }
   chrome.socket.read(self._socketInfo.socketId, function(readInfo) {
     if(readInfo.resultCode < 0) return;
     // ArrayBuffer to Buffer if no encoding.

@@ -62,7 +62,7 @@ app.controller('inputSelection', function($scope) {
   chrome.system.network.getNetworkInterfaces(function (ipAddresses) {
     ipAddresses.forEach(function (ipAddress) {
       console.log(ipAddress);
-      if (ipAddress.prefixLength < 64 && ipAddress.name === "en0") {
+      if (ipAddress.prefixLength < 64 && (ipAddress.name === "en0" || ipAddress.name === "wlan0")) {
         $scope.title = 'IP FOUND'
 
         $scope.ipAddress = ip4 = ipAddress.address;
