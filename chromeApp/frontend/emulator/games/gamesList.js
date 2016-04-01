@@ -1,36 +1,4 @@
 var gamesList = [
-  // {
-  //   title: '',
-  //   link: '',
-  //   console: {
-  //     id: 2,
-  //     name: 'SNES'
-  //   }
-  // },
-  // {
-  //   title: '',
-  //   link: '',
-  //   console: {
-  //     id: 1,
-  //     name: 'NES'
-  //   }
-  // },
-  // {
-  //   title: '',
-  //   link: '',
-  //   console: {
-  //     id: 4,
-  //     name: 'GBA'
-  //   }
-  // },
-  // {
-  //   title: '',
-  //   link: '',
-  //   console: {
-  //     id: 3,
-  //     name: 'GB'
-  //   }
-  // },
   {
     title: 'Crono Trigger',
     link: '',
