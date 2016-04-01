@@ -159,7 +159,7 @@ class ChatBox extends Component {
           )}
         </div>
         <div className="input-field grey lighten-4 row no-bottom-margin">
-          <input className="col s8 m9 l10 black-text .rounded-10 valign-wrapper" type="text" placeholder={this.state.placeholder}
+          <input className="col s7 m8 l10 black-text .rounded-10 valign-wrapper" type="text" placeholder={this.state.placeholder}
             value={this.state.chatInput} onChange={this.handleChatInput} onKeyPress={this.handleChatInput} />
           <div className="right tooltipped" data-position="top" data-delay="800" data-tooltip="Show/hide moves">
             <Toggle className="col s5 m4 l3 valign-wrapper" defaultChecked={this.state.displayMoves} onChange={this.handleToggle}/>
