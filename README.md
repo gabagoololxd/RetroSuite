@@ -25,7 +25,7 @@ __Step 1: Navigate to the webapp/emulatorNode directory__
 ```
 $ cd webApp/emulatorNode
 ```
-__Step 2: Set environmental variable CROWDMU_ROM to the available ROM__
+__Step 2: Set environmental variable CROWDMU_ROM to the available ROM. This emulator is compatible with Gameboy Color ROMS__
 ```
 $ CROWDMU_ROM=./path/to/rom.gb
 ```
