@@ -4,6 +4,8 @@ var controllerAction;
 
 function router(req, res) {
 
+  console.log('req received');
+
   var httpVerb = req.method;
   var httpPath = req.url;
   var pathArr = req.url.split('/');
@@ -18,12 +20,12 @@ function router(req, res) {
     res.writeHead(200, {
       'Content-Type': 'application/json'
     });
-    if (numberOfPlayersJoined === 0) {
-      numberOfPlayersJoined++;
+    // if (numberOfPlayersJoined === 0) {
+    //   numberOfPlayersJoined++;
       res.end(JSON.stringify({ipAddress: ip4, port: port}));
-    } else {
-      res.end(JSON.stringify({message: 'no more players allowed'}));
-    }
+    // } else {
+    //   res.end(JSON.stringify({message: 'no more players allowed'}));
+    // }
   } else if ( // app.post('/player/:action/:button', cb)   like: /player/press/a
     httpVerb === 'POST' && //Post requests are possible and don't fire three times
     pathArr.length === 4 &&
