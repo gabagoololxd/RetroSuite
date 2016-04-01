@@ -48,10 +48,3 @@ __Step 2: Click 'Load unpacked extension...'__
 __Step 3: Select and open the 'chromeApp' directory in your forked and cloned version of this repository__
 
 __Steop 4: Click 'Launch'__
-
-
-### Scrum Roles
- - Scrum Master: Colin Whitmarsh
- - Product Owner: Kyle Corbelli
- - Extreme Programmer: Joe Miller
- - Extreme Programmer: Frank Shieh
