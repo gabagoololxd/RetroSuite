@@ -38,8 +38,8 @@ class GameConsole extends Component {
 
     if(this.state.mobile===true) {
       return (
-        <div className="col m8 s12 height-88 height-min-510px grey lighten-2">
-          <div className="row no-bottom-margin height-70 margin-2">
+        <div className="col m8 s12 height-92 height-min-510px grey lighten-2">
+          <div className="row no-bottom-margin height-72 margin-2">
             <StreamViewer socket={this.props.socket} />
           </div>
           <div className="row no-bottom-margin height-20 margin-2 min-height-150">
@@ -50,8 +50,8 @@ class GameConsole extends Component {
     } else {
       if(this.state.tooSmall===true) {
         return (
-          <div className="col m8 s12 height-88 height-min-510px grey lighten-2">
-            <div className="row no-bottom-margin height-70 margin-2">
+          <div className="col m8 s12 height-92 height-min-510px grey lighten-2">
+            <div className="row no-bottom-margin height-72 margin-2">
               <StreamViewer socket={this.props.socket} />
             </div>
             <div className="row no-bottom-margin height-20 margin-2 min-height-150">
@@ -61,8 +61,8 @@ class GameConsole extends Component {
         );
       } else {
         return (
-          <div className="col m8 s12 height-88 height-min-510px grey lighten-2">
-            <div className="row no-bottom-margin height-70 margin-2">
+          <div className="col m8 s12 height-92 height-min-510px grey lighten-2">
+            <div className="row no-bottom-margin height-72 margin-2">
               <StreamViewer socket={this.props.socket} />
             </div>
             <div className="row no-bottom-margin height-20 margin-2 min-height-150">
