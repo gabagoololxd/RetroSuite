@@ -352,7 +352,7 @@ class ControllerView extends React.Component {
     }
     return (
       <View style={styles.imageContainer}>
-        <Image source={require('./Assets/snescontrollercropped.jpg')} style={styles.image}>
+        <Image source={require('./Assets/snescontrollercroppedlabels.jpg')} style={styles.image}>
 
           <View style={styles.AButton} onTouchStart={this._APressIn.bind(this)} onTouchEnd={this._APressOut.bind(this)}>
             <IconIon name="record" size={this.state.circleButtonSize} color="transparent"/>

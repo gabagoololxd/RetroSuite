@@ -72,7 +72,7 @@ var gamesList = [
     }
   },
   {
-    title: 'Supre Mario World 2 - Yoshi\'s Island',
+    title: 'Super Mario World 2 - Yoshi\'s Island',
     link: 'http://gateway.ipfs.io/ipfs/Qmdr9mDKwUiUgEp8aFPktFB8wDZtnY9RvJWcf4ncinjpWh/Super%20Mario%20World%202%20-%20Yoshi%27s%20Island%20%28USA%29.zip',
     console: {
       id: 2,
@@ -264,7 +264,7 @@ var gamesList = [
     }
   },
   {
-    title: 'Mike Tyson\'s Munch-Out!!',
+    title: 'Mike Tyson\'s Punch-Out',
     link: 'http://gateway.ipfs.io/ipfs/QmdpAWfLFN6bcspfHRY5Vdxt7x3WMQdCo7eoZwnX5N9z33/Mike%20Tyson%27s%20Punch-Out!!%20%28USA%29.zip',
     console: {
       id: 1,
@@ -302,7 +302,7 @@ var gamesList = [
       id: 1,
       name: 'NES'
     }
-  }
+  },
   {
     title: 'Star Fox',
     link: 'https://gateway.ipfs.io/ipfs/QmUnEhFVWB8xctTXNdpsLJNULQtJNp5oV2sb7St1cuCM1G/Star%20Fox%20%28USA%29.zip',
