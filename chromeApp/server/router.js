@@ -1,5 +1,6 @@
 var url = require('url');
 var numberOfPlayersJoined = 0;
+window.numberOfPlayersJoined = numberOfPlayersJoined;
 var controllerAction;
 
 function router(req, res) {

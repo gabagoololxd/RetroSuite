@@ -10,7 +10,6 @@ app.controller('inputSelection', function($scope) {
     inputSelectionScreen.classList.add('hidden');
     $scope.$apply();
   }
-
   var qrScreen = document.getElementById('qrScreen');
   $scope.openQRScreen = function() {
     qrScreen.classList.remove('hidden');
