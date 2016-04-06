@@ -147,7 +147,7 @@
         <div id='keyMappingsForm'>
           <h1 class="pauseMenuTitle">Controls:</h1>
           <div id="keyMappingsFormButtons">
-            <button id="editKeyMappings" class="pauseMenuButton" data-ng-click="editKeyMappings()" ng-hide="!disabled">Set New Key Mappings</button>
+            <button id="editKeyMappings" class="pauseMenuButton" data-ng-click="editKeyMappings()" ng-hide="!disabled">Create New Key Mappings</button>
             <button id="submitNewKeyMappings" class="pauseMenuButton" ng-click='submitNewKeyMappings()' ng-hide="disabled">Submit New Key Mappings</button>
             <button id="cancelSubmitNewKeyMappings" class="pauseMenuButton" ng-click='cancelSubmitNewKeyMappings()' ng-hide="disabled">Cancel</button>
           </div>
@@ -234,6 +234,7 @@
   <script src="./frontend/angular/controllers/errorScreen.js"></script>
   <script src="./frontend/angular/controllers/inputSelection.js"></script>
   <script src="./frontend/angular/controllers/gameSelection.js"></script>
+  <script src="./frontend/angular/helpers/keyCodes.js"></script>
   <script src="./frontend/angular/controllers/pauseScreen.js"></script>
 
   <!-- games and emulator -->
