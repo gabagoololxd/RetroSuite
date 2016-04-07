@@ -3,97 +3,23 @@ app.controller('pauseScreen', function($scope) {
   $scope.chooseNewGame = function () {
     window.chooseNewGame();
   }
-
-  window.systemSettings = {
-    "extensions": {
-      "gb": "gambatte",
-      "gbc": "gambatte",
-      "smc": "snes9x-next",
-      "fig": "snes9x-next",
-      "sfc": "snes9x-next",
-      "swc": "snes9x-next",
-      "gba": "vba-next",
-      "nes": "quicknes",
-      "sms": "picodrive",
-      "gen": "picodrive",
-      "smd": "picodrive",
-      "md": "picodrive",
-      "32x": "picodrive",
-      "mgw": "gw",
-      "vec": "vecx"
-    },
-    "overlays": {
-      "gambatte": "./overlays/gamepads/gameboy/",
-      "vba-next": "./overlays/gamepads/gba/",
-      "snes9x-next": "./overlays/gamepads/snes/",
-      "nestopia": "./overlays/gamepads/nes/"
-    },
-    "keys": {
-      //Default keyboard key mappings:
-      //IKJL Keys
-      "75": "0",  //B
-      "76": "1",  //A
-      "74": "2",  //Y
-      "73": "3",  //X
-      //E, U
-      "69": "4",  //L
-      "85": "5",  //R
-      //Enter, Shift
-      "16": "8",  //Select
-      "13": "9",  //Start
-      //WASD keys
-      "87": "12",  //Up
-      "83": "13",  //Down
-      "65": "14",  //Left
-      "68": "15", //Right
-
-      //Keys reserved for mobilecontroller; seldom used keys
-      "59": "0",  //B
-      "61": "1",  //A
-      "108": "2",  //Y
-      "173": "3",  //X
-
-      "181": "4",  //L
-      "182": "5",  //R
-
-      "183": "8",  //Select
-      "226": "9",  //Start
-      
-      "230": "12",  //Up
-      "233": "13",  //Down
-      "234": "14",  //Left
-      "255": "15", //Right
-    },
-    "urlPrefix": "https://crossorigin.me/"
-  }; 
-
-  var newKeyMappings = {
-    //Keys reserved for mobilecontroller; seldom used keys. 
-    //Mapping new keys overwrite all existing mappings but we want to keep these so we include them here
-    "59": "0",  //B
-    "61": "1",  //A
-    "108": "2",  //Y
-    "173": "3",  //X
-
-    "181": "4",  //L
-    "182": "5",  //R
-
-    "183": "8",  //Select
-    "226": "9",  //Start
-    
-    "230": "12",  //Up
-    "233": "13",  //Down
-    "234": "14",  //Left
-    "255": "15", //Right
-
-  };
-
-  //used as a cache to store the last state of keys; used when user clicks cancel
-  var oldKeyMappings = {};
   
+  //helper function to make sure the attempted key mapping is not reserved
+  var notReserved = function(mapping) {
+    if(mapping !== "59" && mapping !=="61" && mapping !=="108" && mapping !=="173" && mapping !=="181" && mapping !=="182" && mapping !=="183" && mapping !=="226" && mapping !=="230" && mapping !=="233" && mapping !=="234" && mapping !=="235") {
+      return true;
+    } else {
+      return false;
+    }
+  };
+  
+  var newKeyMappings = {}; //used to store what might become the actual new key mappings
+  var oldKeyMappings = {}; //used as a cache to store the last state of keys; used when user clicks cancel
+  
+  //Event listener for setting new key mappings
   document.querySelector('body').addEventListener('keydown', function (e) {
-    console.log('keycode: ', e.keyCode);
-    console.log('code: ', e.code);
+    // console.log('keycode: ', e.keyCode);
+    // console.log('code: ', e.code);
 
     //only do the following if the emulator has started
     if ($('#retro').length < 1){
@@ -103,7 +29,7 @@ app.controller('pauseScreen', function($scope) {
       e.preventDefault();
       try {
         //if the user is not trying to map to a key reserved to the mobilecontroller, then map in new keys
-        if(e.keyCode !== "59" && e.keyCode !=="61" && e.keyCode !=="108" && e.keyCode !=="173" && e.keyCode !=="181" && e.keyCode !=="182" && e.keyCode !=="183" && e.keyCode !=="226" && e.keyCode !=="230" && e.keyCode !=="233" && e.keyCode !=="234" && e.keyCode !=="235") {
+        if(notReserved(e.keyCode)) {
           document.getElementById(document.activeElement.id).value = window.keyCodes[e.keyCode];
           switch (document.activeElement.id) {
             case 'aButton':
@@ -158,84 +84,84 @@ app.controller('pauseScreen', function($scope) {
      switch (button) {
        case 'aButton':
          for(var key in mappingsList) {
-           if(mappingsList[key]==="1" && key !== "59" && key !== "61" && key !== "108" && key !== "173" && key !== "181" && key !== "182" && key !== "183" && key !== "226" && key !== "230" && key !== "233" && key !== "234" && key !== "235" ) {
+           if(mappingsList[key]==="1" && notReserved(key)) {
              return window.keyCodes[key];
            }
          }
          break;
        case 'bButton':
          for(var key in mappingsList) {
-           if(mappingsList[key]==="0" && key !== "59" && key !== "61" && key !== "108" && key !== "173" && key !== "181" && key !== "182" && key !== "183" && key !== "226" && key !== "230" && key !== "233" && key !== "234" && key !== "235" ) {
+           if(mappingsList[key]==="0" && notReserved(key)) {
              return window.keyCodes[key];
            }
          }
          break;
        case 'xButton':
          for(var key in mappingsList) {
-           if(mappingsList[key]==="3" && key !== "59" && key !== "61" && key !== "108" && key !== "173" && key !== "181" && key !== "182" && key !== "183" && key !== "226" && key !== "230" && key !== "233" && key !== "234" && key !== "235" ) {
+           if(mappingsList[key]==="3" && notReserved(key)) {
              return window.keyCodes[key];
            }
          }
          break;
        case 'yButton':
          for(var key in mappingsList) {
-           if(mappingsList[key]==="2" && key !== "59" && key !== "61" && key !== "108" && key !== "173" && key !== "181" && key !== "182" && key !== "183" && key !== "226" && key !== "230" && key !== "233" && key !== "234" && key !== "235" ) {
+           if(mappingsList[key]==="2" && notReserved(key)) {
              return window.keyCodes[key];
            }
          }
          break;
        case 'startButton':
          for(var key in mappingsList) {
-           if(mappingsList[key]==="9" && key !== "59" && key !== "61" && key !== "108" && key !== "173" && key !== "181" && key !== "182" && key !== "183" && key !== "226" && key !== "230" && key !== "233" && key !== "234" && key !== "235" ) {
+           if(mappingsList[key]==="9" && notReserved(key)) {
              return window.keyCodes[key];
            }
          }
          break;
        case 'selectButton':
          for(var key in mappingsList) {
-           if(mappingsList[key]==="8" && key !== "59" && key !== "61" && key !== "108" && key !== "173" && key !== "181" && key !== "182" && key !== "183" && key !== "226" && key !== "230" && key !== "233" && key !== "234" && key !== "235" ) {
+           if(mappingsList[key]==="8" && notReserved(key)) {
              return window.keyCodes[key];
            }
          }
          break;
        case 'upArrow':
          for(var key in mappingsList) {
-           if(mappingsList[key]==="12" && key !== "59" && key !== "61" && key !== "108" && key !== "173" && key !== "181" && key !== "182" && key !== "183" && key !== "226" && key !== "230" && key !== "233" && key !== "234" && key !== "235" ) {
+           if(mappingsList[key]==="12" && notReserved(key)) {
              return window.keyCodes[key];
            }
          }
          break;
        case 'downArrow':
          for(var key in mappingsList) {
-           if(mappingsList[key]==="13" && key !== "59" && key !== "61" && key !== "108" && key !== "173" && key !== "181" && key !== "182" && key !== "183" && key !== "226" && key !== "230" && key !== "233" && key !== "234" && key !== "235" ) {
+           if(mappingsList[key]==="13" && notReserved(key)) {
              return window.keyCodes[key];
            }
          }
          break;
        case 'leftArrow':
          for(var key in mappingsList) {
-           if(mappingsList[key]==="14" && key !== "59" && key !== "61" && key !== "108" && key !== "173" && key !== "181" && key !== "182" && key !== "183" && key !== "226" && key !== "230" && key !== "233" && key !== "234" && key !== "235" ) {
+           if(mappingsList[key]==="14" && notReserved(key)) {
              return window.keyCodes[key];
            }
          }
          break;
        case 'rightArrow':
          for(var key in mappingsList) {
-           if(mappingsList[key]==="15" && key !== "59" && key !== "61" && key !== "108" && key !== "173" && key !== "181" && key !== "182" && key !== "183" && key !== "226" && key !== "230" && key !== "233" && key !== "234" && key !== "235" ) {
+           if(mappingsList[key]==="15" && notReserved(key)) {
              return window.keyCodes[key];
            }
          }
          break;
        case 'lShoulder':
          for(var key in mappingsList) {
-           if(mappingsList[key]==="4" && key !== "59" && key !== "61" && key !== "108" && key !== "173" && key !== "181" && key !== "182" && key !== "183" && key !== "226" && key !== "230" && key !== "233" && key !== "234" && key !== "235" ) {
+           if(mappingsList[key]==="4" && notReserved(key)) {
              return window.keyCodes[key];
            }
          }
          break;
        case 'rShoulder':
          for(var key in mappingsList) {
-           if(mappingsList[key]==="5" && key !== "59" && key !== "61" && key !== "108" && key !== "173" && key !== "181" && key !== "182" && key !== "183" && key !== "226" && key !== "230" && key !== "233" && key !== "234" && key !== "235" ) {
+           if(mappingsList[key]==="5" && notReserved(key)) {
              return window.keyCodes[key];
            }
          }
@@ -246,106 +172,77 @@ app.controller('pauseScreen', function($scope) {
    } 
 
   $scope.disabled = true;
-  $scope.validationError1 = true;
-  // $scope.validationError2 = true;
 
   $scope.editKeyMappings = function() {
-    $scope.disabled = false;
-    oldKeyMappings = {};
-    // newKeyMappings = {
+    $scope.disabled = false; //allow user to edit key mappings by clicking into the input
 
-    // };
-
+    //take current key mappings and save them in oldKeyMappings
+    oldKeyMappings = {}; 
     for(keyMapping in systemSettings.keys) {
       oldKeyMappings[keyMapping] = systemSettings.keys[keyMapping];
     };
     console.log('oldKeyMappings',oldKeyMappings);
-
-    // $('#keyMappingsForm').find("input").each(function(ev){
-    //    $(this).val("click to edit; type new key");
-    // });
   };
 
   $scope.submitNewKeyMappings = function() {
+    systemSettings.keys = {}; //clear out all current key mappings
 
-    // var toSubmit = true;
+    //if newKeyMappings has an undefined, then replace with what was in old key mappings TODOOOOO
+    console.log('old:', oldKeyMappings);
+    console.log('new:', newKeyMappings);
 
-    // $scope.validationError1 = true;
-    // // $scope.validationError2 = true;
+    var keysToMap = [];
 
-    // var newValueTextArray = []
-    
-    // $('#keyMappingsForm').find("input").each(function(){
-
-    //   var id = $(this).attr('id');
-
-    //   var newValueText = $scope.getValue(id, newKeyMappings);
-    //   document.getElementById(id).value = newValueText;
-
-    //   newValueTextArray.push(newValueText);
-
-    // });
-
-    // if(_.contains(newValueTextArray, undefined)) {
-    //   var toSubmit = false;
-    //   $scope.validationError1 = false;
-    //   return;
-    // }
-    
-    // if(toSubmit) {
-      // $scope.validationError1 = true;
-
-      systemSettings.keys = {};
-      //if newkeyMappings has an undefined, then replace with what was in old key mappings
-      for(var mapping in newKeyMappings) {
-        console.log('mapppppppp', mapping, " + ", newKeyMappings[mapping]);
+    //delete the mobileControllerMappings so we can compare more easily; will add back later
+    for(var mapping in oldKeyMappings) {
+      if(mobileControllerKeys[mapping]) {
+        delete oldKeyMappings[mapping];
+      } else {
+        keysToMap.push(oldKeyMappings[mapping]);
       }
+    }
+
+    function findKey(obj, value) {
+      var key;
+      _.each(obj, function (v, k) {
+        if (v === value) {
+          key = k;
+        }
+      });
+      return key;
+    }
+
+    _.each(keysToMap, function(button) {
+      if(_.contains(_.values(newKeyMappings), button)===false) {
+        console.log('nahht there', button)
+        var keyboardKey = findKey(oldKeyMappings, button);
+        console.log(keyboardKey, "keyboardKey");
+        newKeyMappings[keyboardKey] = button;
+      }
+    });
 
 
+    //add in the keys that the mobile controller needs
+    _.extend(newKeyMappings, window.mobileControllerKeys);
 
-      systemSettings.keys = newKeyMappings;
-      
+    //submit the new mappings
+    systemSettings.keys = newKeyMappings;
 
-
-
-
-
-
-
-      newKeyMappings = {
-        //Keys reserved for mobilecontroller; seldom used keys. 
-        //Mapping new keys overwrite all existing mappings but we want to keep these so we include them here
-        "59": "0",  //B
-        "61": "1",  //A
-        "108": "2",  //Y
-        "173": "3",  //X
-
-        "181": "4",  //L
-        "182": "5",  //R
-
-        "183": "8",  //Select
-        "226": "9",  //Start
-        
-        "230": "12",  //Up
-        "233": "13",  //Down
-        "234": "14",  //Left
-        "255": "15", //Right
-      };
-
-      $scope.disabled = true;
-    // }
+    //reset the cycle
+    newKeyMappings = {};
+    $scope.disabled = true;
   };
 
   $scope.cancelSubmitNewKeyMappings = function() {
+    //display the old key mappings
     $('#keyMappingsForm').find("input").each(function(){
       var id = $(this).attr('id');
       var oldValueText = $scope.getValue(id, oldKeyMappings);
-      console.log("oldValueText",oldValueText)
       document.getElementById(id).value = oldValueText;
     });
-    $scope.disabled = true;
-    $scope.validationError1 = true;
 
+    //reset the cycle
+    $scope.disabled = true;
   }
 
 });

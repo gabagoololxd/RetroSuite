@@ -1,3 +1,66 @@
+  window.systemSettings = {
+    "extensions": {
+      "gb": "gambatte",
+      "gbc": "gambatte",
+      "smc": "snes9x-next",
+      "fig": "snes9x-next",
+      "sfc": "snes9x-next",
+      "swc": "snes9x-next",
+      "gba": "vba-next",
+      "nes": "quicknes",
+      "sms": "picodrive",
+      "gen": "picodrive",
+      "smd": "picodrive",
+      "md": "picodrive",
+      "32x": "picodrive",
+      "mgw": "gw",
+      "vec": "vecx"
+    },
+    "overlays": {
+      "gambatte": "./overlays/gamepads/gameboy/",
+      "vba-next": "./overlays/gamepads/gba/",
+      "snes9x-next": "./overlays/gamepads/snes/",
+      "nestopia": "./overlays/gamepads/nes/"
+    },
+    "keys": {
+      //Default keyboard key mappings:
+      //IKJL Keys
+      "75": "0",  //B
+      "76": "1",  //A
+      "74": "2",  //Y
+      "73": "3",  //X
+      //E, U
+      "69": "4",  //L
+      "85": "5",  //R
+      //Enter, Shift
+      "16": "8",  //Select
+      "13": "9",  //Start
+      //WASD keys
+      "87": "12",  //Up
+      "83": "13",  //Down
+      "65": "14",  //Left
+      "68": "15", //Right
+
+      //Keys reserved for mobilecontroller; seldom used keys
+      "59": "0",  //B
+      "61": "1",  //A
+      "108": "2",  //Y
+      "173": "3",  //X
+
+      "181": "4",  //L
+      "182": "5",  //R
+
+      "183": "8",  //Select
+      "226": "9",  //Start
+      
+      "230": "12",  //Up
+      "233": "13",  //Down
+      "234": "14",  //Left
+      "255": "15", //Right
+    },
+    "urlPrefix": "https://crossorigin.me/"
+  }; 
+
   window.keyCodes = {
     3 : "break",
     8 : "backspace / delete",
@@ -129,4 +192,24 @@
     223 : "`",
     224 : "left or right ⌘ key (firefox)",
     225 : "altgr", 
+  };
+
+  window.mobileControllerKeys = {
+    //Keys reserved for mobilecontroller; seldom used keys. 
+    //Mapping new keys overwrite all existing mappings but we want to keep these so we include them here
+    "59": "0",  //B
+    "61": "1",  //A
+    "108": "2",  //Y
+    "173": "3",  //X
+
+    "181": "4",  //L
+    "182": "5",  //R
+
+    "183": "8",  //Select
+    "226": "9",  //Start
+    
+    "230": "12",  //Up
+    "233": "13",  //Down
+    "234": "14",  //Left
+    "255": "15", //Right
   };
