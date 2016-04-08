@@ -21,7 +21,6 @@
    "name": "OSnes",
    "offline_enabled": true,
    "permissions": [
-     "storage",
      "system.network",
      {"socket":["tcp-listen"]},
      {"fileSystem": [ "retainEntries", "directory", "write" ]},

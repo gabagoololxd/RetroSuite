@@ -162,9 +162,9 @@ class ControllerView extends React.Component {
 
   componentDidMount() {
     if (Platform.OS === 'ios') {
-      Orientation.lockToLandscapeRight(); //this will lock the view to Landscape
+      Orientation.lockToLandscapeLeft(); //this will lock the view to Landscape
     } else {
-      Orientation.lockToLandscape(); // no support for lockToLandscapeRight in Android yet
+      Orientation.lockToLandscape(); // no support for lockToLandscapeLeft in Android yet
     }
 
     //buttons must scale with size of the phone

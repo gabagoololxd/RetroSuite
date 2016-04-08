@@ -61,13 +61,13 @@
     "urlPrefix": "https://crossorigin.me/"
   }; 
 
+  //if the user has saved their own key mappings to storage, use those mappings instead
   chrome.storage.sync.get("myKeyMappings", function (obj) {
     console.log('mymappings', obj.myKeyMappings);
     if(obj.myKeyMappings) {
       window.systemSettings.keys = obj.myKeyMappings;
     }
   });
-
 
   window.keyCodes = {
     3 : "break",

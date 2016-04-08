@@ -185,6 +185,7 @@ app.controller('pauseScreen', function($scope) {
         counter++;
       });
 
+      //set key mappings to what we had before since the user's mappings are invalid
       systemSettings.keys = oldKeyMappings;
     } else {
       $scope.validationError = false;
