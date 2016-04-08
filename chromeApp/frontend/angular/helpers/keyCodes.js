@@ -61,6 +61,14 @@
     "urlPrefix": "https://crossorigin.me/"
   }; 
 
+  chrome.storage.sync.get("myKeyMappings", function (obj) {
+    console.log('mymappings', obj.myKeyMappings);
+    if(obj.myKeyMappings) {
+      window.systemSettings.keys = obj.myKeyMappings;
+    }
+  });
+
+
   window.keyCodes = {
     3 : "break",
     8 : "backspace / delete",

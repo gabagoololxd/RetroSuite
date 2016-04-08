@@ -14,7 +14,7 @@ app.controller('pauseScreen', function($scope) {
   };
   
   var newKeyMappings = {}; //used to store what might become the actual new key mappings
-  var oldKeyMappings = {}; //used as a cache to store the last state of keys; used when user clicks cancel
+  var oldKeyMappings = {}; //used to store the last state of keys; used when user clicks cancel
   
   //Event listener for setting new key mappings
   document.querySelector('body').addEventListener('keydown', function (e) {
@@ -28,7 +28,7 @@ app.controller('pauseScreen', function($scope) {
     if(retro.classList.contains('hidden')) {
       e.preventDefault();
       try {
-        //if the user is not trying to map to a key reserved to the mobilecontroller, then map in new keys
+        //if the user is not trying to map to a key reserved to the mobilecontroller, then add in new key to the form input
         if(notReserved(e.keyCode)) {
           document.getElementById(document.activeElement.id).value = window.keyCodes[e.keyCode];
         }
@@ -135,10 +135,8 @@ app.controller('pauseScreen', function($scope) {
   $scope.validationError = false;
   $scope.editHint = false;
 
-
-
   $scope.editKeyMappings = function() {
-    $scope.editHint = true;
+    $scope.editHint = true; //show the instructional text
     $scope.disabled = false; //allow user to edit key mappings by clicking into the input
 
     //take current key mappings and save them in oldKeyMappings
@@ -146,11 +144,9 @@ app.controller('pauseScreen', function($scope) {
     for(keyMapping in systemSettings.keys) {
       oldKeyMappings[keyMapping] = systemSettings.keys[keyMapping];
     };
-    console.log('oldKeyMappings',oldKeyMappings);
   };
 
   $scope.submitNewKeyMappings = function() {
-    console.log('before: newKeyMappings',newKeyMappings);
 
     systemSettings.keys = {}; //clear out all current key mappings
     newKeyMappings = {}; //clear out all current key mappings
@@ -158,38 +154,28 @@ app.controller('pauseScreen', function($scope) {
     var keyCodesInvert = _.invert(window.keyCodes);
     var mappedKeys = [];
     
-
     //helper function:
     function containsDuplicates(arr) {
       var index = {}, i, str;
-
       for(i = 0; i < arr.length; i++) {
-        // you could use arr[i].toString() here, but JSON.stringify()
-        // is a lot safer because it cannot create ambiguous output.
         str = JSON.stringify(arr[i]);
         if (index.hasOwnProperty(str)) {
-            return true;
+          return true;
         } else {
-            index[str] = true;
+          index[str] = true;
         }
       }
       return false;
     }
-
     
     $('#keyMappingsForm').find("input").each(function(){
       var id = $(this).attr('id');
-      // console.log('id', id);
       mappedKeys.push(document.getElementById(id).value)
       var keyCode = keyCodesInvert[document.getElementById(id).value];
-      // console.log('keyCode', keyCode);
       newKeyMappings[keyCode] =  window.buttonNumbers[id];   
     });
     
-    console.log('after: newKeyMappings',newKeyMappings);
-
     if(containsDuplicates(mappedKeys)) {
-      console.log('dupessssssss for dayz');
       $scope.validationError = true;
       // display the attempted key mappings
       var counter = 0;
@@ -201,20 +187,18 @@ app.controller('pauseScreen', function($scope) {
 
       systemSettings.keys = oldKeyMappings;
     } else {
-      console.log('no dupes; to submit!')
       $scope.validationError = false;
       //add in the keys that the mobile controller needs
       _.extend(newKeyMappings, window.mobileControllerKeys);
 
       //submit the new mappings
       systemSettings.keys = newKeyMappings;
+      chrome.storage.sync.set({"myKeyMappings": newKeyMappings});
 
       //reset the cycle
       newKeyMappings = {};
       $scope.disabled = true;
       $scope.editHint = false;
-
-      
     }
 
 
