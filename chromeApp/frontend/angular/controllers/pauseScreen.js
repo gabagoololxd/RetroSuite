@@ -133,9 +133,12 @@ app.controller('pauseScreen', function($scope) {
 
   $scope.disabled = true;
   $scope.validationError = false;
+  $scope.editHint = false;
+
 
 
   $scope.editKeyMappings = function() {
+    $scope.editHint = true;
     $scope.disabled = false; //allow user to edit key mappings by clicking into the input
 
     //take current key mappings and save them in oldKeyMappings
@@ -209,6 +212,8 @@ app.controller('pauseScreen', function($scope) {
       //reset the cycle
       newKeyMappings = {};
       $scope.disabled = true;
+      $scope.editHint = false;
+
       
     }
 
@@ -226,6 +231,8 @@ app.controller('pauseScreen', function($scope) {
 
     //reset the cycle
     $scope.disabled = true;
+    $scope.editHint = false;
+
   }
 
 });

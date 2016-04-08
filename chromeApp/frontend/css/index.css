@@ -328,6 +328,13 @@ html, body, canvas {
   margin-bottom: 3px;
 }
 
+
+.editHint {
+  color: white;
+  margin-top: 3px;
+  margin-bottom: 3px;
+}
+
 #menu {
   position: absolute;
   height: 100%;
