@@ -31,46 +31,6 @@ app.controller('pauseScreen', function($scope) {
         //if the user is not trying to map to a key reserved to the mobilecontroller, then map in new keys
         if(notReserved(e.keyCode)) {
           document.getElementById(document.activeElement.id).value = window.keyCodes[e.keyCode];
-          switch (document.activeElement.id) {
-            case 'aButton':
-              newKeyMappings[e.keyCode] = '1';
-              break;
-            case 'bButton':
-              newKeyMappings[e.keyCode] = '0';
-              break;
-            case 'xButton':
-              newKeyMappings[e.keyCode] = '3';
-              break;
-            case 'yButton':
-              newKeyMappings[e.keyCode] = '2';
-              break;
-            case 'startButton':
-              newKeyMappings[e.keyCode] = '9';
-              break;
-            case 'selectButton':
-              newKeyMappings[e.keyCode] = '8';
-              break;
-            case 'upArrow':
-              newKeyMappings[e.keyCode] = '12';
-              break;
-            case 'downArrow':
-              newKeyMappings[e.keyCode] = '13';
-              break;
-            case 'leftArrow':
-              newKeyMappings[e.keyCode] = '14';
-              break;
-            case 'rightArrow':
-              newKeyMappings[e.keyCode] = '15';
-              break;
-            case 'lShoulder':
-              newKeyMappings[e.keyCode] = '4';
-              break;
-            case 'rShoulder':
-              newKeyMappings[e.keyCode] = '5';
-              break;
-            default:
-              break;
-          }
         }
       }
       catch(err) {
@@ -172,6 +132,8 @@ app.controller('pauseScreen', function($scope) {
    } 
 
   $scope.disabled = true;
+  $scope.validationError = false;
+
 
   $scope.editKeyMappings = function() {
     $scope.disabled = false; //allow user to edit key mappings by clicking into the input
@@ -185,55 +147,76 @@ app.controller('pauseScreen', function($scope) {
   };
 
   $scope.submitNewKeyMappings = function() {
+    console.log('before: newKeyMappings',newKeyMappings);
+
     systemSettings.keys = {}; //clear out all current key mappings
+    newKeyMappings = {}; //clear out all current key mappings
 
-    //if newKeyMappings has an undefined, then replace with what was in old key mappings TODOOOOO
-    console.log('old:', oldKeyMappings);
-    console.log('new:', newKeyMappings);
+    var keyCodesInvert = _.invert(window.keyCodes);
+    var mappedKeys = [];
+    
 
-    var keysToMap = [];
+    //helper function:
+    function containsDuplicates(arr) {
+      var index = {}, i, str;
 
-    //delete the mobileControllerMappings so we can compare more easily; will add back later
-    for(var mapping in oldKeyMappings) {
-      if(mobileControllerKeys[mapping]) {
-        delete oldKeyMappings[mapping];
-      } else {
-        keysToMap.push(oldKeyMappings[mapping]);
-      }
-    }
-
-    function findKey(obj, value) {
-      var key;
-      _.each(obj, function (v, k) {
-        if (v === value) {
-          key = k;
+      for(i = 0; i < arr.length; i++) {
+        // you could use arr[i].toString() here, but JSON.stringify()
+        // is a lot safer because it cannot create ambiguous output.
+        str = JSON.stringify(arr[i]);
+        if (index.hasOwnProperty(str)) {
+            return true;
+        } else {
+            index[str] = true;
         }
-      });
-      return key;
+      }
+      return false;
     }
 
-    _.each(keysToMap, function(button) {
-      if(_.contains(_.values(newKeyMappings), button)===false) {
-        console.log('nahht there', button)
-        var keyboardKey = findKey(oldKeyMappings, button);
-        console.log(keyboardKey, "keyboardKey");
-        newKeyMappings[keyboardKey] = button;
-      }
+    
+    $('#keyMappingsForm').find("input").each(function(){
+      var id = $(this).attr('id');
+      // console.log('id', id);
+      mappedKeys.push(document.getElementById(id).value)
+      var keyCode = keyCodesInvert[document.getElementById(id).value];
+      // console.log('keyCode', keyCode);
+      newKeyMappings[keyCode] =  window.buttonNumbers[id];   
     });
+    
+    console.log('after: newKeyMappings',newKeyMappings);
+
+    if(containsDuplicates(mappedKeys)) {
+      console.log('dupessssssss for dayz');
+      $scope.validationError = true;
+      // display the attempted key mappings
+      var counter = 0;
+      $('#keyMappingsForm').find("input").each(function(){
+        var id = $(this).attr('id');
+        document.getElementById(id).value = mappedKeys[counter];
+        counter++;
+      });
+
+      systemSettings.keys = oldKeyMappings;
+    } else {
+      console.log('no dupes; to submit!')
+      $scope.validationError = false;
+      //add in the keys that the mobile controller needs
+      _.extend(newKeyMappings, window.mobileControllerKeys);
+
+      //submit the new mappings
+      systemSettings.keys = newKeyMappings;
+
+      //reset the cycle
+      newKeyMappings = {};
+      $scope.disabled = true;
+      
+    }
 
 
-    //add in the keys that the mobile controller needs
-    _.extend(newKeyMappings, window.mobileControllerKeys);
-
-    //submit the new mappings
-    systemSettings.keys = newKeyMappings;
-
-    //reset the cycle
-    newKeyMappings = {};
-    $scope.disabled = true;
   };
 
   $scope.cancelSubmitNewKeyMappings = function() {
+    $scope.validationError = false;
     //display the old key mappings
     $('#keyMappingsForm').find("input").each(function(){
       var id = $(this).attr('id');

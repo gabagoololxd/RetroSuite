@@ -194,6 +194,21 @@
     225 : "altgr", 
   };
 
+  window.buttonNumbers = {
+    'aButton': "1",
+    'bButton': "0",
+    'xButton': "3",
+    'yButton': "2",
+    'lShoulder': "4",
+    'rShoulder': "5",
+    'startButton': "9",
+    'selectButton': "8",
+    'upArrow': "12",
+    'downArrow': "13",
+    'leftArrow': '14',
+    'rightArrow': '15'
+  };
+
   window.mobileControllerKeys = {
     //Keys reserved for mobilecontroller; seldom used keys. 
     //Mapping new keys overwrite all existing mappings but we want to keep these so we include them here
