@@ -4,6 +4,7 @@ var IconIon = require('react-native-vector-icons/Ionicons');
 var api = require('../Utils/api');
 var ControllerView = require('./ControllerView');
 var _ = require('lodash');
+var Orientation = require('react-native-orientation');
 var BarcodeScanner = require('react-native-barcodescanner');
 var StatusBarAndroid = require('react-native-android-statusbar');
 
@@ -28,6 +29,10 @@ class QRReader extends React.Component {
       androidTorch: "off",
       cameraOn: true
     }
+  }
+
+  componentDidMount() {
+    Orientation.lockToPortrait(); //this will lock the view to Portrait
   }
 
   _onBarCodeRead(e) {
@@ -111,8 +116,8 @@ class QRReader extends React.Component {
               onBarCodeRead={_.once(this._onBarCodeRead.bind(this))}
               defaultOnFocusComponent={ true }
               onFocusChanged={ this.state.handleFocusChanged }>
-              <View style={styles.rectangleContainer}>
-                <View style={styles.rectangle}/>
+              <View style={styles.rectangleContainer} pointerEvents='box-none'>
+                <View style={styles.rectangle} pointerEvents='box-none'/>
               </View>
               <View style={styles.bottomButtonContainer}>
                   <TouchableOpacity onPress={this._torchEnabled.bind(this)} style={styles.flashButton} underlayColor={'#FC9396'}>

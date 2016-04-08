@@ -147,11 +147,15 @@
         <div id='keyMappingsForm'>
           <h1 class="pauseMenuTitle">Controls:</h1>
           <div id="keyMappingsFormButtons">
-            <button id="editKeyMappings" class="pauseMenuButton" data-ng-click="editKeyMappings()" ng-hide="!disabled">Set New Key Mappings</button>
+            <button id="editKeyMappings" class="pauseMenuButton" data-ng-click="editKeyMappings()" ng-hide="!disabled">Edit Key Mappings</button>
             <button id="submitNewKeyMappings" class="pauseMenuButton" ng-click='submitNewKeyMappings()' ng-hide="disabled">Submit New Key Mappings</button>
             <button id="cancelSubmitNewKeyMappings" class="pauseMenuButton" ng-click='cancelSubmitNewKeyMappings()' ng-hide="disabled">Cancel</button>
           </div>
-          <div ng-hide="validationError1" id="validationError">Please map a key for every button, and use each key only once</div>
+          <div ng-hide="!validationError" id="validationError">Please map a key for every button, and use each key only once</div>
+          <div ng-hide="!editHint" class="editHint">Click an input box below and tap the new keyboard key you want to use as the button.</div>
+          <div ng-hide="!editHint" class="editHint">Click "Submit New Key Mappings" when done.</div>
+
+
           <div id="buttonMappingsList">
             <div class="buttonMapping">
               <span>A button:</span> 
@@ -234,6 +238,7 @@
   <script src="./frontend/angular/controllers/errorScreen.js"></script>
   <script src="./frontend/angular/controllers/inputSelection.js"></script>
   <script src="./frontend/angular/controllers/gameSelection.js"></script>
+  <script src="./frontend/angular/helpers/keyCodes.js"></script>
   <script src="./frontend/angular/controllers/pauseScreen.js"></script>
 
   <!-- games and emulator -->

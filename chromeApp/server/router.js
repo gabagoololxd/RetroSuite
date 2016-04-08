@@ -1,5 +1,6 @@
 var url = require('url');
 var numberOfPlayersJoined = 0;
+window.numberOfPlayersJoined = numberOfPlayersJoined;
 var controllerAction;
 
 function router(req, res) {
@@ -14,18 +15,13 @@ function router(req, res) {
     httpVerb === 'GET' &&
     httpPath === '/pair-controller'
   ) {
-
-    window.toggleInputSelectionScreen();
-
-    res.writeHead(200, {
-      'Content-Type': 'application/json'
-    });
-    // if (numberOfPlayersJoined === 0) {
-    //   numberOfPlayersJoined++;
-      res.end(JSON.stringify({ipAddress: ip4, port: port}));
-    // } else {
-    //   res.end(JSON.stringify({message: 'no more players allowed'}));
-    // }
+    if (numberOfPlayersJoined === 0) {
+      numberOfPlayersJoined++;
+      window.toggleInputSelectionScreen();
+      res.writeHead(200, {
+        'Content-Type': 'application/json'
+      });
+    }
   } else if ( // app.post('/player/:action/:button', cb)   like: /player/press/a
     httpVerb === 'POST' && //Post requests are possible and don't fire three times
     pathArr.length === 4 &&

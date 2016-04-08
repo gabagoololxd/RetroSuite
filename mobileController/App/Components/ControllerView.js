@@ -25,6 +25,7 @@ class ControllerView extends React.Component {
     super(props);
     this.state = {
       //used to scale sizes of buttons depending on phone resolution
+      iPhoneSize: undefined,
       circleButtonSize: undefined,
       dPadSize: undefined,
       shoulderButtonSize: undefined,
@@ -57,10 +58,22 @@ class ControllerView extends React.Component {
         });
 
         //TODO: don't hardcode theses points of the D-Pad buttons
-        var distanceToUp = Math.sqrt( (79-x2)*(79-x2) + (58-y2)*(58-y2) );
-        var distanceToRight = Math.sqrt( (127.5-x2)*(127.5-x2) + (105.5-y2)*(105.5-y2) );
-        var distanceToDown = Math.sqrt( (81-x2)*(81-x2) + (150.5-y2)*(150.5-y2) );
-        var distanceToLeft = Math.sqrt( (32.5-x2)*(32.5-x2) + (107-y2)*(107-y2) );
+        if(this.state.iPhoneSize === 'iPhone6') {
+          var distanceToUp = Math.sqrt( (79-x2)*(79-x2) + (58-y2)*(58-y2) );
+          var distanceToRight = Math.sqrt( (127.5-x2)*(127.5-x2) + (105.5-y2)*(105.5-y2) );
+          var distanceToDown = Math.sqrt( (81-x2)*(81-x2) + (150.5-y2)*(150.5-y2) );
+          var distanceToLeft = Math.sqrt( (32.5-x2)*(32.5-x2) + (107-y2)*(107-y2) );
+        } else if(this.state.iPhoneSize === 'iPhone6+') {
+          var distanceToUp = Math.sqrt( (89-x2)*(89-x2) + (64-y2)*(64-y2) );
+          var distanceToRight = Math.sqrt( (140-x2)*(140-x2) + (116-y2)*(116-y2) );
+          var distanceToDown = Math.sqrt( (90-x2)*(90-x2) + (169-y2)*(169-y2) );
+          var distanceToLeft = Math.sqrt( (35-x2)*(35-x2) + (116-y2)*(116-y2) );
+        } else if(this.state.iPhoneSize === 'iPhone5') {
+          var distanceToUp = Math.sqrt( (68.5-x2)*(68.5-x2) + (49.5-y2)*(49.5-y2) );
+          var distanceToRight = Math.sqrt( (108.5-x2)*(108.5-x2) + (91-y2)*(91-y2) );
+          var distanceToDown = Math.sqrt( (67.5-x2)*(67.5-x2) + (130.5-y2)*(130.5-y2) );
+          var distanceToLeft = Math.sqrt( (28-x2)*(28-x2) + (90-y2)*(90-y2) );
+        }
 
         var closest = Math.min(distanceToUp, distanceToRight, distanceToDown, distanceToLeft);
 
@@ -98,10 +111,22 @@ class ControllerView extends React.Component {
         var y2 = dPadTouch[0].locationY;
 
         //TODO: don't hardcode theses points of the D-Pad buttons
-        var distanceToUp = Math.sqrt( (79-x2)*(79-x2) + (58-y2)*(58-y2) );
-        var distanceToRight = Math.sqrt( (127.5-x2)*(127.5-x2) + (105.5-y2)*(105.5-y2) );
-        var distanceToDown = Math.sqrt( (81-x2)*(81-x2) + (150.5-y2)*(150.5-y2) );
-        var distanceToLeft = Math.sqrt( (32.5-x2)*(32.5-x2) + (107-y2)*(107-y2) );
+        if(this.state.iPhoneSize === 'iPhone6') {
+          var distanceToUp = Math.sqrt( (79-x2)*(79-x2) + (58-y2)*(58-y2) );
+          var distanceToRight = Math.sqrt( (127.5-x2)*(127.5-x2) + (105.5-y2)*(105.5-y2) );
+          var distanceToDown = Math.sqrt( (81-x2)*(81-x2) + (150.5-y2)*(150.5-y2) );
+          var distanceToLeft = Math.sqrt( (32.5-x2)*(32.5-x2) + (107-y2)*(107-y2) );
+        } else if(this.state.iPhoneSize === 'iPhone6+') {
+          var distanceToUp = Math.sqrt( (89-x2)*(89-x2) + (64-y2)*(64-y2) );
+          var distanceToRight = Math.sqrt( (140-x2)*(140-x2) + (116-y2)*(116-y2) );
+          var distanceToDown = Math.sqrt( (90-x2)*(90-x2) + (169-y2)*(169-y2) );
+          var distanceToLeft = Math.sqrt( (35-x2)*(35-x2) + (116-y2)*(116-y2) );
+        } else if(this.state.iPhoneSize === 'iPhone5') {
+          var distanceToUp = Math.sqrt( (68.5-x2)*(68.5-x2) + (49.5-y2)*(49.5-y2) );
+          var distanceToRight = Math.sqrt( (108.5-x2)*(108.5-x2) + (91-y2)*(91-y2) );
+          var distanceToDown = Math.sqrt( (67.5-x2)*(67.5-x2) + (130.5-y2)*(130.5-y2) );
+          var distanceToLeft = Math.sqrt( (28-x2)*(28-x2) + (90-y2)*(90-y2) );
+        }
 
         var closest = Math.min(distanceToUp, distanceToRight, distanceToDown, distanceToLeft);
 
@@ -125,19 +150,43 @@ class ControllerView extends React.Component {
           var y2 = evt.nativeEvent.locationY
 
           //TODO: don't hardcode theses points of the D-Pad buttons
-          var distanceToUp = Math.sqrt( (79-x2)*(79-x2) + (58-y2)*(58-y2) );
-          var distanceToRight = Math.sqrt( (127.5-x2)*(127.5-x2) + (105.5-y2)*(105.5-y2) );
-          var distanceToDown = Math.sqrt( (81-x2)*(81-x2) + (150.5-y2)*(150.5-y2) );
-          var distanceToLeft = Math.sqrt( (32.5-x2)*(32.5-x2) + (107-y2)*(107-y2) );
+          if(this.state.iPhoneSize === 'iPhone6') {
+            var distanceToUp = Math.sqrt( (79-x2)*(79-x2) + (58-y2)*(58-y2) );
+            var distanceToRight = Math.sqrt( (127.5-x2)*(127.5-x2) + (105.5-y2)*(105.5-y2) );
+            var distanceToDown = Math.sqrt( (81-x2)*(81-x2) + (150.5-y2)*(150.5-y2) );
+            var distanceToLeft = Math.sqrt( (32.5-x2)*(32.5-x2) + (107-y2)*(107-y2) );
+          } else if(this.state.iPhoneSize === 'iPhone6+') {
+            var distanceToUp = Math.sqrt( (89-x2)*(89-x2) + (64-y2)*(64-y2) );
+            var distanceToRight = Math.sqrt( (140-x2)*(140-x2) + (116-y2)*(116-y2) );
+            var distanceToDown = Math.sqrt( (90-x2)*(90-x2) + (169-y2)*(169-y2) );
+            var distanceToLeft = Math.sqrt( (35-x2)*(35-x2) + (116-y2)*(116-y2) );
+          } else if(this.state.iPhoneSize === 'iPhone5') {
+            var distanceToUp = Math.sqrt( (68.5-x2)*(68.5-x2) + (49.5-y2)*(49.5-y2) );
+            var distanceToRight = Math.sqrt( (108.5-x2)*(108.5-x2) + (91-y2)*(91-y2) );
+            var distanceToDown = Math.sqrt( (67.5-x2)*(67.5-x2) + (130.5-y2)*(130.5-y2) );
+            var distanceToLeft = Math.sqrt( (28-x2)*(28-x2) + (90-y2)*(90-y2) );
+          }
         } else {
           var x2 = gestureState.moveX;
           var y2 = gestureState.moveY;
 
           //TODO: don't hardcode theses points of the D-Pad buttons
-          var distanceToUp = Math.sqrt( (140-x2)*(140-x2) + (132.5-y2)*(132.5-y2) );
-          var distanceToRight = Math.sqrt( (186.5-x2)*(186.5-x2) + (180-y2)*(180-y2) );
-          var distanceToDown = Math.sqrt( (140-x2)*(140-x2) + (228.5-y2)*(228.5-y2) );
-          var distanceToLeft = Math.sqrt( (94.5-x2)*(94.5-x2) + (180-y2)*(180-y2) );
+          if(this.state.iPhoneSize === 'iPhone6') {
+            var distanceToUp = Math.sqrt( (140-x2)*(140-x2) + (132.5-y2)*(132.5-y2) );
+            var distanceToRight = Math.sqrt( (186.5-x2)*(186.5-x2) + (180-y2)*(180-y2) );
+            var distanceToDown = Math.sqrt( (140-x2)*(140-x2) + (228.5-y2)*(228.5-y2) );
+            var distanceToLeft = Math.sqrt( (94.5-x2)*(94.5-x2) + (180-y2)*(180-y2) );
+          } else if(this.state.iPhoneSize === 'iPhone6+') {
+            var distanceToUp = Math.sqrt( (155-x2)*(155-x2) + (146-y2)*(146-y2) );
+            var distanceToRight = Math.sqrt( (206-x2)*(206-x2) + (201-y2)*(201-y2) );
+            var distanceToDown = Math.sqrt( (155-x2)*(155-x2) + (253-y2)*(253-y2) );
+            var distanceToLeft = Math.sqrt( (102.6-x2)*(102.6-x2) + (201-y2)*(201-y2) );
+          } else if(this.state.iPhoneSize === 'iPhone5') {
+            var distanceToUp = Math.sqrt( (119-x2)*(119-x2) + (114.5-y2)*(114.5-y2) );
+            var distanceToRight = Math.sqrt( (159-x2)*(159-x2) + (155-y2)*(155-y2) );
+            var distanceToDown = Math.sqrt( (119-x2)*(119-x2) + (194-y2)*(194-y2) );
+            var distanceToLeft = Math.sqrt( (78.5-x2)*(78.5-x2) + (154.5-y2)*(154.5-y2) );
+          }
         }
 
         var closest = Math.min(distanceToUp, distanceToRight, distanceToDown, distanceToLeft);
@@ -162,15 +211,16 @@ class ControllerView extends React.Component {
 
   componentDidMount() {
     if (Platform.OS === 'ios') {
-      Orientation.lockToLandscapeRight(); //this will lock the view to Landscape
+      Orientation.lockToLandscapeLeft(); //this will lock the view to Landscape
     } else {
-      Orientation.lockToLandscape(); // no support for lockToLandscapeRight in Android yet
+      Orientation.lockToLandscape(); // no support for lockToLandscapeLeft in Android yet
     }
 
     //buttons must scale with size of the phone
     if (Platform.OS === 'ios') {
       if(Dimensions.get('window').width===375) { //iPhone 6/6s
         this.setState({
+          iPhoneSize: 'iPhone6',
           circleButtonSize: 105,
           dPadSize: 200,
           shoulderButtonSize: 180,
@@ -178,20 +228,22 @@ class ControllerView extends React.Component {
         })
       } else if (Dimensions.get('window').width===414) { //iPhone 6+/6s+
         this.setState({
+          iPhoneSize: 'iPhone6+',
           circleButtonSize: 115,
           dPadSize: 225,
-          shoulderButtonSize: 0, // TODO: set shoulderButtonSize
+          shoulderButtonSize: 190, // TODO: set shoulderButtonSize
           selectStartButtonSize: 45
         })
-      } else if (Dimensions.get('window').width===320) { //iPhone 5/5s
+      } else if (Dimensions.get('window').width===320) { //iPhone 5/5s/SE
         this.setState({
-          circleButtonSize: 88,
-          dPadSize: 170,
-          shoulderButtonSize: 0, // TODO: set shoulderButtonSize
-          selectStartButtonSize: 40
+          iPhoneSize: 'iPhone5',
+          circleButtonSize: 80,
+          dPadSize: 160,
+          shoulderButtonSize: 140, // TODO: set shoulderButtonSize
+          selectStartButtonSize: 35
         })
       }
-    } else { // Android sizing of buttons
+    } else { // TODO: Android sizing of buttons
       var windowWidth = Dimensions.get('window').width;
       this.setState({
         circleButtonSize: windowWidth * 0.16,
@@ -207,31 +259,31 @@ class ControllerView extends React.Component {
   //Right thumb buttons: A, B, X, Y
   /////////////////////////////////////////////////////////////////////
   _APressIn() {
-    api.Press(this.props.route.ipAddress, 'a'); //emulator has a and b switched, so we switch again to make it normal
+    api.Press(this.props.route.ipAddress, 'a'); 
   }
   _APressOut() {
-    api.Release(this.props.route.ipAddress, 'a'); //emulator has a and b switched, so we switch again to make it normal
+    api.Release(this.props.route.ipAddress, 'a'); 
   }
 
   _BPressIn() {
-    api.Press(this.props.route.ipAddress, 'b'); //emulator has a and b switched, so we switch again to make it normal
+    api.Press(this.props.route.ipAddress, 'b'); 
   }
   _BPressOut() {
-    api.Release(this.props.route.ipAddress, 'b'); //emulator has a and b switched, so we switch again to make it normal
+    api.Release(this.props.route.ipAddress, 'b'); 
   }
 
   _XPressIn() {
-    api.Press(this.props.route.ipAddress, 'x'); //emulator has x and y switched, so we switch again to make it normal
+    api.Press(this.props.route.ipAddress, 'x'); 
   }
   _XPressOut() {
-    api.Release(this.props.route.ipAddress, 'x'); //emulator has x and y switched, so we switch again to make it normal
+    api.Release(this.props.route.ipAddress, 'x'); 
   }
 
   _YPressIn() {
-    api.Press(this.props.route.ipAddress, 'y'); //emulator has x and y switched, so we switch again to make it normal
+    api.Press(this.props.route.ipAddress, 'y'); 
   }
   _YPressOut() {
-    api.Release(this.props.route.ipAddress, 'y'); //emulator has x and y switched, so we switch again to make it normal
+    api.Release(this.props.route.ipAddress, 'y'); 
   }
 
   /////////////////////////////////////////////////////////////////////
@@ -352,7 +404,7 @@ class ControllerView extends React.Component {
     }
     return (
       <View style={styles.imageContainer}>
-        <Image source={require('./Assets/snescontrollercropped.jpg')} style={styles.image}>
+        <Image source={require('./Assets/snescontrollercroppedlabels.jpg')} style={styles.image}>
 
           <View style={styles.AButton} onTouchStart={this._APressIn.bind(this)} onTouchEnd={this._APressOut.bind(this)}>
             <IconIon name="record" size={this.state.circleButtonSize} color="transparent"/>
