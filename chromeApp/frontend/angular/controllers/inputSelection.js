@@ -8,6 +8,10 @@ app.controller('inputSelection', function($scope) {
     // $scope.inputSelection.hidden = true;
     inputSelectionScreen = document.getElementById('inputSelectionScreen');
     inputSelectionScreen.classList.add('hidden');
+    document.getElementById('menuHintBubble').classList.remove('hidden');
+    setTimeout(function(){
+      $( "#menuHintBubble" ).fadeOut( "slow", function() {});
+    },4000)
     $scope.$apply();
   }
   var qrScreen = document.getElementById('qrScreen');

@@ -277,6 +277,15 @@ html, body, canvas {
   background-color: white;
 }
 
+#menuHintBubble {
+  padding: 10px 10px 10px 10px;
+  border-radius: 5px;
+  color: white;
+  background-color: rgba(0,0,0,0.5);
+  -webkit-transition: all 0.3s ease-in-out;
+  
+}
+
 #clickToRestart {
   width: 10%;
   margin: 0 auto;
@@ -318,6 +327,14 @@ html, body, canvas {
 
 .buttonInput {
   margin-left: 15px;
+}
+
+#menuHint {
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+  font-family: dockerOne;
+  color: white;
 }
 
 
