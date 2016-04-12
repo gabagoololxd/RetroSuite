@@ -135,7 +135,10 @@ app.controller('pauseScreen', function($scope) {
   $scope.validationError = false;
   $scope.editHint = false;
 
+  window.edittingKeyMappings = false;
+
   $scope.editKeyMappings = function() {
+    window.edittingKeyMappings = true; //disallow clicking out of the menu if key mappings is in progress
     $scope.editHint = true; //show the instructional text
     $scope.disabled = false; //allow user to edit key mappings by clicking into the input
 
@@ -148,6 +151,8 @@ app.controller('pauseScreen', function($scope) {
 
   $scope.submitNewKeyMappings = function() {
 
+    window.edittingKeyMappings = false;
+    document.getElementById('resumeError').classList.add('hidden');
     systemSettings.keys = {}; //clear out all current key mappings
     newKeyMappings = {}; //clear out all current key mappings
 
@@ -206,6 +211,8 @@ app.controller('pauseScreen', function($scope) {
   };
 
   $scope.cancelSubmitNewKeyMappings = function() {
+    window.edittingKeyMappings = false;
+    document.getElementById('resumeError').classList.add('hidden');
     $scope.validationError = false;
     //display the old key mappings
     $('#keyMappingsForm').find("input").each(function(){

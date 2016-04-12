@@ -16,6 +16,7 @@ var {
   TouchableOpacity,
   Navigator,
   StatusBarIOS,
+  SegmentedControlIOS,
   AlertIOS,
   Platform
 } = React;
@@ -27,7 +28,9 @@ class QRReader extends React.Component {
       cameraTorchToggle: Camera.constants.TorchMode.off,
       handleFocusChanged: () => {},
       androidTorch: "off",
-      cameraOn: true
+      cameraOn: true,
+      selectedIndex: 0,
+      helpScreenOn: false,
     }
   }
 
@@ -70,6 +73,21 @@ class QRReader extends React.Component {
       }
     });
 
+  }
+
+  _openHelpScreen() {
+    console.log(this.state.helpScreenOn);
+    if (this.state.helpScreenOn) {
+      this.setState({helpScreenOn: false});
+    } else {
+      this.setState({helpScreenOn: true});
+    }
+  }
+
+  _onChange(event) {
+    this.setState({
+      selectedIndex: event.nativeEvent.selectedSegmentIndex,
+    });
   }
 
   // For Android
@@ -116,9 +134,26 @@ class QRReader extends React.Component {
               onBarCodeRead={_.once(this._onBarCodeRead.bind(this))}
               defaultOnFocusComponent={ true }
               onFocusChanged={ this.state.handleFocusChanged }>
+
+              <View style={styles.overlayLeft} pointerEvents='box-none'/> 
+              <View style={styles.overlayTop} pointerEvents='box-none'/> 
+              <View style={styles.overlayRight} pointerEvents='box-none'/> 
+              <View style={styles.overlayBottom} pointerEvents='box-none'/> 
+
+
+              <SegmentedControlIOS 
+                values={['Scan QR', 'Instructions']} 
+                selectedIndex={this.state.selectedIndex} 
+                style={styles.segments} 
+                tintColor="white"
+                onChange={this._onChange.bind(this)}
+                />
+
               <View style={styles.rectangleContainer} pointerEvents='box-none'>
                 <View style={styles.rectangle} pointerEvents='box-none'/>
               </View>
+              
+
               <View style={styles.bottomButtonContainer}>
                   <TouchableOpacity onPress={this._torchEnabled.bind(this)} style={styles.flashButton} underlayColor={'#FC9396'}>
                     {this.state.cameraTorchToggle === Camera.constants.TorchMode.off ? <IconIon name="ios-bolt-outline" size={55} color="rgba(237,237,237,0.5)" style={styles.flashIcon} /> : <IconIon name="ios-bolt" size={55} color="rgba(237,237,237,0.5)" style={styles.flashIcon} />}
@@ -127,12 +162,12 @@ class QRReader extends React.Component {
 
             </Camera>
           </View>
+
         );
       } else {
         return null;
-      }i
-      // else if Android
-    } else {
+      }
+    } else { //android
       if (this.state.cameraOn) {
         return (
             <BarcodeScanner
@@ -156,20 +191,25 @@ class QRReader extends React.Component {
 
 var styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
   },
   preview: {
-    flex: 1,
-    justifyContent: 'space-between',
-    alignItems: 'center',
     height: Dimensions.get('window').height,
-    width: Dimensions.get('window').width
+    width: Dimensions.get('window').width,
+  },
+  cameraFocus: {
+    height: 250,
+    width: 250,
+  },
+  segments : {
+    marginTop: 25
   },
   rectangleContainer: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'transparent',
+    marginBottom: 50
   },
   rectangle: {
     height: 250,
@@ -177,10 +217,12 @@ var styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: '#ededed',
     backgroundColor: 'transparent',
+    opacity: 1
   },
 
   bottomButtonContainer: {
     flexDirection: 'row',
+    justifyContent: 'center',
     alignItems:'center',
     marginBottom: 15
   },
@@ -205,6 +247,38 @@ var styles = StyleSheet.create({
     height: 55,
     backgroundColor: 'transparent'
   },
+  overlayTop: {
+    height: Dimensions.get('window').height - 500,
+    width: Dimensions.get('window').width,
+    backgroundColor: 'rgba(0,0,0,0.65)',
+    position: 'absolute',
+    left: 0,
+    top: 0,
+  },
+  overlayRight: {
+    height: 251,
+    width: Dimensions.get('window').width - 311,
+    backgroundColor: 'rgba(0,0,0,0.65)',
+    position: 'absolute',
+    left: Dimensions.get('window').width /2 + 125,
+    top: 167,
+  },
+  overlayBottom: {
+    height: Dimensions.get('window').height -250,
+    width: Dimensions.get('window').width,
+    backgroundColor: 'rgba(0,0,0,0.65)',
+    position: 'absolute',
+    left: 0,
+    top: 418,
+  },
+  overlayLeft: {
+    height: 251,
+    width: Dimensions.get('window').width - 311,
+    backgroundColor: 'rgba(0,0,0,0.65)',
+    position: 'absolute',
+    left: 0,
+    top: 167,
+  }
 });
 
 module.exports = QRReader;

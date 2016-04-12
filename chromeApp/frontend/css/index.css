@@ -328,6 +328,12 @@ html, body, canvas {
   margin-bottom: 3px;
 }
 
+#resumeError {
+  color: red;
+  margin-top: 3px;
+  margin-bottom: 3px;
+}
+
 
 .editHint {
   color: white;
