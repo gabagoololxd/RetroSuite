@@ -1,5 +1,6 @@
 var React = require('react-native');
-var IconIon = require('react-native-vector-icons/Ionicons');
+var Ionicon = require('react-native-vector-icons/Ionicons');
+var FontAwesomeIcon = require('react-native-vector-icons/FontAwesome');
 var Orientation = require('react-native-orientation');
 var api = require('../Utils/api');
 var Settings = require('./Settings');
@@ -364,7 +365,6 @@ class ControllerView extends React.Component {
 
   /////////////////////////////////////////////////////////////////////
   //Shoulder buttons: Left and Right Index Finger Triggers.
-  //TODO: implement shoulder buttons on screen, or ideally with volume rocker
   /////////////////////////////////////////////////////////////////////
   _rightShoulderPressIn() {
     api.Press(this.props.route.ipAddress, 'r-shoulder');
@@ -397,6 +397,14 @@ class ControllerView extends React.Component {
     api.Release(this.props.route.ipAddress, 'select');
   }
 
+  /////////////////////////////////////////////////////////////////////
+  //Pause button
+  /////////////////////////////////////////////////////////////////////
+  _pause() {
+    api.Pause(this.props.route.ipAddress);
+    console.log('pause pressedd');
+  }
+
   render() {
     if (Platform.OS === 'ios') {
       StatusBarIOS.setHidden('true');
@@ -408,37 +416,41 @@ class ControllerView extends React.Component {
         <Image source={require('./Assets/snescontrollercroppedlabels.jpg')} style={styles.image}>
 
           <View style={styles.AButton} onTouchStart={this._APressIn.bind(this)} onTouchEnd={this._APressOut.bind(this)}>
-            <IconIon name="record" size={this.state.circleButtonSize} allowFontScaling={false} color="red"/>
+            <Ionicon name="record" size={this.state.circleButtonSize} allowFontScaling={false} color="red"/>
           </View>
           <View style={styles.BButton} onTouchStart={this._BPressIn.bind(this)} onTouchEnd={this._BPressOut.bind(this)}>
-            <IconIon name="record" size={this.state.circleButtonSize} allowFontScaling={false} color="red"/>
+            <Ionicon name="record" size={this.state.circleButtonSize} allowFontScaling={false} color="red"/>
           </View>
           <View style={styles.XButton} onTouchStart={this._XPressIn.bind(this)} onTouchEnd={this._XPressOut.bind(this)}>
-            <IconIon name="record" size={this.state.circleButtonSize} allowFontScaling={false} color="red"/>
+            <Ionicon name="record" size={this.state.circleButtonSize} allowFontScaling={false} color="red"/>
           </View>
           <View style={styles.YButton} onTouchStart={this._YPressIn.bind(this)} onTouchEnd={this._YPressOut.bind(this)}>
-            <IconIon name="record" size={this.state.circleButtonSize} allowFontScaling={false} color="red"/>
+            <Ionicon name="record" size={this.state.circleButtonSize} allowFontScaling={false} color="red"/>
           </View>
 
           <View {...this._panResponder.panHandlers}>
             <View style={styles.dPad} >
-              <IconIon name="record" size={this.state.dPadSize} allowFontScaling={false} color="red"/>
+              <Ionicon name="record" size={this.state.dPadSize} allowFontScaling={false} color="red"/>
             </View>
           </View>
 
           <View style={styles.leftShoulderButton} onTouchStart={this._leftShoulderPressIn.bind(this)} onTouchEnd={this._leftShoulderPressOut.bind(this)}>
-            <IconIon name="minus-round" size={this.state.shoulderButtonSize} allowFontScaling={false} color="red"/>
+            <Ionicon name="minus-round" size={this.state.shoulderButtonSize} allowFontScaling={false} color="red"/>
           </View>
           <View style={styles.rightShoulderButton} onTouchStart={this._rightShoulderPressIn.bind(this)} onTouchEnd={this._rightShoulderPressOut.bind(this)}>
-            <IconIon name="minus-round" size={this.state.shoulderButtonSize} allowFontScaling={false} color="red"/>
+            <Ionicon name="minus-round" size={this.state.shoulderButtonSize} allowFontScaling={false} color="red"/>
           </View>
 
           <View style={styles.selectButton} onTouchStart={this._selectPressIn.bind(this)} onTouchEnd={this._selectPressOut.bind(this)}>
-            <IconIon name="edit" size={this.state.selectStartButtonSize} allowFontScaling={false} color="red"/>
+            <Ionicon name="edit" size={this.state.selectStartButtonSize} allowFontScaling={false} color="red"/>
           </View>
           <View style={styles.startButton} onTouchStart={this._startPressIn.bind(this)} onTouchEnd={this._startPressOut.bind(this)}>
-            <IconIon name="edit" size={this.state.selectStartButtonSize} allowFontScaling={false} color="red"/>
+            <Ionicon name="edit" size={this.state.selectStartButtonSize} allowFontScaling={false} color="red"/>
           </View>
+
+          <TouchableOpacity style={styles.pauseButton} onPress={this._pause.bind(this)}>
+            <FontAwesomeIcon name="pause-circle" size={this.state.selectStartButtonSize} allowFontScaling={false} color="#6b676e"/>
+          </TouchableOpacity>
 
         </Image>
       </View>
@@ -510,6 +522,11 @@ var styles = StyleSheet.create({
     position: 'absolute',
     top: Dimensions.get('window')[width] * 0.47,
     left: Dimensions.get('window')[height] * 0.49,
+  },
+  pauseButton: {
+    position: 'absolute',
+    bottom: 5,
+    right: 5,
   }
 });
 

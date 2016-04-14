@@ -4,6 +4,7 @@ var api = {
     return fetch(url, {
       method: 'GET',
       headers: {
+        'Accept': 'application/json',
         'Content-Type': 'application/json'
       }
     }).then(function(result) {
@@ -24,6 +25,14 @@ var api = {
 
   Release(ipAddress, button) {
     var url = 'http://' + ipAddress + '/player/release/' + button;
+    return fetch(url, {
+      method: 'POST',
+      body: null
+    });
+  },
+
+  Pause(ipAddress) {
+    var url = 'http://' + ipAddress + '/pause';
     return fetch(url, {
       method: 'POST',
       body: null

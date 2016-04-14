@@ -18,7 +18,7 @@
       "128": "/frontEnd/img/icon/snes_128.png"
    },
    "manifest_version": 2,
-   "name": "OSnes",
+   "name": "RetroSuite",
    "offline_enabled": true,
    "permissions": [
      "system.network",
@@ -30,6 +30,6 @@
      "storage",
      "unlimitedStorage"
    ],
-   "short_name": "OSnes",
-   "version": "0.0.1"
+   "short_name": "RetroSuite",
+   "version": "0.0.2"
 }

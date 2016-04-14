@@ -11,6 +11,8 @@ function router(req, res) {
   var httpPath = req.url;
   var pathArr = req.url.split('/');
 
+  console.log('pathArr', pathArr)
+
   if ( // app.get('/pair-controller', cb)
     httpVerb === 'GET' &&
     httpPath === '/pair-controller'
@@ -22,6 +24,14 @@ function router(req, res) {
         'Content-Type': 'application/json'
       });
     }
+  } else if ( 
+    httpVerb === 'POST' && 
+    pathArr.length === 2 &&
+    pathArr[1] === 'pause'
+  ) {
+    // document.querySelector('body').dispatchEvent(keyBoardEvent);
+    window.pauseGame();
+    console.log('pause')
   } else if ( // app.post('/player/:action/:button', cb)   like: /player/press/a
     httpVerb === 'POST' && //Post requests are possible and don't fire three times
     pathArr.length === 4 &&
