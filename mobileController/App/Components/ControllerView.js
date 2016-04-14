@@ -13,10 +13,8 @@ var {
   Text,
   View,
   Image,
-  TouchableHighlight,
   TouchableOpacity,
   StatusBarIOS,
-  VibrationIOS,
   PanResponder,
   Platform
 } = React;
@@ -31,7 +29,9 @@ class ControllerView extends React.Component {
       dPadButton: undefined, //currently pressed D-pad button
       dPadStartX: undefined,
       dPadStartY: undefined,
-      dPadTouchesIdentifier: undefined //identifier of the D-Pad touch within the evt.nativeEvent.touches array
+      dPadTouchesIdentifier: undefined, //identifier of the D-Pad touch within the evt.nativeEvent.touches array
+      //set to true when game is paused
+      showPauseModal: false,
     }
   }
 
@@ -382,10 +382,20 @@ class ControllerView extends React.Component {
   }
 
   /////////////////////////////////////////////////////////////////////
-  //Pause button
+  //Pause button and button options while game is paused
   /////////////////////////////////////////////////////////////////////
   _pause() {
     api.Pause(this.props.route.ipAddress);
+    this.setState({showPauseModal: true});
+  }
+  _resume() {
+    api.Pause(this.props.route.ipAddress);
+    this.setState({showPauseModal: false});
+  }
+  _pairController() {
+    this.props.navigator.pop();
+    this.props.route.turnCameraOn();
+    Orientation.lockToPortrait();
   }
 
   render() {
@@ -415,6 +425,22 @@ class ControllerView extends React.Component {
             <FontAwesomeIcon name="pause-circle" size={50} allowFontScaling={false} color="#6b676e"/>
           </TouchableOpacity>
 
+          {this.state.showPauseModal ? 
+            <View style={styles.pauseModal}>
+              <Text style={styles.pauseText}>Your Game is Paused</Text>
+              <TouchableOpacity style={styles.resume} onPress={this._resume.bind(this)}>
+                <Ionicon name="ios-play-outline" style={styles.resumeIcon} size={50} allowFontScaling={false} color="white"/>
+                <Text style={styles.resumeText}>Resume Game    </Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.pair} onPress={this._pairController.bind(this)}>
+                <Ionicon name="ios-barcode-outline" style={styles.pairIcon} size={50} allowFontScaling={false} color="white"/>
+                <Text style={styles.pairText}>Re-pair controller</Text>
+              </TouchableOpacity>
+            </View>
+          : 
+            null
+          }
+
         </Image>
       </View>
 
@@ -428,7 +454,7 @@ var width;
 if (Platform.OS === 'ios') {
   height = 'height';
   width = 'width';
-} else {
+} else { //android's height and width are swapped relative to iOS's
   height = 'width';
   width = 'height';
 }
@@ -528,6 +554,45 @@ var styles = StyleSheet.create({
     position: 'absolute',
     bottom: 5,
     right: 5,
+  },
+  pauseModal: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    height: Dimensions.get('window')[width],
+    width: Dimensions.get('window')[height],
+    backgroundColor: 'rgba(0,0,0,0.8)',
+    flexDirection: 'column',
+    alignItems:'center',
+    justifyContent: 'center',
+  },
+  pauseText: {
+    color: 'white',
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginTop: Dimensions.get('window')[width] * -0.2,
+  },
+  resume: {
+    flexDirection: 'row',
+    marginTop: Dimensions.get('window')[width] * 0.2
+  },
+  resumeText: {
+    color: 'white',
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginLeft: Dimensions.get('window')[width] * 0.05,
+    marginTop: Dimensions.get('window')[width] * 0.03
+  },
+  pair: {
+    marginTop: Dimensions.get('window')[width] * 0.05,
+    flexDirection: 'row',
+  },
+  pairText: {
+    color: 'white',
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginLeft: Dimensions.get('window')[width] * 0.05,
+    marginTop: Dimensions.get('window')[width] * 0.03
   }
 });
 

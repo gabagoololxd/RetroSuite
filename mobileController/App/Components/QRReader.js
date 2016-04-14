@@ -37,8 +37,6 @@ class QRReader extends React.Component {
 
   componentDidMount() {
     console.log('widddddddth', Dimensions.get('window').width);
-    // console.log('screen widddddddth', window.screen.width);
-
     Orientation.lockToPortrait(); //this will lock the view to Portrait
   }
 
@@ -71,6 +69,7 @@ class QRReader extends React.Component {
       component: ControllerView,
       ipAddress: ipAddress, // pass the ipAddress to ControllerView
       playerID: '1', // pass the playerID (p1 or p2) to ControllerView
+      turnCameraOn: this.turnCameraOn.bind(this),
       sceneConfig: {
         ...Navigator.SceneConfigs.FloatFromBottom,
         gestures: {} //disable ability to swipe to pop back from ControllerView to QRReader once past the ip address page
@@ -111,6 +110,10 @@ class QRReader extends React.Component {
 
   turnCameraOff() {
     this.setState({cameraOn:false})
+  }
+
+  turnCameraOn() {
+    this.setState({cameraOn:true})
   }
 
   // For developing, this simulates a successful barcode read:
