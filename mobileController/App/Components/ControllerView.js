@@ -408,36 +408,36 @@ class ControllerView extends React.Component {
         <Image source={require('./Assets/snescontrollercroppedlabels.jpg')} style={styles.image}>
 
           <View style={styles.AButton} onTouchStart={this._APressIn.bind(this)} onTouchEnd={this._APressOut.bind(this)}>
-            <IconIon name="record" size={this.state.circleButtonSize} color="red"/>
+            <IconIon name="record" size={this.state.circleButtonSize} allowFontScaling={false} color="red"/>
           </View>
           <View style={styles.BButton} onTouchStart={this._BPressIn.bind(this)} onTouchEnd={this._BPressOut.bind(this)}>
-            <IconIon name="record" size={this.state.circleButtonSize} color="red"/>
+            <IconIon name="record" size={this.state.circleButtonSize} allowFontScaling={false} color="red"/>
           </View>
           <View style={styles.XButton} onTouchStart={this._XPressIn.bind(this)} onTouchEnd={this._XPressOut.bind(this)}>
-            <IconIon name="record" size={this.state.circleButtonSize} color="red"/>
+            <IconIon name="record" size={this.state.circleButtonSize} allowFontScaling={false} color="red"/>
           </View>
           <View style={styles.YButton} onTouchStart={this._YPressIn.bind(this)} onTouchEnd={this._YPressOut.bind(this)}>
-            <IconIon name="record" size={this.state.circleButtonSize} color="red"/>
+            <IconIon name="record" size={this.state.circleButtonSize} allowFontScaling={false} color="red"/>
           </View>
 
           <View {...this._panResponder.panHandlers}>
             <View style={styles.dPad} >
-              <IconIon name="record" size={this.state.dPadSize} color="red"/>
+              <IconIon name="record" size={this.state.dPadSize} allowFontScaling={false} color="red"/>
             </View>
           </View>
 
           <View style={styles.leftShoulderButton} onTouchStart={this._leftShoulderPressIn.bind(this)} onTouchEnd={this._leftShoulderPressOut.bind(this)}>
-            <IconIon name="minus-round" size={this.state.shoulderButtonSize} color="red"/>
+            <IconIon name="minus-round" size={this.state.shoulderButtonSize} allowFontScaling={false} color="red"/>
           </View>
           <View style={styles.rightShoulderButton} onTouchStart={this._rightShoulderPressIn.bind(this)} onTouchEnd={this._rightShoulderPressOut.bind(this)}>
-            <IconIon name="minus-round" size={this.state.shoulderButtonSize} color="red"/>
+            <IconIon name="minus-round" size={this.state.shoulderButtonSize} allowFontScaling={false} color="red"/>
           </View>
 
           <View style={styles.selectButton} onTouchStart={this._selectPressIn.bind(this)} onTouchEnd={this._selectPressOut.bind(this)}>
-            <IconIon name="edit" size={this.state.selectStartButtonSize} color="red"/>
+            <IconIon name="edit" size={this.state.selectStartButtonSize} allowFontScaling={false} color="red"/>
           </View>
           <View style={styles.startButton} onTouchStart={this._startPressIn.bind(this)} onTouchEnd={this._startPressOut.bind(this)}>
-            <IconIon name="edit" size={this.state.selectStartButtonSize} color="red"/>
+            <IconIon name="edit" size={this.state.selectStartButtonSize} allowFontScaling={false} color="red"/>
           </View>
 
         </Image>

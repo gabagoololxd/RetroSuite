@@ -35,6 +35,9 @@ class QRReader extends React.Component {
   }
 
   componentDidMount() {
+    console.log('widddddddth', Dimensions.get('window').width);
+    // console.log('screen widddddddth', window.screen.width);
+
     Orientation.lockToPortrait(); //this will lock the view to Portrait
   }
 
@@ -149,15 +152,36 @@ class QRReader extends React.Component {
                 onChange={this._onChange.bind(this)}
                 />
 
-              <View style={styles.rectangleContainer} pointerEvents='box-none'>
-                <View style={styles.rectangle} pointerEvents='box-none'/>
-              </View>
-              
+              {this.state.selectedIndex===1 ? 
+                <View style={styles.modal}>
+                  <Text>Hello world!</Text>
+                  <Text>Hello world!</Text>
+                  <Text>Hello world!</Text>
+                  <Text>Hello world!</Text>
+                  <Text>Hello world!</Text>
+                  <Text>Hello world!</Text>
+                  <Text>Hello world!</Text>
+                  <Text>Hello world!</Text>
+                  <Text>Hello world!</Text>
+                  <Text>Hello world!</Text>
+                  <Text>Hello world!</Text>
+                  <Text>Hello world!</Text>
+                </View> :
+                <View style={styles.rectangleContainer} pointerEvents='box-none'>
+                </View>
+              }
+
+              {this.state.selectedIndex===0 ? 
+                <View style={styles.rectangle} pointerEvents='box-none'>
+                </View>:
+                null
+              }
+
 
               <View style={styles.bottomButtonContainer}>
-                  <TouchableOpacity onPress={this._torchEnabled.bind(this)} style={styles.flashButton} underlayColor={'#FC9396'}>
-                    {this.state.cameraTorchToggle === Camera.constants.TorchMode.off ? <IconIon name="ios-bolt-outline" size={55} color="rgba(237,237,237,0.5)" style={styles.flashIcon} /> : <IconIon name="ios-bolt" size={55} color="rgba(237,237,237,0.5)" style={styles.flashIcon} />}
-                  </TouchableOpacity>
+                <TouchableOpacity onPress={this._torchEnabled.bind(this)} style={styles.flashButton} underlayColor={'#FC9396'}>
+                  {this.state.cameraTorchToggle === Camera.constants.TorchMode.off ? <IconIon name="ios-bolt-outline" size={55} allowFontScaling={false} color="rgba(237,237,237,0.5)" style={styles.flashIcon} /> : <IconIon name="ios-bolt" size={55} allowFontScaling={false} color="rgba(237,237,237,0.5)" style={styles.flashIcon} />}
+                </TouchableOpacity>
               </View>
 
             </Camera>
@@ -209,12 +233,14 @@ var styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'transparent',
-    marginBottom: 50
   },
   rectangle: {
-    height: 250,
-    width: 250,
-    borderWidth: 2,
+    height: 2/3 * Dimensions.get('window').width,
+    width: 2/3 * Dimensions.get('window').width,
+    position: 'absolute',
+    left: Dimensions.get('window').width - 311/375 * Dimensions.get('window').width,
+    top: Dimensions.get('window').height * 0.25,
+    borderWidth: 5,
     borderColor: '#ededed',
     backgroundColor: 'transparent',
     opacity: 1
@@ -248,7 +274,7 @@ var styles = StyleSheet.create({
     backgroundColor: 'transparent'
   },
   overlayTop: {
-    height: Dimensions.get('window').height - 500,
+    height: Dimensions.get('window').height * 0.25,
     width: Dimensions.get('window').width,
     backgroundColor: 'rgba(0,0,0,0.65)',
     position: 'absolute',
@@ -256,28 +282,37 @@ var styles = StyleSheet.create({
     top: 0,
   },
   overlayRight: {
-    height: 251,
-    width: Dimensions.get('window').width - 311,
+    height: Dimensions.get('window').width * 2/3,
+    width: Dimensions.get('window').width - 311/375 * Dimensions.get('window').width,
     backgroundColor: 'rgba(0,0,0,0.65)',
     position: 'absolute',
-    left: Dimensions.get('window').width /2 + 125,
-    top: 167,
+    right: 0,
+    top: Dimensions.get('window').height * 0.25,
+  },
+  overlayLeft: {
+    height: Dimensions.get('window').width * 2/3,
+    width: Dimensions.get('window').width - 311/375 * Dimensions.get('window').width,
+    backgroundColor: 'rgba(0,0,0,0.65)',
+    position: 'absolute',
+    left: 0,
+    top: Dimensions.get('window').height * 0.25
   },
   overlayBottom: {
-    height: Dimensions.get('window').height -250,
+    height: Dimensions.get('window').height - Dimensions.get('window').height * 0.25 - Dimensions.get('window').width * 2/3,
     width: Dimensions.get('window').width,
     backgroundColor: 'rgba(0,0,0,0.65)',
     position: 'absolute',
     left: 0,
-    top: 418,
+    bottom: 0,
   },
-  overlayLeft: {
-    height: 251,
-    width: Dimensions.get('window').width - 311,
-    backgroundColor: 'rgba(0,0,0,0.65)',
-    position: 'absolute',
-    left: 0,
-    top: 167,
+  modal: {
+    flex: 1,
+    marginTop: 70,
+    marginBottom: 20,
+    marginHorizontal: 20,
+    backgroundColor: '#ffffff',
+    borderRadius: 3,
+    padding: 20,
   }
 });
 
