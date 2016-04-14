@@ -14,6 +14,7 @@ var {
   Text,
   View,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   Navigator,
   StatusBarIOS,
   SegmentedControlIOS,
@@ -167,21 +168,33 @@ class QRReader extends React.Component {
                   <Text>Hello world!</Text>
                   <Text>Hello world!</Text>
                 </View> :
-                <View style={styles.rectangleContainer} pointerEvents='box-none'>
-                </View>
+                <View style={styles.rectanglePlaceholder} pointerEvents='box-none'/>
               }
 
               {this.state.selectedIndex===0 ? 
-                <View style={styles.rectangle} pointerEvents='box-none'>
+                <View style={styles.rectangleContainer} pointerEvents='box-none'>
+                  <View style={styles.rectangleTopLeft} pointerEvents='box-none'></View>
+                  <View style={styles.rectangleTopRight} pointerEvents='box-none'></View>
+                  <View style={styles.rectangleBottomLeft} pointerEvents='box-none'></View>
+                  <View style={styles.rectangleBottomRight} pointerEvents='box-none'></View>
                 </View>:
                 null
               }
 
 
               <View style={styles.bottomButtonContainer}>
-                <TouchableOpacity onPress={this._torchEnabled.bind(this)} style={styles.flashButton} underlayColor={'#FC9396'}>
-                  {this.state.cameraTorchToggle === Camera.constants.TorchMode.off ? <IconIon name="ios-bolt-outline" size={55} allowFontScaling={false} color="rgba(237,237,237,0.5)" style={styles.flashIcon} /> : <IconIon name="ios-bolt" size={55} allowFontScaling={false} color="rgba(237,237,237,0.5)" style={styles.flashIcon} />}
-                </TouchableOpacity>
+                <TouchableWithoutFeedback onPress={this._torchEnabled.bind(this)}  underlayColor={'#FC9396'}>
+                  {this.state.cameraTorchToggle === Camera.constants.TorchMode.off ? 
+                    <View style={styles.flashButton}>
+                      <IconIon name="ios-bolt-outline" size={40} allowFontScaling={false} color="rgba(237,237,237,0.5)" style={styles.flashIcon} />
+                      <Text style={styles.flashButtonText}>Flash Off</Text>
+                    </View> : 
+                    <View style={styles.flashButton}>
+                      <IconIon name="ios-bolt" size={40} allowFontScaling={false} color="rgba(237,237,237,0.5)" style={styles.flashIcon} />
+                      <Text style={styles.flashButtonText}>Flash On </Text>
+                    </View>
+                  }
+                </TouchableWithoutFeedback>
               </View>
 
             </Camera>
@@ -228,22 +241,65 @@ var styles = StyleSheet.create({
   segments : {
     marginTop: 25
   },
-  rectangleContainer: {
+  rectanglePlaceholder: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'transparent',
   },
-  rectangle: {
-    height: 2/3 * Dimensions.get('window').width,
-    width: 2/3 * Dimensions.get('window').width,
+
+  rectangleContainer: {
+    height: Dimensions.get('window').height,
+    width: Dimensions.get('window').width,
     position: 'absolute',
-    left: Dimensions.get('window').width - 311/375 * Dimensions.get('window').width,
-    top: Dimensions.get('window').height * 0.25,
-    borderWidth: 5,
+    left: 0,
+    top: 0,
     borderColor: '#ededed',
     backgroundColor: 'transparent',
-    opacity: 1
+  },
+  rectangleTopLeft: {
+    height: 1/4 * Dimensions.get('window').width,
+    width: 1/4 * Dimensions.get('window').width,
+    position: 'absolute',
+    left: Dimensions.get('window').width - 311/375 * Dimensions.get('window').width - 7,
+    top: Dimensions.get('window').height * 0.25 - 7 ,
+    borderTopWidth: 2,
+    borderLeftWidth: 2,
+    borderColor: '#ededed',
+    backgroundColor: 'transparent',
+  },
+  rectangleTopRight: {
+    height: 1/4 * Dimensions.get('window').width,
+    width: 1/4 * Dimensions.get('window').width,
+    position: 'absolute',
+    top: Dimensions.get('window').height * 0.25 - 7,
+    right: Dimensions.get('window').width - 311/375 * Dimensions.get('window').width - 7,
+    borderTopWidth: 2,
+    borderRightWidth: 2,
+    borderColor: '#ededed',
+    backgroundColor: 'transparent',
+  },
+  rectangleBottomLeft: {
+    height: 1/4 * Dimensions.get('window').width,
+    width: 1/4 * Dimensions.get('window').width,
+    position: 'absolute',
+    left: Dimensions.get('window').width - 311/375 * Dimensions.get('window').width - 7,
+    bottom: Dimensions.get('window').height - Dimensions.get('window').height * 0.25 - Dimensions.get('window').width * 2/3 - 7,
+    borderBottomWidth: 2,
+    borderLeftWidth: 2,
+    borderColor: '#ededed',
+    backgroundColor: 'transparent',
+  },
+  rectangleBottomRight: {
+    height: 1/4 * Dimensions.get('window').width,
+    width: 1/4 * Dimensions.get('window').width,
+    position: 'absolute',
+    right: Dimensions.get('window').width - 311/375 * Dimensions.get('window').width - 7,
+    bottom: Dimensions.get('window').height - Dimensions.get('window').height * 0.25 - Dimensions.get('window').width * 2/3 - 7,
+    borderBottomWidth: 2,
+    borderRightWidth: 2,
+    borderColor: '#ededed',
+    backgroundColor: 'transparent',
   },
 
   bottomButtonContainer: {
@@ -258,20 +314,24 @@ var styles = StyleSheet.create({
     marginBottom: 15
   },
   flashButton: {
-    width: 70,
-    height: 70,
-    backgroundColor: 'transparent',
-    borderRadius: 50,
     alignItems: 'center',
     justifyContent: 'center',
-    borderWidth: 5,
-    borderColor: '#ededed',
-    paddingLeft: 25
+    flexDirection: 'row'
   },
   flashIcon: {
+    flex: 1,
     width: 52.5,
     height: 55,
     backgroundColor: 'transparent'
+  },
+  flashButtonText: {
+    flex: 1,
+    marginBottom: 16.5,
+    marginLeft: -20,
+
+    color: 'white',
+    fontSize: 20,
+    fontWeight: 'bold',
   },
   overlayTop: {
     height: Dimensions.get('window').height * 0.25,
