@@ -139,10 +139,10 @@ class QRReader extends React.Component {
               defaultOnFocusComponent={ true }
               onFocusChanged={ this.state.handleFocusChanged }>
 
-              <View style={styles.overlayLeft} pointerEvents='box-none'/> 
-              <View style={styles.overlayTop} pointerEvents='box-none'/> 
-              <View style={styles.overlayRight} pointerEvents='box-none'/> 
-              <View style={styles.overlayBottom} pointerEvents='box-none'/> 
+              <View style={styles.overlayLeft}/> 
+              <View style={styles.overlayTop}/> 
+              <View style={styles.overlayRight}/> 
+              <View style={styles.overlayBottom}/> 
 
 
               <SegmentedControlIOS 
@@ -180,7 +180,6 @@ class QRReader extends React.Component {
                 </View>:
                 null
               }
-
 
               <View style={styles.bottomButtonContainer}>
                 <TouchableWithoutFeedback onPress={this._torchEnabled.bind(this)}  underlayColor={'#FC9396'}>
@@ -234,13 +233,10 @@ var styles = StyleSheet.create({
     height: Dimensions.get('window').height,
     width: Dimensions.get('window').width,
   },
-  cameraFocus: {
-    height: 250,
-    width: 250,
-  },
   segments : {
     marginTop: 25
   },
+
   rectanglePlaceholder: {
     flex: 1,
     alignItems: 'center',
@@ -328,11 +324,11 @@ var styles = StyleSheet.create({
     flex: 1,
     marginBottom: 16.5,
     marginLeft: -20,
-
     color: 'white',
     fontSize: 20,
     fontWeight: 'bold',
   },
+
   overlayTop: {
     height: Dimensions.get('window').height * 0.25,
     width: Dimensions.get('window').width,
@@ -365,9 +361,10 @@ var styles = StyleSheet.create({
     left: 0,
     bottom: 0,
   },
+
   modal: {
     flex: 1,
-    marginTop: 70,
+    marginTop: 40,
     marginBottom: 20,
     marginHorizontal: 20,
     backgroundColor: '#ffffff',
