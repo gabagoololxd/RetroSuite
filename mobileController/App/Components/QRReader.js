@@ -155,18 +155,18 @@ class QRReader extends React.Component {
 
               {this.state.selectedIndex===1 ? 
                 <View style={styles.modal}>
-                  <Text>Hello world!</Text>
-                  <Text>Hello world!</Text>
-                  <Text>Hello world!</Text>
-                  <Text>Hello world!</Text>
-                  <Text>Hello world!</Text>
-                  <Text>Hello world!</Text>
-                  <Text>Hello world!</Text>
-                  <Text>Hello world!</Text>
-                  <Text>Hello world!</Text>
-                  <Text>Hello world!</Text>
-                  <Text>Hello world!</Text>
-                  <Text>Hello world!</Text>
+                  <Text allowFontScaling={false}>Hello world!</Text>
+                  <Text allowFontScaling={false}>Hello world!</Text>
+                  <Text allowFontScaling={false}>Hello world!</Text>
+                  <Text allowFontScaling={false}>Hello world!</Text>
+                  <Text allowFontScaling={false}>Hello world!</Text>
+                  <Text allowFontScaling={false}>Hello world!</Text>
+                  <Text allowFontScaling={false}>Hello world!</Text>
+                  <Text allowFontScaling={false}>Hello world!</Text>
+                  <Text allowFontScaling={false}>Hello world!</Text>
+                  <Text allowFontScaling={false}>Hello world!</Text>
+                  <Text allowFontScaling={false}>Hello world!</Text>
+                  <Text allowFontScaling={false}>Hello world!</Text>
                 </View> :
                 <View style={styles.rectanglePlaceholder} pointerEvents='box-none'/>
               }
@@ -186,11 +186,11 @@ class QRReader extends React.Component {
                   {this.state.cameraTorchToggle === Camera.constants.TorchMode.off ? 
                     <View style={styles.flashButton}>
                       <IconIon name="ios-bolt-outline" size={40} allowFontScaling={false} color="rgba(237,237,237,0.5)" style={styles.flashIcon} />
-                      <Text style={styles.flashButtonText}>Flash Off</Text>
+                      <Text style={styles.flashButtonText} allowFontScaling={false}>Flash Off</Text>
                     </View> : 
                     <View style={styles.flashButton}>
                       <IconIon name="ios-bolt" size={40} allowFontScaling={false} color="rgba(237,237,237,0.5)" style={styles.flashIcon} />
-                      <Text style={styles.flashButtonText}>Flash On </Text>
+                      <Text style={styles.flashButtonText} allowFontScaling={false}>Flash On </Text>
                     </View>
                   }
                 </TouchableWithoutFeedback>

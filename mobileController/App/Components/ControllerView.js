@@ -25,12 +25,8 @@ class ControllerView extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      //used to scale sizes of buttons depending on phone resolution
+      //used to scale sizes of D-Pad depending on phone resolution
       iPhoneSize: undefined,
-      circleButtonSize: undefined,
-      dPadSize: undefined,
-      shoulderButtonSize: undefined,
-      selectStartButtonSize: undefined,
       //used to control logic in the D-Pad
       dPadButton: undefined, //currently pressed D-pad button
       dPadStartX: undefined,
@@ -223,26 +219,14 @@ class ControllerView extends React.Component {
       if(Dimensions.get('window').width===375) { //iPhone 6/6s
         this.setState({
           iPhoneSize: 'iPhone6',
-          circleButtonSize: 105,
-          dPadSize: 200,
-          shoulderButtonSize: 180,
-          selectStartButtonSize: 45
         })
       } else if (Dimensions.get('window').width===414) { //iPhone 6+/6s+
         this.setState({
           iPhoneSize: 'iPhone6+',
-          circleButtonSize: 115,
-          dPadSize: 225,
-          shoulderButtonSize: 190, // TODO: set shoulderButtonSize
-          selectStartButtonSize: 45
         })
       } else if (Dimensions.get('window').width===320) { //iPhone 5/5s/SE
         this.setState({
           iPhoneSize: 'iPhone5',
-          circleButtonSize: 80,
-          dPadSize: 160,
-          shoulderButtonSize: 140, // TODO: set shoulderButtonSize
-          selectStartButtonSize: 35
         })
       }
     } else { // TODO: Android sizing of buttons
@@ -402,7 +386,6 @@ class ControllerView extends React.Component {
   /////////////////////////////////////////////////////////////////////
   _pause() {
     api.Pause(this.props.route.ipAddress);
-    console.log('pause pressedd');
   }
 
   render() {
@@ -415,41 +398,21 @@ class ControllerView extends React.Component {
       <View style={styles.imageContainer}>
         <Image source={require('./Assets/snescontrollercroppedlabels.jpg')} style={styles.image}>
 
-          <View style={styles.AButton} onTouchStart={this._APressIn.bind(this)} onTouchEnd={this._APressOut.bind(this)}>
-            <Ionicon name="record" size={this.state.circleButtonSize} allowFontScaling={false} color="red"/>
-          </View>
-          <View style={styles.BButton} onTouchStart={this._BPressIn.bind(this)} onTouchEnd={this._BPressOut.bind(this)}>
-            <Ionicon name="record" size={this.state.circleButtonSize} allowFontScaling={false} color="red"/>
-          </View>
-          <View style={styles.XButton} onTouchStart={this._XPressIn.bind(this)} onTouchEnd={this._XPressOut.bind(this)}>
-            <Ionicon name="record" size={this.state.circleButtonSize} allowFontScaling={false} color="red"/>
-          </View>
-          <View style={styles.YButton} onTouchStart={this._YPressIn.bind(this)} onTouchEnd={this._YPressOut.bind(this)}>
-            <Ionicon name="record" size={this.state.circleButtonSize} allowFontScaling={false} color="red"/>
-          </View>
+          <View style={styles.AButton} onTouchStart={this._APressIn.bind(this)} onTouchEnd={this._APressOut.bind(this)}/>
+          <View style={styles.BButton} onTouchStart={this._BPressIn.bind(this)} onTouchEnd={this._BPressOut.bind(this)}/>
+          <View style={styles.XButton} onTouchStart={this._XPressIn.bind(this)} onTouchEnd={this._XPressOut.bind(this)}/>
+          <View style={styles.YButton} onTouchStart={this._YPressIn.bind(this)} onTouchEnd={this._YPressOut.bind(this)}/>
 
-          <View {...this._panResponder.panHandlers}>
-            <View style={styles.dPad} >
-              <Ionicon name="record" size={this.state.dPadSize} allowFontScaling={false} color="red"/>
-            </View>
-          </View>
+          <View {...this._panResponder.panHandlers} style={styles.dPad}/>
 
-          <View style={styles.leftShoulderButton} onTouchStart={this._leftShoulderPressIn.bind(this)} onTouchEnd={this._leftShoulderPressOut.bind(this)}>
-            <Ionicon name="minus-round" size={this.state.shoulderButtonSize} allowFontScaling={false} color="red"/>
-          </View>
-          <View style={styles.rightShoulderButton} onTouchStart={this._rightShoulderPressIn.bind(this)} onTouchEnd={this._rightShoulderPressOut.bind(this)}>
-            <Ionicon name="minus-round" size={this.state.shoulderButtonSize} allowFontScaling={false} color="red"/>
-          </View>
+          <View style={styles.leftShoulderButton} onTouchStart={this._leftShoulderPressIn.bind(this)} onTouchEnd={this._leftShoulderPressOut.bind(this)}/>
+          <View style={styles.rightShoulderButton} onTouchStart={this._rightShoulderPressIn.bind(this)} onTouchEnd={this._rightShoulderPressOut.bind(this)}/>
 
-          <View style={styles.selectButton} onTouchStart={this._selectPressIn.bind(this)} onTouchEnd={this._selectPressOut.bind(this)}>
-            <Ionicon name="edit" size={this.state.selectStartButtonSize} allowFontScaling={false} color="red"/>
-          </View>
-          <View style={styles.startButton} onTouchStart={this._startPressIn.bind(this)} onTouchEnd={this._startPressOut.bind(this)}>
-            <Ionicon name="edit" size={this.state.selectStartButtonSize} allowFontScaling={false} color="red"/>
-          </View>
+          <View style={styles.selectButton} onTouchStart={this._selectPressIn.bind(this)} onTouchEnd={this._selectPressOut.bind(this)}/>
+          <View style={styles.startButton} onTouchStart={this._startPressIn.bind(this)} onTouchEnd={this._startPressOut.bind(this)}/>
 
           <TouchableOpacity style={styles.pauseButton} onPress={this._pause.bind(this)}>
-            <FontAwesomeIcon name="pause-circle" size={this.state.selectStartButtonSize} allowFontScaling={false} color="#6b676e"/>
+            <FontAwesomeIcon name="pause-circle" size={50} allowFontScaling={false} color="#6b676e"/>
           </TouchableOpacity>
 
         </Image>
@@ -480,48 +443,86 @@ var styles = StyleSheet.create({
   },
   AButton: {
     position: 'absolute',
-    top: Dimensions.get('window')[width] * 0.34,
+    top: Dimensions.get('window')[width] * 0.36,
     left: Dimensions.get('window')[height] * 0.83,
+    width: Dimensions.get('window')[width] * 0.23,
+    height: Dimensions.get('window')[width] * 0.23,
+    borderRadius: Dimensions.get('window')[width] * 0.23 /2,
+    backgroundColor: 'transparent'
   },
   BButton: {
     position: 'absolute',
-    top: Dimensions.get('window')[width] * 0.48,
+    top: Dimensions.get('window')[width] * 0.51,
     left: Dimensions.get('window')[height] * 0.73,
+    width: Dimensions.get('window')[width] * 0.23,
+    height: Dimensions.get('window')[width] * 0.23,
+    borderRadius: Dimensions.get('window')[width] * 0.23 /2,
+    backgroundColor: 'transparent'
   },
   XButton: {
     position: 'absolute',
-    top: Dimensions.get('window')[width] * 0.2,
+    top: Dimensions.get('window')[width] * 0.21,
     left: Dimensions.get('window')[height] * 0.72,
+    width: Dimensions.get('window')[width] * 0.23,
+    height: Dimensions.get('window')[width] * 0.23,
+    borderRadius: Dimensions.get('window')[width] * 0.23 /2,
+    backgroundColor: 'transparent'
   },
   YButton: {
     position: 'absolute',
-    top: Dimensions.get('window')[width] * 0.34,
+    top: Dimensions.get('window')[width] * 0.36,
     left: Dimensions.get('window')[height] * 0.62,
+    width: Dimensions.get('window')[width] * 0.23,
+    height: Dimensions.get('window')[width] * 0.23,
+    borderRadius: Dimensions.get('window')[width] * 0.23 /2,
+    backgroundColor: 'transparent'
   },
   dPad: {
     position: 'absolute',
-    top: Dimensions.get('window')[width] * 0.2,
-    left: Dimensions.get('window')[height] * 0.09,
+    top: Dimensions.get('window')[width] * 0.263,
+    left: Dimensions.get('window')[height] * 0.0925,
+    width: Dimensions.get('window')[width] * 0.42,
+    height: Dimensions.get('window')[width] * 0.42,
+    borderRadius: Dimensions.get('window')[width] * 0.42 /2,
+    backgroundColor: 'transparent'
   },
   leftShoulderButton: {
     position: 'absolute',
-    top: Dimensions.get('window')[width] * -0.37,
-    left: Dimensions.get('window')[height] * 0.12,
+    top: Dimensions.get('window')[width] * 0,
+    left: Dimensions.get('window')[height] * 0.025,
+    width: Dimensions.get('window')[width] * 0.7,
+    height: Dimensions.get('window')[width] * 0.15,
+    backgroundColor: 'transparent'
   },
   rightShoulderButton: {
     position: 'absolute',
-    top: Dimensions.get('window')[width] * -0.37,
-    left: Dimensions.get('window')[height] * 0.67,
+    top: Dimensions.get('window')[width] * 0,
+    right: Dimensions.get('window')[height] * 0.025,
+    width: Dimensions.get('window')[width] * 0.7,
+    height: Dimensions.get('window')[width] * 0.15,
+    backgroundColor: 'transparent'
   },
   selectButton: {
     position: 'absolute',
-    top: Dimensions.get('window')[width] * 0.47,
-    left: Dimensions.get('window')[height] * 0.38,
+    top: Dimensions.get('window')[width] * 0.5,
+    left: Dimensions.get('window')[height] * 0.36,
+    width: Dimensions.get('window')[width] * 0.16,
+    height: 20,
+    transform: [
+      {rotate: '140deg'}
+    ],
+    backgroundColor: 'transparent'
   },
   startButton: {
     position: 'absolute',
-    top: Dimensions.get('window')[width] * 0.47,
-    left: Dimensions.get('window')[height] * 0.49,
+    top: Dimensions.get('window')[width] * 0.5,
+    left: Dimensions.get('window')[height] * 0.47,
+    width: Dimensions.get('window')[width] * 0.16,
+    height: 20,
+    transform: [
+      {rotate: '140deg'}
+    ],
+    backgroundColor: 'transparent'
   },
   pauseButton: {
     position: 'absolute',
