@@ -48,7 +48,7 @@ app.controller('gameSelection', function($scope, $http) {
         url: game.link,
         responseType: 'arraybuffer'
       }).then(function successCallback(response) {
-          window.loadData(game.link.split("/")[5], new Uint8Array(response.data));
+          window.loadData(game.link.split("/")[5], new Uint8Array(response.data), false);
         }, function errorCallback(response) {
           console.log('failuuuure', response);
         });
