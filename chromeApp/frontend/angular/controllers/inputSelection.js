@@ -56,6 +56,7 @@ app.controller('inputSelection', function($scope) {
 
         if($scope.ipFound === false) {
           new QRCode(document.getElementById('qrCode'), toQ);
+          new QRCode(document.getElementById('qrCode2'), toQ);
         }
 
         $scope.ipFound = true;

@@ -36,55 +36,33 @@ class QRReader extends React.Component {
   }
 
   componentDidMount() {
-    console.log('widddddddth', Dimensions.get('window').width);
     Orientation.lockToPortrait(); //this will lock the view to Portrait
   }
 
   _onBarCodeRead(e) {
-    this.turnCameraOff();
-    // StatusBarAndroid.hideNavBar()
     //format of QR code: https://chart.googleapis.com/chart?chs=250x250&cht=qr&chl=10.6.30.50:1337
     var ipAddress = e.data;
-    // AlertIOS.alert("QR Code Found", ipAddress);
     console.log("QR Code Found", ipAddress);
+
+    var navigator = this.props.navigator;
+    var turnCameraOn = this.turnCameraOn.bind(this);
+    var turnCameraOff = this.turnCameraOff.bind(this);
 
     //Use the data (the IP address) to connect to the computer using an api.js helper function
     api.PairController(ipAddress, function(data) {
-      var playerID = data.player;
-      console.log('phone paired as controller! playerID:', playerID)
+      turnCameraOff();
       //open up the ControllerView
-      this.props.navigator.push({
+      navigator.push({
         component: ControllerView,
         ipAddress: ipAddress, // pass the ipAddress to ControllerView
+        turnCameraOn: turnCameraOn.bind(this),
         sceneConfig: {
           ...Navigator.SceneConfigs.FloatFromBottom,
           gestures: {} //disable ability to swipe to pop back from ControllerView to QRReader once past the ip address page
         }
       });
-
     });
 
-    //DELETE THIS WHEN GET REQUESTS WORK. Done to force controllerview to open up after QR scan
-    this.props.navigator.push({
-      component: ControllerView,
-      ipAddress: ipAddress, // pass the ipAddress to ControllerView
-      playerID: '1', // pass the playerID (p1 or p2) to ControllerView
-      turnCameraOn: this.turnCameraOn.bind(this),
-      sceneConfig: {
-        ...Navigator.SceneConfigs.FloatFromBottom,
-        gestures: {} //disable ability to swipe to pop back from ControllerView to QRReader once past the ip address page
-      }
-    });
-
-  }
-
-  _openHelpScreen() {
-    console.log(this.state.helpScreenOn);
-    if (this.state.helpScreenOn) {
-      this.setState({helpScreenOn: false});
-    } else {
-      this.setState({helpScreenOn: true});
-    }
   }
 
   _onChange(event) {
@@ -116,16 +94,8 @@ class QRReader extends React.Component {
     this.setState({cameraOn:true})
   }
 
-  // For developing, this simulates a successful barcode read:
-  // componentWillMount() {
-  //   this._onBarCodeRead({
-  //     data: '10.6.31.208'
-  //   });
-  // }
-
   render() {
     // check for IOS specific
-
     if (Platform.OS === 'ios') {
       StatusBarIOS.setStyle('light-content');
       if (this.state.cameraOn) {
@@ -206,7 +176,7 @@ class QRReader extends React.Component {
       } else {
         return null;
       }
-    } else { //android
+    } else { //TODO: android
       if (this.state.cameraOn) {
         return (
             <BarcodeScanner

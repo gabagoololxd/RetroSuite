@@ -1,6 +1,6 @@
 var url = require('url');
-var numberOfPlayersJoined = 0;
-window.numberOfPlayersJoined = numberOfPlayersJoined;
+// var numberOfPlayersJoined = 0;
+// window.numberOfPlayersJoined = numberOfPlayersJoined;
 var controllerAction;
 
 function router(req, res) {
@@ -11,29 +11,29 @@ function router(req, res) {
   var httpPath = req.url;
   var pathArr = req.url.split('/');
 
-  console.log('pathArr', pathArr)
-
   if ( // app.get('/pair-controller', cb)
     httpVerb === 'GET' &&
     httpPath === '/pair-controller'
   ) {
-    if (numberOfPlayersJoined === 0) {
-      numberOfPlayersJoined++;
+    // console.log('numberOfPlayersJoined', numberOfPlayersJoined)
+    // if (numberOfPlayersJoined === 0) {
+      // numberOfPlayersJoined++;
       window.toggleInputSelectionScreen();
       res.writeHead(200, {
         'Content-Type': 'application/json'
       });
-    }
-  } else if ( 
+      res.end(JSON.stringify({message: 'mobile controller successfully paired!'}));
+    // }
+  } else if ( // app.post('/pause', cb) 
     httpVerb === 'POST' && 
     pathArr.length === 2 &&
     pathArr[1] === 'pause'
   ) {
-    // document.querySelector('body').dispatchEvent(keyBoardEvent);
     window.pauseGame();
-    console.log('pause')
+    res.writeHead(200, {'Content-Type': 'application/json'});
+    res.end(JSON.stringify({message: 'paused'}));
   } else if ( // app.post('/player/:action/:button', cb)   like: /player/press/a
-    httpVerb === 'POST' && //Post requests are possible and don't fire three times
+    httpVerb === 'POST' &&
     pathArr.length === 4 &&
     pathArr[1] === 'player'
   ) {
@@ -97,7 +97,6 @@ function makeEvent(type, asciiNum) {
     'bubbles': true,
     'keyCode': asciiNum,
     'charCode': 0,
-    // 'key': 'ArrowDown',
     'view': window
   });
 

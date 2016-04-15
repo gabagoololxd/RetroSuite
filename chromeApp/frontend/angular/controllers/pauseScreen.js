@@ -1,6 +1,14 @@
 //pause game screen
 app.controller('pauseScreen', function($scope) {
-  $scope.chooseNewGame = function () {
+  var qrScreen2 = document.getElementById('qrScreen2');
+  $scope.openQRScreen = function() {
+    qrScreen2.classList.remove('hidden');
+  };
+  $scope.closeQRScreen = function() {
+    console.log('close click');
+    qrScreen2.classList.add('hidden');
+  };
+  $scope.chooseNewGame = function() {
     window.chooseNewGame();
   }
   

@@ -4271,8 +4271,17 @@ OutgoingMessage.prototype.end = function(data, encoding) {
             data.length > 0 &&
             this.output.length === 0 &&
             this.connection &&
-            this.connection.writable &&
+            // this.connection.writable &&
             this.connection._httpMessage === this;
+            
+  // console.log('this._headerSent?', this._headerSent);
+  // console.log('typeof(data)?', typeof(data));
+  // console.log('data.length?', data.length);
+  // console.log('this.output.length?', this.output.length);
+  // console.log('this.connection?', this.connection);
+  // console.log('this.connection.writable?', this.connection.writable);
+  // console.log('this.connection._httpMessage?', this.connection._httpMessage);
+  // console.log('this?', this);
 
   if (hot) {
     // Hot path. They're doing

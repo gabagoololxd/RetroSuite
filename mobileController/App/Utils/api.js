@@ -1,12 +1,8 @@
 var api = {
-  PairController(ipAddress) {
+  PairController(ipAddress, callback) {
     var url = 'http://' + ipAddress + '/pair-controller';
     return fetch(url, {
       method: 'GET',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      }
     }).then(function(result) {
       callback(result._bodyInit);
     })

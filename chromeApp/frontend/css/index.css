@@ -59,17 +59,9 @@ html, body, canvas {
   text-align: center;
   margin-top: 2%;
   margin-bottom: 2%;
-
   font-family: dockerOne;
   color: black;
   font-size: 1.5em;
-}
-#qrInstructions2 {
-  text-align: center;
-  /*margin-top: 2%;*/
-  font-family: dockerOne;
-  color: black;
-  font-size: 1em;
 }
 #qrStartButton {
   width: 100%;
@@ -90,8 +82,34 @@ html, body, canvas {
 }
 #qrCode {
   border: thick solid transparent;
-
   width: 255px;
+}
+
+#qrScreen2 {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background-size: cover;
+  background-color: rgba(0,0,0,.6);
+}
+#qrModal2 {
+  width: 300px;
+  margin: -25% 0 0 -150px;
+}
+#qrModalBody2 {
+  padding: 15px 15px 5px 15px;
+}
+#qrCode2 {
+  border: thick solid transparent;
+  width: 255px;
+}
+#qrInstructions2 {
+  text-align: center;
+  margin-top: 2%;
+  margin-bottom: 2%;
+  font-family: dockerOne;
+  color: black;
+  font-size: 1.5em;
 }
 
 #keyboardSide {

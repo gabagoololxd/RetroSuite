@@ -54,7 +54,7 @@ class ControllerView extends React.Component {
           dPadStartY: y2,
         });
 
-        //TODO: don't hardcode theses points of the D-Pad buttons
+        //TODO: don't hardcode these points of the D-Pad buttons
         if(this.state.iPhoneSize === 'iPhone6') {
           var distanceToUp = Math.sqrt( (79-x2)*(79-x2) + (58-y2)*(58-y2) );
           var distanceToRight = Math.sqrt( (127.5-x2)*(127.5-x2) + (105.5-y2)*(105.5-y2) );
@@ -107,7 +107,7 @@ class ControllerView extends React.Component {
         var x2 = dPadTouch[0].locationX;
         var y2 = dPadTouch[0].locationY;
 
-        //TODO: don't hardcode theses points of the D-Pad buttons
+        //TODO: don't hardcode these points of the D-Pad buttons
         if(this.state.iPhoneSize === 'iPhone6') {
           var distanceToUp = Math.sqrt( (79-x2)*(79-x2) + (58-y2)*(58-y2) );
           var distanceToRight = Math.sqrt( (127.5-x2)*(127.5-x2) + (105.5-y2)*(105.5-y2) );
@@ -146,7 +146,7 @@ class ControllerView extends React.Component {
           var x2 = evt.nativeEvent.locationX
           var y2 = evt.nativeEvent.locationY
 
-          //TODO: don't hardcode theses points of the D-Pad buttons
+          //TODO: don't hardcode these points of the D-Pad buttons
           if(this.state.iPhoneSize === 'iPhone6') {
             var distanceToUp = Math.sqrt( (79-x2)*(79-x2) + (58-y2)*(58-y2) );
             var distanceToRight = Math.sqrt( (127.5-x2)*(127.5-x2) + (105.5-y2)*(105.5-y2) );
@@ -167,7 +167,7 @@ class ControllerView extends React.Component {
           var x2 = gestureState.moveX;
           var y2 = gestureState.moveY;
 
-          //TODO: don't hardcode theses points of the D-Pad buttons
+          //TODO: don't hardcode these points of the D-Pad buttons
           if(this.state.iPhoneSize === 'iPhone6') {
             var distanceToUp = Math.sqrt( (140-x2)*(140-x2) + (132.5-y2)*(132.5-y2) );
             var distanceToRight = Math.sqrt( (186.5-x2)*(186.5-x2) + (180-y2)*(180-y2) );
@@ -207,7 +207,6 @@ class ControllerView extends React.Component {
   }
 
   componentDidMount() {
-    console.log('widddddddth', Dimensions.get('window').width);
     if (Platform.OS === 'ios') {
       Orientation.lockToLandscapeLeft(); //this will lock the view to Landscape
     } else {
