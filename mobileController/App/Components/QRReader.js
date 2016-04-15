@@ -163,7 +163,7 @@ class QRReader extends React.Component {
                     </View> : 
                     <View style={styles.flashButton}>
                       <IconIon name="ios-bolt" size={40} allowFontScaling={false} color="rgba(237,237,237,0.5)" style={styles.flashIcon} />
-                      <Text style={styles.flashButtonText} allowFontScaling={false}>Flash On </Text>
+                      <Text style={styles.flashButtonText} allowFontScaling={false}>Flash On</Text>
                     </View>
                   }
                 </TouchableWithoutFeedback>

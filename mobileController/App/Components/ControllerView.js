@@ -208,9 +208,9 @@ class ControllerView extends React.Component {
 
   componentDidMount() {
     if (Platform.OS === 'ios') {
-      Orientation.lockToLandscapeLeft(); //this will lock the view to Landscape
+      Orientation.lockToLandscapeRight(); //this will lock the view to Landscape
     } else {
-      Orientation.lockToLandscape(); // no support for lockToLandscapeLeft in Android yet
+      Orientation.lockToLandscape(); // no support for lockToLandscapeRight in Android yet
     }
 
     //buttons must scale with size of the phone
@@ -384,17 +384,29 @@ class ControllerView extends React.Component {
   //Pause button and button options while game is paused
   /////////////////////////////////////////////////////////////////////
   _pause() {
-    api.Pause(this.props.route.ipAddress);
-    this.setState({showPauseModal: true});
+    var controller = this;
+    api.Pause(this.props.route.ipAddress, function() {
+      controller.setState({showPauseModal: true});
+    });
   }
   _resume() {
-    api.Pause(this.props.route.ipAddress);
-    this.setState({showPauseModal: false});
+    var controller = this;
+    api.Resume(this.props.route.ipAddress, function() {
+      controller.setState({showPauseModal: false});
+    });
   }
   _pairController() {
-    this.props.navigator.pop();
-    this.props.route.turnCameraOn();
-    Orientation.lockToPortrait();
+    navigator = this.props.navigator;
+    turnCameraOn = this.props.route.turnCameraOn.bind(this);
+    api.RePairController(this.props.route.ipAddress, function() {
+      navigator.pop();
+      turnCameraOn();
+      Orientation.lockToPortrait();
+    });
+
+    // this.props.navigator.pop();
+    // this.props.route.turnCameraOn();
+    // Orientation.lockToPortrait();
   }
 
   render() {

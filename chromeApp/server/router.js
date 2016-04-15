@@ -12,7 +12,12 @@ function router(req, res) {
     httpVerb === 'GET' &&
     httpPath === '/pair-controller'
   ) {
-    window.toggleInputSelectionScreen();
+    if(window.retro && window.retro.classList.contains('hidden')) {
+      window.closeQRScreen();
+      window.resumeGame();
+    } else {
+      window.toggleInputSelectionScreen();
+    }
     res.writeHead(200, {
       'Content-Type': 'application/json'
     });
@@ -25,6 +30,22 @@ function router(req, res) {
     window.pauseGame();
     res.writeHead(200, {'Content-Type': 'application/json'});
     res.end(JSON.stringify({message: 'paused'}));
+  } else if ( // app.post('/resume', cb) 
+    httpVerb === 'POST' && 
+    pathArr.length === 2 &&
+    pathArr[1] === 'resume'
+  ) {
+    window.resumeGame();
+    res.writeHead(200, {'Content-Type': 'application/json'});
+    res.end(JSON.stringify({message: 'resumed'}));
+  } else if ( // app.post('/re-pair-controller', cb) 
+    httpVerb === 'POST' && 
+    pathArr.length === 2 &&
+    pathArr[1] === 're-pair-controller'
+  ) {
+    window.openQRScreen();
+    res.writeHead(200, {'Content-Type': 'application/json'});
+    res.end(JSON.stringify({message: 'resumed'}));
   } else if ( // app.post('/player/:action/:button', cb)   like: /player/press/a
     httpVerb === 'POST' &&
     pathArr.length === 4 &&
