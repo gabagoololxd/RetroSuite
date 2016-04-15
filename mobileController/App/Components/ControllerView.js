@@ -429,7 +429,7 @@ class ControllerView extends React.Component {
               <Text style={styles.pauseText}>Your Game is Paused</Text>
               <TouchableOpacity style={styles.resume} onPress={this._resume.bind(this)}>
                 <Ionicon name="ios-play-outline" style={styles.resumeIcon} size={50} allowFontScaling={false} color="white"/>
-                <Text style={styles.resumeText}>Resume Game    </Text>
+                <Text style={styles.resumeText}>Resume Game</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.pair} onPress={this._pairController.bind(this)}>
                 <Ionicon name="ios-barcode-outline" style={styles.pairIcon} size={50} allowFontScaling={false} color="white"/>
@@ -566,8 +566,9 @@ var styles = StyleSheet.create({
     justifyContent: 'center',
   },
   pauseText: {
+    fontFamily: 'docker',
     color: 'white',
-    fontSize: 20,
+    fontSize: 30,
     fontWeight: 'bold',
     marginTop: Dimensions.get('window')[width] * -0.2,
   },
@@ -576,22 +577,24 @@ var styles = StyleSheet.create({
     marginTop: Dimensions.get('window')[width] * 0.2
   },
   resumeText: {
+    fontFamily: 'docker',
     color: 'white',
     fontSize: 20,
     fontWeight: 'bold',
     marginLeft: Dimensions.get('window')[width] * 0.05,
-    marginTop: Dimensions.get('window')[width] * 0.03
+    marginTop: Dimensions.get('window')[width] * 0.045
   },
   pair: {
     marginTop: Dimensions.get('window')[width] * 0.05,
     flexDirection: 'row',
   },
   pairText: {
+    fontFamily: 'docker',
     color: 'white',
     fontSize: 20,
     fontWeight: 'bold',
     marginLeft: Dimensions.get('window')[width] * 0.05,
-    marginTop: Dimensions.get('window')[width] * 0.03
+    marginTop: Dimensions.get('window')[width] * 0.045
   }
 });
 

@@ -1,6 +1,4 @@
-var ipv4;
 var http = require('http');
-var url = require('url');
 var port = 1337;
 var host = '0.0.0.0';
 try {

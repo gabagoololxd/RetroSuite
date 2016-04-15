@@ -1,7 +1,4 @@
 var url = require('url');
-// var numberOfPlayersJoined = 0;
-// window.numberOfPlayersJoined = numberOfPlayersJoined;
-var controllerAction;
 
 function router(req, res) {
 
@@ -15,15 +12,11 @@ function router(req, res) {
     httpVerb === 'GET' &&
     httpPath === '/pair-controller'
   ) {
-    // console.log('numberOfPlayersJoined', numberOfPlayersJoined)
-    // if (numberOfPlayersJoined === 0) {
-      // numberOfPlayersJoined++;
-      window.toggleInputSelectionScreen();
-      res.writeHead(200, {
-        'Content-Type': 'application/json'
-      });
-      res.end(JSON.stringify({message: 'mobile controller successfully paired!'}));
-    // }
+    window.toggleInputSelectionScreen();
+    res.writeHead(200, {
+      'Content-Type': 'application/json'
+    });
+    res.end(JSON.stringify({message: 'mobile controller successfully paired!'}));
   } else if ( // app.post('/pause', cb) 
     httpVerb === 'POST' && 
     pathArr.length === 2 &&

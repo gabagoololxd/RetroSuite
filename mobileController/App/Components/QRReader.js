@@ -295,7 +295,8 @@ var styles = StyleSheet.create({
   },
   flashButtonText: {
     flex: 1,
-    marginBottom: 16.5,
+    fontFamily: 'docker',
+    marginBottom: 10,
     marginLeft: -20,
     color: 'white',
     fontSize: 20,
