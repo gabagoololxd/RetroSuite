@@ -13,18 +13,30 @@ var api = {
 
   Press(ipAddress, button) {
     var url = 'http://' + ipAddress + '/player/press/' + button;
-    return fetch(url, {
-      method: 'POST',
-      body: null
-    });
+
+    var p = Promise.race([
+      fetch(url, {method: 'POST', body: null}),
+      new Promise(function (resolve, reject) {
+        setTimeout(() => reject(new Error('request timeout')), 500)
+      })
+    ])
+    p.then(response => console.log(response))
+    p.catch(error => console.log(error))
+
   },
 
   Release(ipAddress, button) {
     var url = 'http://' + ipAddress + '/player/release/' + button;
-    return fetch(url, {
-      method: 'POST',
-      body: null
-    });
+
+    var p = Promise.race([
+      fetch(url, {method: 'POST', body: null}),
+      new Promise(function (resolve, reject) {
+        setTimeout(() => reject(new Error('request timeout')), 500)
+      })
+    ])
+    p.then(response => console.log(response))
+    p.catch(error => console.log(error))
+
   },
 
   Pause(ipAddress, callback) {

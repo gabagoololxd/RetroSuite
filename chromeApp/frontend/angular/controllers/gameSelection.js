@@ -31,15 +31,29 @@ app.controller('gameSelection', function($scope, $http) {
       document.getElementById('loadingText2').classList.remove('hidden');
       document.getElementById('clickToRestart').classList.remove('hidden');
     }, 5000);
-    return $http({
-      method: 'GET',
-      url: game.link,
-      responseType: 'arraybuffer'
-    }).then(function successCallback(response) {
-        window.loadData(game.link.split("/")[5], new Uint8Array(response.data));
-      }, function errorCallback(response) {
-        console.log('failuuuure', response);
+
+    if(game.rom) {
+      var gameAsArray = game.rom.split(',').map(function(string) {
+        return parseInt(string);
       });
+      console.log('correct or not?', gameAsArray)
+      console.log('extension', game.extension)
+
+      window.play(game.rom.split(','), game.extension);
+      document.getElementById('gameSelection').classList.add('hidden');
+
+    } else {
+      return $http({
+        method: 'GET',
+        url: game.link,
+        responseType: 'arraybuffer'
+      }).then(function successCallback(response) {
+          window.loadData(game.link.split("/")[5], new Uint8Array(response.data));
+        }, function errorCallback(response) {
+          console.log('failuuuure', response);
+        });
+    }
+
   }
 
   
@@ -63,6 +77,11 @@ app.controller('gameSelection', function($scope, $http) {
   
   //'import' list of games to render from gamesList.js
   $scope.games = window.gamesList;
+  chrome.storage.local.get('userGames', function(obj) {
+    obj.userGames.forEach(function(userGame) {
+      $scope.games.push(userGame);
+    });
+  });
 
   //methods to filter and show games from the list
   $scope.setSelectedConsole = function () {

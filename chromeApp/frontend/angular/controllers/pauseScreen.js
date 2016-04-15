@@ -2,6 +2,28 @@
 app.controller('pauseScreen', function($scope) {
   var qrScreen2 = document.getElementById('qrScreen2');
   window.openQRScreen = $scope.openQRScreen = function() {
+    chrome.system.network.getNetworkInterfaces(function (ipAddresses) {
+      ipAddresses.forEach(function (ipAddress) {
+        console.log(ipAddress);
+        if (/^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/.test(ipAddress.address)) {
+          $scope.title = 'IP FOUND'
+
+          $scope.ipAddress = ip4 = ipAddress.address;
+          var toQ = $scope.ipAddress + ':' + port;
+
+          if($scope.ipFound === false) {
+            new QRCode(document.getElementById('qrCode'), toQ);
+            new QRCode(document.getElementById('qrCode2'), toQ);
+          }
+
+          $scope.ipFound = true;
+
+          // force scope to update
+          $scope.$apply()
+        }
+      });
+
+    });
     qrScreen2.classList.remove('hidden');
   };
   window.closeQRScreen = $scope.closeQRScreen = function() {
