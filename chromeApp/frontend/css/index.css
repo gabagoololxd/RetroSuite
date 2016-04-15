@@ -19,6 +19,10 @@ html, body, canvas {
   width:300px;
 }
 
+.editOrDeleteIcon {
+  margin-right: 5px;
+}
+
 #mobileSide {
   height: 100%;
   width: 100%;
