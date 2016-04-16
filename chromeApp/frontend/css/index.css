@@ -116,6 +116,48 @@ html, body, canvas {
   font-size: 1.5em;
 }
 
+#deleteGameScreen {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background-size: cover;
+  background-color: rgba(0,0,0,0);
+}
+#deleteGameModal {
+  width: 300px;
+  margin: -10% 0 0 -150px;
+}
+#deleteGameModalBody {
+  padding: 15px 15px 5px 15px;
+}
+#deleteGameInstructions {
+  text-align: center;
+  margin-top: 2%;
+  margin-bottom: 2%;
+  font-family: dockerOne;
+  color: black;
+  font-size: 1.2em;
+}
+#deleteGameModalFooter {
+  background-color: white;
+  display: flex;
+  flex-direction: row;
+}
+#deleteGameYesButton {
+  width: 40%;
+  margin: 0 auto; 
+  border-radius: 5px;
+  color: black;
+  background-color: white;
+}
+#deleteGameNoButton {
+  width: 40%;
+  margin: 0 auto; 
+  border-radius: 5px;
+  color: black;
+  background-color: white;
+}
+
 #keyboardSide {
   height: 100%;
   width: 100%;

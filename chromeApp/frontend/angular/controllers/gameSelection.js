@@ -54,24 +54,31 @@ app.controller('gameSelection', function($scope, $http) {
   }
 
   //for when the user wants to remove a game they've added in from the list
+
+
   $scope.removeUserAddedGame = function(game) {
-    //remove from chrome.storage.local
-    chrome.storage.local.get('userGames', function(obj) {
-      var newGamesList = _.filter(obj.userGames, function(existingGame) {
-        return existingGame.rom !== game.rom;
-      })
-      chrome.storage.local.set({'userGames': newGamesList});
-      console.log('newGamesList', newGamesList);
-    });
+    document.getElementById('deleteGameScreen').classList.remove('hidden');
 
-    //remove from list of games the user sees
-    var index = $scope.games.indexOf(game);
-    $scope.games.splice(index, 1);   
-  }
+    $scope.cancelDeleteGame = function() {
+      document.getElementById('deleteGameScreen').classList.add('hidden');
+    }
 
-  //for when the user wants to edit the title of a game they've added in the list
-  $scope.editUserAddedGame = function(game) {
-    console.log('game', game)
+    $scope.confirmDeleteGame = function(game){
+      //remove from chrome.storage.local
+      chrome.storage.local.get('userGames', function(obj) {
+        var newGamesList = _.filter(obj.userGames, function(existingGame) {
+          return existingGame.rom !== game.rom;
+        })
+        chrome.storage.local.set({'userGames': newGamesList});
+        console.log('newGamesList', newGamesList);
+      });
+
+      //remove from list of games the user sees
+      var index = $scope.games.indexOf(game);
+      $scope.games.splice(index, 1);   
+
+      document.getElementById('deleteGameScreen').classList.add('hidden');
+    }
   }
   
   //list of available consoles: used to filter list of games

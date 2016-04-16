@@ -36,7 +36,21 @@
 
   <!-- this is the game selection screen -->
   <div class="gameSelection hidden screen" ng-hide="gameSelection.hidden" id="gameSelection" ng-controller="gameSelection">
-    <!-- right side -->
+
+    <div id="deleteGameScreen" class="hidden">
+      <div id="deleteGameModal" class="modal" data-ng-click="$event.stopPropagation()">
+        <div id="deleteGameModalBody" class="modal-body"> 
+          <h3 id="deleteGameInstructions">Remove from your saved list of games?</h3>
+          <div class="modal-footer" id="deleteGameModalFooter">
+            <button id="deleteGameYesButton" data-ng-click="cancelDeleteGame()">No</button>
+            <button id="deleteGameNoButton" data-ng-click="confirmDeleteGame()">Yes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- left side -->
     <div class="availableGames" id="availableGames">
       <h1 class='needAGame'>Need a Game?</h1>
       <div class="btn-group" data-ng-class="{open: open}" ng-cloak>
@@ -74,13 +88,12 @@
             <a id='gameTitle' data-ng-click="getRom(game)">
               {{game.title}}
             </a>
-            <img src="/frontend/img/editIconGray.png" data-ng-show="game.extension" data-ng-click="editUserAddedGame(game)" class="editOrDeleteIcon" height='30px' width='30px'>
             <img src="/frontend/img/xIconGray.png" data-ng-show="game.extension" data-ng-click="removeUserAddedGame(game)" class="editOrDeleteIcon" height='20px' width='20px'> 
           </li>
         </ul>
       </div>
     </div>
-    <!-- left side -->
+    <!-- right side -->
     <div class='dragGameHere' id='dragGameHere'>
       <input type="file" id="chooser" class="chooser"/>
         <h1 id="dragHint1">Have a game?</h1>
