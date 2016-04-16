@@ -54,33 +54,34 @@ app.controller('gameSelection', function($scope, $http) {
   }
 
   //for when the user wants to remove a game they've added in from the list
-
-
+  $scope.gameToDelete = undefined;
   $scope.removeUserAddedGame = function(game) {
     document.getElementById('deleteGameScreen').classList.remove('hidden');
-
-    $scope.cancelDeleteGame = function() {
-      document.getElementById('deleteGameScreen').classList.add('hidden');
-    }
-
-    $scope.confirmDeleteGame = function(game){
-      //remove from chrome.storage.local
-      chrome.storage.local.get('userGames', function(obj) {
-        var newGamesList = _.filter(obj.userGames, function(existingGame) {
-          return existingGame.rom !== game.rom;
-        })
-        chrome.storage.local.set({'userGames': newGamesList});
-        console.log('newGamesList', newGamesList);
-      });
-
-      //remove from list of games the user sees
-      var index = $scope.games.indexOf(game);
-      $scope.games.splice(index, 1);   
-
-      document.getElementById('deleteGameScreen').classList.add('hidden');
-    }
+    $scope.gameToDelete = game;
   }
   
+  $scope.cancelDeleteGame = function() {
+    document.getElementById('deleteGameScreen').classList.add('hidden');
+  }
+
+  $scope.confirmDeleteGame = function(game){
+    console.log('game to delete', game);
+    //remove from chrome.storage.local
+    chrome.storage.local.get('userGames', function(obj) {
+      var newGamesList = _.filter(obj.userGames, function(existingGame) {
+        return existingGame.rom !== game.rom;
+      })
+      chrome.storage.local.set({'userGames': newGamesList});
+      console.log('newGamesList', newGamesList);
+    });
+
+    //remove from list of games the user sees
+    var index = $scope.games.indexOf(game);
+    $scope.games.splice(index, 1);   
+
+    document.getElementById('deleteGameScreen').classList.add('hidden');
+  }
+
   //list of available consoles: used to filter list of games
   $scope.consoleList = [{
     id: 1,
