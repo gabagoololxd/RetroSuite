@@ -39,25 +39,24 @@ class QRReader extends React.Component {
   componentDidMount() {
     Orientation.lockToPortrait(); //this will lock the view to Portrait
     
-    //for development, simulates successful qr scan
-    var openControllerViewCallback = () => {
-      var navigator = this.props.navigator;
-      var turnCameraOn = this.turnCameraOn.bind(this);
-      var turnCameraOff = this.turnCameraOff.bind(this);
-      turnCameraOff();
-      //open up the ControllerView
-      navigator.push({
-        component: ControllerView,
-        showPauseModal: this.state.showPauseModal, // TODO: comment
-        turnCameraOn: turnCameraOn.bind(this),
-        sceneConfig: {
-          ...Navigator.SceneConfigs.FloatFromBottom,
-          gestures: {} //disable ability to swipe to pop back from ControllerView to QRReader once past the ip address page
-        }
-      });
-    }
+    // //for development, simulates successful qr scan
+    // var openControllerViewCallback = () => {
+    //   var navigator = this.props.navigator;
+    //   var turnCameraOn = this.turnCameraOn.bind(this);
+    //   var turnCameraOff = this.turnCameraOff.bind(this);
+    //   turnCameraOff();
+    //   //open up the ControllerView
+    //   navigator.push({
+    //     component: ControllerView,
+    //     turnCameraOn: turnCameraOn.bind(this),
+    //     sceneConfig: {
+    //       ...Navigator.SceneConfigs.FloatFromBottom,
+    //       gestures: {} //disable ability to swipe to pop back from ControllerView to QRReader once past the ip address page
+    //     }
+    //   });
+    // }
 
-    utils.PairController('10.0.0.215:1337', openControllerViewCallback);
+    // utils.PairController('10.0.0.215:1337', openControllerViewCallback);
   }
 
   _onBarCodeRead(e) {
