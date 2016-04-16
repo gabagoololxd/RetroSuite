@@ -30,6 +30,14 @@
      "storage",
      "unlimitedStorage"
    ],
+   "sockets": {
+     "tcp": {
+       "connect": "*"
+     },
+     "tcpServer": {
+       "listen": "*"
+     }
+   },
    "short_name": "RetroSuite",
    "version": "0.0.2"
 }

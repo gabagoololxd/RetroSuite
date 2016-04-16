@@ -2,7 +2,8 @@ var React = require('react-native');
 var Ionicon = require('react-native-vector-icons/Ionicons');
 var FontAwesomeIcon = require('react-native-vector-icons/FontAwesome');
 var Orientation = require('react-native-orientation');
-var api = require('../Utils/api');
+// var api = require('../Utils/api');
+var utils = require('../Utils/utils');
 var Settings = require('./Settings');
 var _ = require('lodash');
 var StatusBarAndroid = require('react-native-android-statusbar');
@@ -244,31 +245,31 @@ class ControllerView extends React.Component {
   //Right thumb buttons: A, B, X, Y
   /////////////////////////////////////////////////////////////////////
   _APressIn() {
-    api.Press(this.props.route.ipAddress, 'a'); 
+    utils.Press('a'); 
   }
   _APressOut() {
-    api.Release(this.props.route.ipAddress, 'a'); 
+    utils.Release('a'); 
   }
 
   _BPressIn() {
-    api.Press(this.props.route.ipAddress, 'b'); 
+    utils.Press('b'); 
   }
   _BPressOut() {
-    api.Release(this.props.route.ipAddress, 'b'); 
+    utils.Release('b'); 
   }
 
   _XPressIn() {
-    api.Press(this.props.route.ipAddress, 'x'); 
+    utils.Press('x'); 
   }
   _XPressOut() {
-    api.Release(this.props.route.ipAddress, 'x'); 
+    utils.Release('x'); 
   }
 
   _YPressIn() {
-    api.Press(this.props.route.ipAddress, 'y'); 
+    utils.Press('y'); 
   }
   _YPressOut() {
-    api.Release(this.props.route.ipAddress, 'y'); 
+    utils.Release('y'); 
   }
 
   /////////////////////////////////////////////////////////////////////
@@ -285,11 +286,11 @@ class ControllerView extends React.Component {
       }
     }
     this.setState({dPadButton: "up"});
-    api.Press(this.props.route.ipAddress, 'up');
+    utils.Press('up');
   }
   _upArrowPressOut() {
     this.setState({dPadButton: undefined});
-    api.Release(this.props.route.ipAddress, 'up');
+    utils.Release('up');
   }
 
   _downArrowPressIn() {
@@ -303,11 +304,11 @@ class ControllerView extends React.Component {
       }
     }
     this.setState({dPadButton: "down"});
-    api.Press(this.props.route.ipAddress, 'down');
+    utils.Press('down');
   }
   _downArrowPressOut() {
     this.setState({dPadButton: undefined});
-    api.Release(this.props.route.ipAddress, 'down');
+    utils.Release('down');
   }
 
   _rightArrowPressIn() {
@@ -321,11 +322,11 @@ class ControllerView extends React.Component {
       }
     }
     this.setState({dPadButton: "right"});
-    api.Press(this.props.route.ipAddress, 'right');
+    utils.Press('right');
   }
   _rightArrowPressOut() {
     this.setState({dPadButton: undefined});
-    api.Release(this.props.route.ipAddress, 'right');
+    utils.Release('right');
   }
 
   _leftArrowPressIn() {
@@ -339,45 +340,45 @@ class ControllerView extends React.Component {
       }
     }
     this.setState({dPadButton: "left"});
-    api.Press(this.props.route.ipAddress, 'left');
+    utils.Press('left');
   }
   _leftArrowPressOut() {
     this.setState({dPadButton: undefined});
-    api.Release(this.props.route.ipAddress, 'left');
+    utils.Release('left');
   }
 
   /////////////////////////////////////////////////////////////////////
   //Shoulder buttons: Left and Right Index Finger Triggers.
   /////////////////////////////////////////////////////////////////////
   _rightShoulderPressIn() {
-    api.Press(this.props.route.ipAddress, 'r-shoulder');
+    utils.Press('r-shoulder');
   }
   _rightShoulderPressOut() {
-    api.Release(this.props.route.ipAddress, 'r-shoulder');
+    utils.Release('r-shoulder');
   }
 
   _leftShoulderPressIn() {
-    api.Press(this.props.route.ipAddress, 'l-shoulder');
+    utils.Press('l-shoulder');
   }
   _leftShoulderPressOut() {
-    api.Release(this.props.route.ipAddress, 'l-shoulder');
+    utils.Release('l-shoulder');
   }
 
   /////////////////////////////////////////////////////////////////////
   //Start and Select buttons
   /////////////////////////////////////////////////////////////////////
   _startPressIn() {
-    api.Press(this.props.route.ipAddress, 'start');
+    utils.Press('start');
   }
   _startPressOut() {
-    api.Release(this.props.route.ipAddress, 'start');
+    utils.Release('start');
   }
 
   _selectPressIn() {
-    api.Press(this.props.route.ipAddress, 'select');
+    utils.Press('select');
   }
   _selectPressOut() {
-    api.Release(this.props.route.ipAddress, 'select');
+    utils.Release('select');
   }
 
   /////////////////////////////////////////////////////////////////////

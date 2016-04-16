@@ -1,7 +1,8 @@
 var React = require('react-native');
 var Camera = require('react-native-camera').default;
 var IconIon = require('react-native-vector-icons/Ionicons');
-var api = require('../Utils/api');
+var utils = require('../Utils/utils');
+// var api = require('../Utils/api');
 var ControllerView = require('./ControllerView');
 var _ = require('lodash');
 var Orientation = require('react-native-orientation');
@@ -31,12 +32,31 @@ class QRReader extends React.Component {
       androidTorch: "off",
       cameraOn: true,
       selectedIndex: 0,
-      helpScreenOn: false,
     }
   }
 
   componentDidMount() {
     Orientation.lockToPortrait(); //this will lock the view to Portrait
+    
+    // //for development, simulates successful qr scan
+    // var success = () => {
+    //   var navigator = this.props.navigator;
+    //   var turnCameraOn = this.turnCameraOn.bind(this);
+    //   var turnCameraOff = this.turnCameraOff.bind(this);
+    //   turnCameraOff();
+    //   //open up the ControllerView
+    //   navigator.push({
+    //     component: ControllerView,
+    //     // ipAddress: '10.0.0.215:1337', // pass the ipAddress to ControllerView
+    //     turnCameraOn: turnCameraOn.bind(this),
+    //     sceneConfig: {
+    //       ...Navigator.SceneConfigs.FloatFromBottom,
+    //       gestures: {} //disable ability to swipe to pop back from ControllerView to QRReader once past the ip address page
+    //     }
+    //   });
+    // }
+
+    // utils.PairController('10.0.0.215:1337', success);
   }
 
   _onBarCodeRead(e) {
@@ -44,25 +64,43 @@ class QRReader extends React.Component {
     var ipAddress = e.data;
     console.log("QR Code Found", ipAddress);
 
-    var navigator = this.props.navigator;
-    var turnCameraOn = this.turnCameraOn.bind(this);
-    var turnCameraOff = this.turnCameraOff.bind(this);
+    // var navigator = this.props.navigator;
+    // var turnCameraOn = this.turnCameraOn.bind(this);
+    // var turnCameraOff = this.turnCameraOff.bind(this);
 
-    //Use the data (the IP address) to connect to the computer using an api.js helper function
-    api.PairController(ipAddress, function(data) {
+    // //Use the data (the IP address) to connect to the computer using an api.js helper function
+    // api.PairController(ipAddress, function(data) {
+    //   turnCameraOff();
+    //   //open up the ControllerView
+    //   navigator.push({
+    //     component: ControllerView,
+    //     ipAddress: ipAddress, // pass the ipAddress to ControllerView
+    //     turnCameraOn: turnCameraOn.bind(this),
+    //     sceneConfig: {
+    //       ...Navigator.SceneConfigs.FloatFromBottom,
+    //       gestures: {} //disable ability to swipe to pop back from ControllerView to QRReader once past the ip address page
+    //     }
+    //   });
+    // });
+
+    var success = () => {
+      var navigator = this.props.navigator;
+      var turnCameraOn = this.turnCameraOn.bind(this);
+      var turnCameraOff = this.turnCameraOff.bind(this);
       turnCameraOff();
       //open up the ControllerView
       navigator.push({
         component: ControllerView,
-        ipAddress: ipAddress, // pass the ipAddress to ControllerView
+        // ipAddress: '10.0.0.215:1337', // pass the ipAddress to ControllerView
         turnCameraOn: turnCameraOn.bind(this),
         sceneConfig: {
           ...Navigator.SceneConfigs.FloatFromBottom,
           gestures: {} //disable ability to swipe to pop back from ControllerView to QRReader once past the ip address page
         }
       });
-    });
+    }
 
+    utils.PairController(ipAddress, success);
   }
 
   _onChange(event) {

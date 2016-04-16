@@ -294,7 +294,7 @@ html, body, canvas {
 
 .dragGameHere {
   border: 10px dashed transparent; 
-  border-left: 10px solid white; 
+  border-left: 10px solid gray; 
   flex: 1;
   overflow: hidden;
   background: gray url(../img/snesconsolewithborderandtext.png) no-repeat center center;
