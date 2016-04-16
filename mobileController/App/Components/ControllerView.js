@@ -33,8 +33,23 @@ class ControllerView extends React.Component {
       dPadTouchesIdentifier: undefined, //identifier of the D-Pad touch within the evt.nativeEvent.touches array
       //set to true when game is paused
       showPauseModal: false,
-    }
+    };
+    // TODO: pause and resume the game through websockets without using global scope
+    global.pause = () => {
+      this.setState({showPauseModal: true});
+    };
+    global.resume = () => {
+      this.setState({showPauseModal: false});
+    };
+    global.onclose = () => {
+      navigator = this.props.navigator;
+      turnCameraOn = this.props.route.turnCameraOn.bind(this);
+      navigator.pop();
+      turnCameraOn();
+      Orientation.lockToPortrait();
+    };
   }
+
 
   componentWillMount() {
     //The following code is used to make the D-Pad into a joystick so the user can roll their thumb between buttons and trigger a response
@@ -386,28 +401,24 @@ class ControllerView extends React.Component {
   /////////////////////////////////////////////////////////////////////
   _pause() {
     var controller = this;
-    api.Pause(this.props.route.ipAddress, function() {
+    utils.Pause(function() {
       controller.setState({showPauseModal: true});
     });
   }
   _resume() {
     var controller = this;
-    api.Resume(this.props.route.ipAddress, function() {
+    utils.Resume(function() {
       controller.setState({showPauseModal: false});
     });
   }
   _pairController() {
     navigator = this.props.navigator;
     turnCameraOn = this.props.route.turnCameraOn.bind(this);
-    api.RePairController(this.props.route.ipAddress, function() {
+    utils.RePairController(function() {
       navigator.pop();
       turnCameraOn();
       Orientation.lockToPortrait();
     });
-
-    // this.props.navigator.pop();
-    // this.props.route.turnCameraOn();
-    // Orientation.lockToPortrait();
   }
 
   render() {

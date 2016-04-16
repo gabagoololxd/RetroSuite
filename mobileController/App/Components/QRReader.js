@@ -20,7 +20,8 @@ var {
   StatusBarIOS,
   SegmentedControlIOS,
   AlertIOS,
-  Platform
+  Platform,
+  Linking
 } = React;
 
 class QRReader extends React.Component {
@@ -38,50 +39,31 @@ class QRReader extends React.Component {
   componentDidMount() {
     Orientation.lockToPortrait(); //this will lock the view to Portrait
     
-    // //for development, simulates successful qr scan
-    // var success = () => {
-    //   var navigator = this.props.navigator;
-    //   var turnCameraOn = this.turnCameraOn.bind(this);
-    //   var turnCameraOff = this.turnCameraOff.bind(this);
-    //   turnCameraOff();
-    //   //open up the ControllerView
-    //   navigator.push({
-    //     component: ControllerView,
-    //     // ipAddress: '10.0.0.215:1337', // pass the ipAddress to ControllerView
-    //     turnCameraOn: turnCameraOn.bind(this),
-    //     sceneConfig: {
-    //       ...Navigator.SceneConfigs.FloatFromBottom,
-    //       gestures: {} //disable ability to swipe to pop back from ControllerView to QRReader once past the ip address page
-    //     }
-    //   });
-    // }
+    //for development, simulates successful qr scan
+    var openControllerViewCallback = () => {
+      var navigator = this.props.navigator;
+      var turnCameraOn = this.turnCameraOn.bind(this);
+      var turnCameraOff = this.turnCameraOff.bind(this);
+      turnCameraOff();
+      //open up the ControllerView
+      navigator.push({
+        component: ControllerView,
+        showPauseModal: this.state.showPauseModal, // TODO: comment
+        turnCameraOn: turnCameraOn.bind(this),
+        sceneConfig: {
+          ...Navigator.SceneConfigs.FloatFromBottom,
+          gestures: {} //disable ability to swipe to pop back from ControllerView to QRReader once past the ip address page
+        }
+      });
+    }
 
-    // utils.PairController('10.0.0.215:1337', success);
+    utils.PairController('10.0.0.215:1337', openControllerViewCallback);
   }
 
   _onBarCodeRead(e) {
     //format of QR code: https://chart.googleapis.com/chart?chs=250x250&cht=qr&chl=10.6.30.50:1337
     var ipAddress = e.data;
     console.log("QR Code Found", ipAddress);
-
-    // var navigator = this.props.navigator;
-    // var turnCameraOn = this.turnCameraOn.bind(this);
-    // var turnCameraOff = this.turnCameraOff.bind(this);
-
-    // //Use the data (the IP address) to connect to the computer using an api.js helper function
-    // api.PairController(ipAddress, function(data) {
-    //   turnCameraOff();
-    //   //open up the ControllerView
-    //   navigator.push({
-    //     component: ControllerView,
-    //     ipAddress: ipAddress, // pass the ipAddress to ControllerView
-    //     turnCameraOn: turnCameraOn.bind(this),
-    //     sceneConfig: {
-    //       ...Navigator.SceneConfigs.FloatFromBottom,
-    //       gestures: {} //disable ability to swipe to pop back from ControllerView to QRReader once past the ip address page
-    //     }
-    //   });
-    // });
 
     var success = () => {
       var navigator = this.props.navigator;
@@ -91,7 +73,6 @@ class QRReader extends React.Component {
       //open up the ControllerView
       navigator.push({
         component: ControllerView,
-        // ipAddress: '10.0.0.215:1337', // pass the ipAddress to ControllerView
         turnCameraOn: turnCameraOn.bind(this),
         sceneConfig: {
           ...Navigator.SceneConfigs.FloatFromBottom,
@@ -122,6 +103,7 @@ class QRReader extends React.Component {
   // For IOS
   _torchEnabled() {
     this.state.cameraTorchToggle === Camera.constants.TorchMode.on ? this.setState({ cameraTorchToggle: Camera.constants.TorchMode.off }) : this.setState({ cameraTorchToggle: Camera.constants.TorchMode.on });
+    // Linking.openURL('prefs:root=Wifi').catch(err => console.error('An error occurred', err));
   }
 
   turnCameraOff() {

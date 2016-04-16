@@ -1,5 +1,6 @@
 function messageParser (message) {
   if (message === 'pair') {
+    //todo: what if we arent at the pairing screen
     if(window.retro && window.retro.classList.contains('hidden')) {
       window.closeQRScreen();
       window.resumeGame();
@@ -25,7 +26,6 @@ function messageParser (message) {
     document.querySelector('body').dispatchEvent(keyBoardEvent);
   }
 }
-
 
 try {
   module.exports = messageParser;
