@@ -1,11 +1,9 @@
 //gameController Screen
 app.controller('gameSelection', function($scope, $http) {
   //used to hide and show the game selection screen
-  // $scope.gameSelection = { hidden: false}
   $scope.toggleGameSelectionScreen = function() {
     gameSelectionScreen = document.getElementById('gameSelection');
     gameSelectionScreen.classList.add('hidden');
-    // $scope.gameSelection.hidden = true;
     $scope.$apply();
   }
   window.toggleGameSelectionScreen = $scope.toggleGameSelectionScreen;
@@ -22,7 +20,6 @@ app.controller('gameSelection', function($scope, $http) {
     $("#filterButton").css("border-color", "#cccccc");
   });
   
-  //Fetches ROM data from ipfs, converts to readable method for emulator, loads in the ROM
   var loading = document.getElementById('loading');
   $scope.getRom = function (game) {
     console.log('game', game);
@@ -32,7 +29,7 @@ app.controller('gameSelection', function($scope, $http) {
       document.getElementById('clickToRestart').classList.remove('hidden');
     }, 5000);
 
-    if(game.rom) {
+    if(game.rom) { //this is a game the user has added in before; we retrieve from chrome.storage.local
       var gameAsArray = game.rom.split(',').map(function(string) {
         return parseInt(string);
       });
@@ -43,7 +40,7 @@ app.controller('gameSelection', function($scope, $http) {
       document.getElementById('gameSelection').classList.add('hidden');
 
     } else {
-      return $http({
+      return $http({ //Fetches ROM data from ipfs, converts to readable method for emulator, loads in the ROM
         method: 'GET',
         url: game.link,
         responseType: 'arraybuffer'
@@ -56,6 +53,26 @@ app.controller('gameSelection', function($scope, $http) {
 
   }
 
+  //for when the user wants to remove a game they've added in from the list
+  $scope.removeUserAddedGame = function(game) {
+    //remove from chrome.storage.local
+    chrome.storage.local.get('userGames', function(obj) {
+      var newGamesList = _.filter(obj.userGames, function(existingGame) {
+        return existingGame.rom !== game.rom;
+      })
+      chrome.storage.local.set({'userGames': newGamesList});
+      console.log('newGamesList', newGamesList);
+    });
+
+    //remove from list of games the user sees
+    var index = $scope.games.indexOf(game);
+    $scope.games.splice(index, 1);   
+  }
+
+  //for when the user wants to edit the title of a game they've added in the list
+  $scope.editUserAddedGame = function(game) {
+    console.log('game', game)
+  }
   
   //list of available consoles: used to filter list of games
   $scope.consoleList = [{

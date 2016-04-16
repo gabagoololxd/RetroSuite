@@ -74,8 +74,8 @@
             <a id='gameTitle' data-ng-click="getRom(game)">
               {{game.title}}
             </a>
-            <img src="/frontend/img/editIconGray.png" data-ng-show="game.extension" class="editOrDeleteIcon" height='30px' width='30px'>
-            <img src="/frontend/img/xIconGray.png" data-ng-show="game.extension" class="editOrDeleteIcon" height='20px' width='20px'> 
+            <img src="/frontend/img/editIconGray.png" data-ng-show="game.extension" data-ng-click="editUserAddedGame(game)" class="editOrDeleteIcon" height='30px' width='30px'>
+            <img src="/frontend/img/xIconGray.png" data-ng-show="game.extension" data-ng-click="removeUserAddedGame(game)" class="editOrDeleteIcon" height='20px' width='20px'> 
           </li>
         </ul>
       </div>
