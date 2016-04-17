@@ -23,7 +23,7 @@ React Native phone app that pairs with the Chrome app and acts as a controller f
  - Extreme Programmer: Franklin Shieh
 
 ## Installation
-### Requirements:
+#### Requirements:
  - OS X is needed for iOS development
  - Xcode 7.3 or higher - [download here](https://developer.apple.com/xcode/download/)
  - npm - [install here](http://blog.npmjs.org/post/85484771375/how-to-install-npm)
@@ -38,7 +38,7 @@ __Step 2: Run 'npm install' from the webApp directory__
 $ cd webApp
 $ npm install
  ```
-### Running the CrowdEMU Web App
+#### Running the CrowdEMU Web App
  __Step 1: Navigate to the webapp/emulatorNode directory__
  ```
  $ cd webApp/emulatorNode
@@ -58,7 +58,7 @@ $ npm install
  ```
  __Step 5: Navigate your web browser to 'localhost:3000'__
 
-### Running the RetroSuite EMU Chrome App
+#### Running the RetroSuite EMU Chrome App
  __Step 1: Open Chrome and navigate to Tools > Extensions__
 
  __Step 2: Click 'Load unpacked extension...'__
