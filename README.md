@@ -26,14 +26,14 @@ Requirements:
  - npm - [install here](http://blog.npmjs.org/post/85484771375/how-to-install-npm)
  - [Cairo](https://github.com/Automattic/node-canvas/wiki,  https://github.com/Automattic/node-canvas ) must be installed before following the steps below
 
- __Step 1: Run 'npm install' from the root directory__
- ```
- $ npm install
- ```
- __Step 2: Run 'npm install' from the webApp directory__
- ```
- $ cd webApp
- $ npm install
+__Step 1: Run 'npm install' from the root directory__
+```
+$ npm install
+```
+__Step 2: Run 'npm install' from the webApp directory__
+```
+$ cd webApp
+$ npm install
  ```
 ### Running the CrowdEMU Web App
  __Step 1: Navigate to the webapp/emulatorNode directory__
