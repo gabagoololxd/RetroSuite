@@ -3,15 +3,18 @@
 # RetroSuite
 A platform to bring retro-gaming to the modern era.
 
-CrowdEMU (Web App): Website where thousands of people can share an instance of a game; every 3 seconds the most popular move is executed. Includes video streaming. https://www.crowdemu.com
+__CrowdEMU (Web App):__ 
+Website where thousands of people can share an instance of a game; every 3 seconds the most popular move is executed. Includes video streaming. https://www.crowdemu.com
 
-RetroSuite EMU (Chrome App): Native desktop application. Play your favorite NES, SNES, Gameboy and Gameboy Advance ROMs; use your phone as your controller - or use custom keyboard mappings. Deploys a websockets tcp server to allow use of phone as a controller. 
+__RetroSuite EMU (Chrome App):__ 
+Native desktop application. Play your favorite NES, SNES, Gameboy and Gameboy Advance ROMs; use your phone as your controller - or use custom keyboard mappings. Deploys a websockets tcp server to allow use of phone as a controller. 
 - Use your iPhone as your joypad
 - Use your own custom keyboard button mappings; right click the screen once a game has started to pause and re-map
 - Try out some pre-loaded games, or add your own; RetroSuite EMU will remember the ones you've added
 - RetroSuite EMU auto-saves your game as you play, but you can also manually save and load in save states
 
-RetroSuite Controller (Mobile App): React Native phone app that pairs with the Chrome app and acts as a controller for the retro console.
+__RetroSuite Controller (Mobile App):__ 
+React Native phone app that pairs with the Chrome app and acts as a controller for the retro console.
 
 ## Scrum Roles
  - Scrum Master: Colin Whitmarsh
