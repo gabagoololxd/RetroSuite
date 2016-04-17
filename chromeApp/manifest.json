@@ -7,7 +7,7 @@
    "author": {
       "name": "Staccato Tricycle"
    },
-   "description": "A video game emulator for Chrome supporting NES, SNES, Gameboy, and Gameboy Advance ROMs.",
+   "description": "A video game emulator supporting NES, SNES, Gameboy, and Gameboy Advance ROMs; use your phone as the controller or map custom keys.",
    "file_handlers": {
       "gpemu": {
          "extensions": [ "32x", "gb", "gba", "gbc", "gen", "md", "mgw", "nes", "sfc", "smc", "smd", "sms", "vec" ]
@@ -18,7 +18,7 @@
       "128": "/frontEnd/img/icon/snes_128.png"
    },
    "manifest_version": 2,
-   "name": "RetroSuite",
+   "name": "RetroSuite EMU",
    "offline_enabled": true,
    "permissions": [
      "system.network",
@@ -39,5 +39,5 @@
      }
    },
    "short_name": "RetroSuite",
-   "version": "0.0.2"
+   "version": "0.0.3"
 }

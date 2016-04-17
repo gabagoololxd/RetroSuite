@@ -2,7 +2,6 @@ var React = require('react-native');
 var Ionicon = require('react-native-vector-icons/Ionicons');
 var FontAwesomeIcon = require('react-native-vector-icons/FontAwesome');
 var Orientation = require('react-native-orientation');
-// var api = require('../Utils/api');
 var utils = require('../Utils/utils');
 var Settings = require('./Settings');
 var _ = require('lodash');
@@ -45,8 +44,8 @@ class ControllerView extends React.Component {
       navigator = this.props.navigator;
       turnCameraOn = this.props.route.turnCameraOn.bind(this);
       navigator.pop();
-      turnCameraOn();
       Orientation.lockToPortrait();
+      turnCameraOn();
     };
   }
 
@@ -416,8 +415,8 @@ class ControllerView extends React.Component {
     turnCameraOn = this.props.route.turnCameraOn.bind(this);
     utils.RePairController(function() {
       navigator.pop();
-      turnCameraOn();
       Orientation.lockToPortrait();
+      turnCameraOn();
     });
   }
 

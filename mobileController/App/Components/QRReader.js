@@ -2,7 +2,6 @@ var React = require('react-native');
 var Camera = require('react-native-camera').default;
 var IconIon = require('react-native-vector-icons/Ionicons');
 var utils = require('../Utils/utils');
-// var api = require('../Utils/api');
 var ControllerView = require('./ControllerView');
 var _ = require('lodash');
 var Orientation = require('react-native-orientation');
@@ -116,6 +115,7 @@ class QRReader extends React.Component {
   render() {
     // check for IOS specific
     if (Platform.OS === 'ios') {
+      StatusBarIOS.setHidden('false');
       StatusBarIOS.setStyle('light-content');
       if (this.state.cameraOn) {
         return (
@@ -129,6 +129,7 @@ class QRReader extends React.Component {
               aspect={Camera.constants.Aspect.Fill}
               onBarCodeRead={_.once(this._onBarCodeRead.bind(this))}
               defaultOnFocusComponent={ true }
+              orientation={Camera.constants.Orientation.portrait}
               onFocusChanged={ this.state.handleFocusChanged }>
 
               <View style={styles.overlayLeft}/> 
