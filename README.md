@@ -19,10 +19,7 @@ RetroSuite Controller (Mobile App): React-native phone app that pairs with the C
  - Extreme Programmer: Joe Miller VI
  - Extreme Programmer: Franklin Shieh
 
-## Installation
-
- ```
-### Running the CrowdEMU webApp
+## Running the CrowdEMU webApp
  __Step 1: Navigate to the webapp/emulatorNode directory__
  ```
  $ cd webApp/emulatorNode
@@ -42,7 +39,7 @@ RetroSuite Controller (Mobile App): React-native phone app that pairs with the C
  ```
  __Step 5: Navigate your web browser to 'localhost:3000'__
 
-### Running the RetoSuite EMU React Native App
+## Running the RetoSuite EMU React Native App
  Requirements:
  - OS X is needed for iOS development
  - Xcode 7.3 or higher - [download here](https://developer.apple.com/xcode/download/)
@@ -58,7 +55,7 @@ RetroSuite Controller (Mobile App): React-native phone app that pairs with the C
  $ cd webApp
  $ npm install
 
-### Running the RetroSuite EMU Chrome App
+## Running the RetroSuite EMU Chrome App
  __Step 1: Open Chrome and navigate to Tools > Extensions__
 
  __Step 2: Click 'Load unpacked extension...'__
