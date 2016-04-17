@@ -1,6 +1,36 @@
 //pause game screen
 app.controller('pauseScreen', function($scope) {
-  $scope.chooseNewGame = function () {
+  var qrScreen2 = document.getElementById('qrScreen2');
+  window.openQRScreen = $scope.openQRScreen = function() {
+    chrome.system.network.getNetworkInterfaces(function (ipAddresses) {
+      ipAddresses.forEach(function (ipAddress) {
+        console.log(ipAddress);
+        if (/^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/.test(ipAddress.address)) {
+          $scope.title = 'IP FOUND'
+
+          $scope.ipAddress = ip4 = ipAddress.address;
+          var toQ = $scope.ipAddress + ':' + port;
+
+          if($scope.ipFound === false) {
+            new QRCode(document.getElementById('qrCode'), toQ);
+            new QRCode(document.getElementById('qrCode2'), toQ);
+          }
+
+          $scope.ipFound = true;
+
+          // force scope to update
+          $scope.$apply()
+        }
+      });
+
+    });
+    qrScreen2.classList.remove('hidden');
+  };
+  window.closeQRScreen = $scope.closeQRScreen = function() {
+    console.log('close click');
+    qrScreen2.classList.add('hidden');
+  };
+  $scope.chooseNewGame = function() {
     window.chooseNewGame();
   }
   
@@ -135,7 +165,10 @@ app.controller('pauseScreen', function($scope) {
   $scope.validationError = false;
   $scope.editHint = false;
 
+  window.edittingKeyMappings = false;
+
   $scope.editKeyMappings = function() {
+    window.edittingKeyMappings = true; //disallow clicking out of the menu if key mappings is in progress
     $scope.editHint = true; //show the instructional text
     $scope.disabled = false; //allow user to edit key mappings by clicking into the input
 
@@ -148,6 +181,8 @@ app.controller('pauseScreen', function($scope) {
 
   $scope.submitNewKeyMappings = function() {
 
+    window.edittingKeyMappings = false;
+    document.getElementById('resumeError').classList.add('hidden');
     systemSettings.keys = {}; //clear out all current key mappings
     newKeyMappings = {}; //clear out all current key mappings
 
@@ -206,6 +241,8 @@ app.controller('pauseScreen', function($scope) {
   };
 
   $scope.cancelSubmitNewKeyMappings = function() {
+    window.edittingKeyMappings = false;
+    document.getElementById('resumeError').classList.add('hidden');
     $scope.validationError = false;
     //display the old key mappings
     $('#keyMappingsForm').find("input").each(function(){

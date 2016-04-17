@@ -8,5 +8,3 @@ window.app = app = angular.module('app', [
     $compileProvider.imgSrcSanitizationWhitelist(/^\s*((https?|ftp|file|blob|chrome-extension):|data:image\/)/);
   }
 ]);
-
-

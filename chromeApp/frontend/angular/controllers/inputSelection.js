@@ -2,12 +2,14 @@
 app.controller('inputSelection', function($scope) {
   $scope.ipAddress = 'filler';
   $scope.ipFound = false;
-  // $scope.inputSelection = { hidden: false}
   $scope.toggleInputSelectionScreen = function() {
     window.retro.start();
-    // $scope.inputSelection.hidden = true;
     inputSelectionScreen = document.getElementById('inputSelectionScreen');
     inputSelectionScreen.classList.add('hidden');
+    document.getElementById('menuHintBubble').classList.remove('hidden');
+    setTimeout(function(){
+      $( "#menuHintBubble" ).fadeOut( "slow", function() {});
+    },4000)
     $scope.$apply();
   }
   var qrScreen = document.getElementById('qrScreen');
@@ -48,10 +50,11 @@ app.controller('inputSelection', function($scope) {
         $scope.title = 'IP FOUND'
 
         $scope.ipAddress = ip4 = ipAddress.address;
-        var toQ = $scope.ipAddress + ':' + port;
+        var toQ = $scope.ipAddress + ':' + window.port;
 
         if($scope.ipFound === false) {
           new QRCode(document.getElementById('qrCode'), toQ);
+          new QRCode(document.getElementById('qrCode2'), toQ);
         }
 
         $scope.ipFound = true;

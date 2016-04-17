@@ -1,11 +1,9 @@
 //gameController Screen
 app.controller('gameSelection', function($scope, $http) {
   //used to hide and show the game selection screen
-  // $scope.gameSelection = { hidden: false}
   $scope.toggleGameSelectionScreen = function() {
     gameSelectionScreen = document.getElementById('gameSelection');
     gameSelectionScreen.classList.add('hidden');
-    // $scope.gameSelection.hidden = true;
     $scope.$apply();
   }
   window.toggleGameSelectionScreen = $scope.toggleGameSelectionScreen;
@@ -22,7 +20,6 @@ app.controller('gameSelection', function($scope, $http) {
     $("#filterButton").css("border-color", "#cccccc");
   });
   
-  //Fetches ROM data from ipfs, converts to readable method for emulator, loads in the ROM
   var loading = document.getElementById('loading');
   $scope.getRom = function (game) {
     console.log('game', game);
@@ -31,18 +28,60 @@ app.controller('gameSelection', function($scope, $http) {
       document.getElementById('loadingText2').classList.remove('hidden');
       document.getElementById('clickToRestart').classList.remove('hidden');
     }, 5000);
-    return $http({
-      method: 'GET',
-      url: game.link,
-      responseType: 'arraybuffer'
-    }).then(function successCallback(response) {
-        window.loadData(game.link.split("/")[5], new Uint8Array(response.data));
-      }, function errorCallback(response) {
-        console.log('failuuuure', response);
+
+    if(game.rom) { //this is a game the user has added in before; we retrieve from chrome.storage.local
+      var gameAsArray = game.rom.split(',').map(function(string) {
+        return parseInt(string);
       });
+      console.log('correct or not?', gameAsArray)
+      console.log('extension', game.extension)
+
+      window.play(game.rom.split(','), game.extension);
+      document.getElementById('gameSelection').classList.add('hidden');
+
+    } else {
+      return $http({ //Fetches ROM data from ipfs, converts to readable method for emulator, loads in the ROM
+        method: 'GET',
+        url: game.link,
+        responseType: 'arraybuffer'
+      }).then(function successCallback(response) {
+          window.loadData(game.link.split("/")[5], new Uint8Array(response.data), false);
+        }, function errorCallback(response) {
+          console.log('failuuuure', response);
+        });
+    }
+
   }
 
+  //for when the user wants to remove a game they've added in from the list
+  $scope.gameToDelete = undefined;
+  $scope.removeUserAddedGame = function(game) {
+    document.getElementById('deleteGameScreen').classList.remove('hidden');
+    $scope.gameToDelete = game;
+  }
   
+  $scope.cancelDeleteGame = function() {
+    document.getElementById('deleteGameScreen').classList.add('hidden');
+  }
+
+  $scope.confirmDeleteGame = function(game){
+    console.log('game to delete', game);
+    //remove from chrome.storage.local
+    chrome.storage.local.get('userGames', function(obj) {
+      var newGamesList = _.filter(obj.userGames, function(existingGame) {
+        return existingGame.rom !== game.rom;
+      })
+      chrome.storage.local.set({'userGames': newGamesList});
+      console.log('newGamesList', newGamesList);
+    });
+
+    //remove from list of games the user sees
+    var index = $scope.games.indexOf(game);
+    $scope.games.splice(index, 1);   
+
+    document.getElementById('deleteGameScreen').classList.add('hidden');
+  }
+
   //list of available consoles: used to filter list of games
   $scope.consoleList = [{
     id: 1,
@@ -63,6 +102,11 @@ app.controller('gameSelection', function($scope, $http) {
   
   //'import' list of games to render from gamesList.js
   $scope.games = window.gamesList;
+  chrome.storage.local.get('userGames', function(obj) {
+    obj.userGames.forEach(function(userGame) {
+      $scope.games.push(userGame);
+    });
+  });
 
   //methods to filter and show games from the list
   $scope.setSelectedConsole = function () {

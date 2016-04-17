@@ -19,6 +19,10 @@ html, body, canvas {
   width:300px;
 }
 
+.editOrDeleteIcon {
+  margin-right: 5px;
+}
+
 #mobileSide {
   height: 100%;
   width: 100%;
@@ -59,17 +63,9 @@ html, body, canvas {
   text-align: center;
   margin-top: 2%;
   margin-bottom: 2%;
-
   font-family: dockerOne;
   color: black;
   font-size: 1.5em;
-}
-#qrInstructions2 {
-  text-align: center;
-  /*margin-top: 2%;*/
-  font-family: dockerOne;
-  color: black;
-  font-size: 1em;
 }
 #qrStartButton {
   width: 100%;
@@ -90,8 +86,76 @@ html, body, canvas {
 }
 #qrCode {
   border: thick solid transparent;
-
   width: 255px;
+}
+
+#qrScreen2 {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background-size: cover;
+  background-color: rgba(0,0,0,.6);
+}
+#qrModal2 {
+  width: 300px;
+  margin: -25% 0 0 -150px;
+}
+#qrModalBody2 {
+  padding: 15px 15px 5px 15px;
+}
+#qrCode2 {
+  border: thick solid transparent;
+  width: 255px;
+}
+#qrInstructions2 {
+  text-align: center;
+  margin-top: 2%;
+  margin-bottom: 2%;
+  font-family: dockerOne;
+  color: black;
+  font-size: 1.5em;
+}
+
+#deleteGameScreen {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background-size: cover;
+  background-color: rgba(0,0,0,0);
+}
+#deleteGameModal {
+  width: 300px;
+  margin: -10% 0 0 -150px;
+}
+#deleteGameModalBody {
+  padding: 15px 15px 5px 15px;
+}
+#deleteGameInstructions {
+  text-align: center;
+  margin-top: 2%;
+  margin-bottom: 2%;
+  font-family: dockerOne;
+  color: black;
+  font-size: 1.2em;
+}
+#deleteGameModalFooter {
+  background-color: white;
+  display: flex;
+  flex-direction: row;
+}
+#deleteGameYesButton {
+  width: 40%;
+  margin: 0 auto; 
+  border-radius: 5px;
+  color: black;
+  background-color: white;
+}
+#deleteGameNoButton {
+  width: 40%;
+  margin: 0 auto; 
+  border-radius: 5px;
+  color: black;
+  background-color: white;
 }
 
 #keyboardSide {
@@ -172,7 +236,6 @@ html, body, canvas {
   right: 0;
   margin: 2.1% 5% 5%;
   padding-right: 115px;
-
   font-family: dockerOne;
   font-size: 3em;
 }
@@ -230,7 +293,7 @@ html, body, canvas {
 
 .dragGameHere {
   border: 10px dashed transparent; 
-  border-left: 10px solid white; 
+  border-left: 10px solid gray; 
   flex: 1;
   overflow: hidden;
   background: gray url(../img/snesconsolewithborderandtext.png) no-repeat center center;
@@ -277,6 +340,15 @@ html, body, canvas {
   background-color: white;
 }
 
+#menuHintBubble {
+  padding: 10px 10px 10px 10px;
+  border-radius: 5px;
+  color: white;
+  background-color: rgba(0,0,0,0.5);
+  -webkit-transition: all 0.3s ease-in-out;
+  
+}
+
 #clickToRestart {
   width: 10%;
   margin: 0 auto;
@@ -320,9 +392,23 @@ html, body, canvas {
   margin-left: 15px;
 }
 
+#menuHint {
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+  font-family: dockerOne;
+  color: white;
+}
+
 
 
 #validationError {
+  color: red;
+  margin-top: 3px;
+  margin-bottom: 3px;
+}
+
+#resumeError {
   color: red;
   margin-top: 3px;
   margin-bottom: 3px;
