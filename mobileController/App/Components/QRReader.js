@@ -18,9 +18,9 @@ var {
   Navigator,
   StatusBarIOS,
   SegmentedControlIOS,
-  AlertIOS,
   Platform,
-  Linking
+  Linking,
+  ScrollView,
 } = React;
 
 class QRReader extends React.Component {
@@ -31,7 +31,7 @@ class QRReader extends React.Component {
       handleFocusChanged: () => {},
       androidTorch: "off",
       cameraOn: true,
-      selectedIndex: 0,
+      selectedIndex: 1,
     }
   }
 
@@ -146,20 +146,20 @@ class QRReader extends React.Component {
                 />
 
               {this.state.selectedIndex===1 ? 
-                <View style={styles.modal}>
-                  <Text allowFontScaling={false}>Hello world!</Text>
-                  <Text allowFontScaling={false}>Hello world!</Text>
-                  <Text allowFontScaling={false}>Hello world!</Text>
-                  <Text allowFontScaling={false}>Hello world!</Text>
-                  <Text allowFontScaling={false}>Hello world!</Text>
-                  <Text allowFontScaling={false}>Hello world!</Text>
-                  <Text allowFontScaling={false}>Hello world!</Text>
-                  <Text allowFontScaling={false}>Hello world!</Text>
-                  <Text allowFontScaling={false}>Hello world!</Text>
-                  <Text allowFontScaling={false}>Hello world!</Text>
-                  <Text allowFontScaling={false}>Hello world!</Text>
-                  <Text allowFontScaling={false}>Hello world!</Text>
-                </View> :
+                <ScrollView style={styles.modal}>
+                  <Text style={{fontWeight: 'bold', fontSize: 18}} allowFontScaling={false}>Welcome to RetroSuite Controller!</Text>
+                  <Text style={{fontSize: 15}} allowFontScaling={false}></Text>
+                  <Text style={{fontWeight: 'bold', fontSize: 15}} allowFontScaling={false}>1.<Text style={{fontWeight: 'normal', fontSize: 15}} allowFontScaling={false}> Download the RetroSuite EMU Chrome App to your computer.</Text></Text>
+                  <Text style={{fontSize: 15}} allowFontScaling={false}></Text>
+                  <Text style={{fontWeight: 'bold', fontSize: 15}} allowFontScaling={false}>2.<Text style={{fontWeight: 'normal', fontSize: 15}} allowFontScaling={false}> Make sure your computer and your phone are connected to the same Wi-Fi network. Click here to connect to Wi-Fi.</Text></Text>
+                  <Text style={{fontSize: 15}} allowFontScaling={false}></Text>
+                  <Text style={{fontWeight: 'bold', fontSize: 15}} allowFontScaling={false}>3.<Text style={{fontWeight: 'normal', fontSize: 15}} allowFontScaling={false}> On your computer, select a game, and on the next "Choose Your Controller" screen, click "Mobile Phone".</Text></Text>
+                  <Text style={{fontSize: 15}} allowFontScaling={false}></Text>
+                  <Text style={{fontWeight: 'bold', fontSize: 15}} allowFontScaling={false}>4.<Text style={{fontWeight: 'normal', fontSize: 15}} allowFontScaling={false}> On your phone, switch to "Scan QR" and point your camera at the QR code. Happy gaming; your phone is paired!</Text></Text>
+                  <Text style={{fontSize: 15}} allowFontScaling={false}></Text>
+                  <Text style={{fontSize: 15}} allowFontScaling={false}></Text>
+                  <Text style={{fontStyle: 'italic', fontSize: 15}} allowFontScaling={false}>*Remember you can use your phone as a hotspot for your computer when Wi-Fi is spotty or nonexistant. Click here to turn on Personal Hotspot.</Text>
+                </ScrollView> :
                 <View style={styles.rectanglePlaceholder} pointerEvents='box-none'/>
               }
 
@@ -357,7 +357,7 @@ var styles = StyleSheet.create({
 
   modal: {
     flex: 1,
-    marginTop: 40,
+    marginTop: 20,
     marginBottom: 20,
     marginHorizontal: 20,
     backgroundColor: '#ffffff',

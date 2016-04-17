@@ -3,7 +3,6 @@ var Ionicon = require('react-native-vector-icons/Ionicons');
 var FontAwesomeIcon = require('react-native-vector-icons/FontAwesome');
 var Orientation = require('react-native-orientation');
 var utils = require('../Utils/utils');
-var Settings = require('./Settings');
 var _ = require('lodash');
 var StatusBarAndroid = require('react-native-android-statusbar');
 
