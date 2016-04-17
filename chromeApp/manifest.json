@@ -5,9 +5,9 @@
       }
    },
    "author": {
-      "name": "Staccato Tricycle"
+      "name": "https://crowdemu.com/"
    },
-   "description": "A video game emulator supporting NES, SNES, Gameboy, and Gameboy Advance ROMs; use your phone as the controller or map custom keys.",
+   "description": "Play your favorite NES, SNES, Gameboy and Gameboy Advance ROMs; use your phone as your controller - or use custom keyboard mappings.",
    "file_handlers": {
       "gpemu": {
          "extensions": [ "32x", "gb", "gba", "gbc", "gen", "md", "mgw", "nes", "sfc", "smc", "smd", "sms", "vec" ]
@@ -39,5 +39,5 @@
      }
    },
    "short_name": "RetroSuite",
-   "version": "0.0.3"
+   "version": "0.0.5"
 }

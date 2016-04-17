@@ -38,7 +38,7 @@ class QRReader extends React.Component {
   componentDidMount() {
     Orientation.lockToPortrait(); //this will lock the view to Portrait
     
-    // //for development, simulates successful qr scan
+    // //for development purposes, simulates successful qr scan
     // var openControllerViewCallback = () => {
     //   var navigator = this.props.navigator;
     //   var turnCameraOn = this.turnCameraOn.bind(this);
@@ -54,7 +54,6 @@ class QRReader extends React.Component {
     //     }
     //   });
     // }
-
     // utils.PairController('10.0.0.215:1337', openControllerViewCallback);
   }
 
