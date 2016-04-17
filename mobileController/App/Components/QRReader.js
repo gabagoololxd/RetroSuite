@@ -31,7 +31,7 @@ class QRReader extends React.Component {
       handleFocusChanged: () => {},
       androidTorch: "off",
       cameraOn: true,
-      selectedIndex: 1,
+      selectedIndex: 0,
     }
   }
 
@@ -149,16 +149,16 @@ class QRReader extends React.Component {
                 <ScrollView style={styles.modal}>
                   <Text style={{fontWeight: 'bold', fontSize: 18}} allowFontScaling={false}>Welcome to RetroSuite Controller!</Text>
                   <Text style={{fontSize: 15}} allowFontScaling={false}></Text>
-                  <Text style={{fontWeight: 'bold', fontSize: 15}} allowFontScaling={false}>1.<Text style={{fontWeight: 'normal', fontSize: 15}} allowFontScaling={false}> Download the RetroSuite EMU Chrome App to your computer.</Text></Text>
+                  <Text style={{fontWeight: 'bold', fontSize: 15}} allowFontScaling={false}>1.<Text style={{fontWeight: 'normal', fontSize: 15}} allowFontScaling={false}> Download the <Text style={{color: 'blue', textDecorationLine: 'underline'}} allowFontScaling={false} onPress={() =>  Linking.openURL('https://chrome.google.com/webstore/detail/retrosuite-emu/bnjapfbdmfjehbgohiebcnmombalmbfd').catch(err => console.error('An error occurred', err))}>RetroSuite EMU Chrome App</Text> to your computer.</Text></Text>
                   <Text style={{fontSize: 15}} allowFontScaling={false}></Text>
-                  <Text style={{fontWeight: 'bold', fontSize: 15}} allowFontScaling={false}>2.<Text style={{fontWeight: 'normal', fontSize: 15}} allowFontScaling={false}> Make sure your computer and your phone are connected to the same Wi-Fi network. Click here to connect to Wi-Fi.</Text></Text>
+                  <Text style={{fontWeight: 'bold', fontSize: 15}} allowFontScaling={false}>2.<Text style={{fontWeight: 'normal', fontSize: 15}} allowFontScaling={false}> Make sure your computer and your phone are connected to the same Wi-Fi network. <Text style={{color: 'blue', textDecorationLine: 'underline'}} allowFontScaling={false} onPress={() =>  Linking.openURL('prefs:root=WIFI').catch(err => console.error('An error occurred', err))}>Click here</Text> to connect your iPhone to Wi-Fi.</Text></Text>
                   <Text style={{fontSize: 15}} allowFontScaling={false}></Text>
-                  <Text style={{fontWeight: 'bold', fontSize: 15}} allowFontScaling={false}>3.<Text style={{fontWeight: 'normal', fontSize: 15}} allowFontScaling={false}> On your computer, select a game, and on the next "Choose Your Controller" screen, click "Mobile Phone".</Text></Text>
+                  <Text style={{fontWeight: 'bold', fontSize: 15}} allowFontScaling={false}>3.<Text style={{fontWeight: 'normal', fontSize: 15}} allowFontScaling={false}> On your computer, select a game. On the next "Choose Your Controller" screen, click "Mobile Phone".</Text></Text>
                   <Text style={{fontSize: 15}} allowFontScaling={false}></Text>
                   <Text style={{fontWeight: 'bold', fontSize: 15}} allowFontScaling={false}>4.<Text style={{fontWeight: 'normal', fontSize: 15}} allowFontScaling={false}> On your phone, switch to "Scan QR" and point your camera at the QR code. Happy gaming; your phone is paired!</Text></Text>
                   <Text style={{fontSize: 15}} allowFontScaling={false}></Text>
                   <Text style={{fontSize: 15}} allowFontScaling={false}></Text>
-                  <Text style={{fontStyle: 'italic', fontSize: 15}} allowFontScaling={false}>*Remember you can use your phone as a hotspot for your computer when Wi-Fi is spotty or nonexistant. Click here to turn on Personal Hotspot.</Text>
+                  <Text style={{fontStyle: 'italic', fontSize: 15}} allowFontScaling={false}>*Remember: you can use your phone as a hotspot for your computer when Wi-Fi is spotty or nonexistant. <Text style={{color: 'blue', textDecorationLine: 'underline'}} allowFontScaling={false} onPress={() =>  Linking.openURL('prefs:root=INTERNET_TETHERING').catch(err => console.error('An error occurred', err))}>Click here</Text> to turn on Personal Hotspot.</Text>
                 </ScrollView> :
                 <View style={styles.rectanglePlaceholder} pointerEvents='box-none'/>
               }
