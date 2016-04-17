@@ -35,10 +35,12 @@ var utils = {
   },
 
   Press(button) {
+    console.log('press ' + button)
     ws.send('press ' + button);
   },
 
   Release(button) {
+    // console.log('release ' + button)
     ws.send('release ' + button);
   },
 

@@ -7,6 +7,7 @@ var _ = require('lodash');
 var Orientation = require('react-native-orientation');
 var BarcodeScanner = require('react-native-barcodescanner');
 var StatusBarAndroid = require('react-native-android-statusbar');
+var NetworkInfo = require('react-native-network-info');
 
 var {
   Dimensions,
@@ -21,6 +22,7 @@ var {
   Platform,
   Linking,
   ScrollView,
+  NetInfo
 } = React;
 
 class QRReader extends React.Component {
@@ -37,24 +39,35 @@ class QRReader extends React.Component {
 
   componentDidMount() {
     Orientation.lockToPortrait(); //this will lock the view to Portrait
+
+    NetworkInfo.getIPAddress(ip => {
+      console.log('ip', ip);
+    });
+    NetworkInfo.getSSID(ssid => {
+      console.log('ssid', ssid);
+    });
+
+    NetInfo.fetch().done(
+        (connectionInfo) => { console.log(connectionInfo, 'connectionInfo') }
+    );
     
-    // //for development purposes, simulates successful qr scan
-    // var openControllerViewCallback = () => {
-    //   var navigator = this.props.navigator;
-    //   var turnCameraOn = this.turnCameraOn.bind(this);
-    //   var turnCameraOff = this.turnCameraOff.bind(this);
-    //   turnCameraOff();
-    //   //open up the ControllerView
-    //   navigator.push({
-    //     component: ControllerView,
-    //     turnCameraOn: turnCameraOn.bind(this),
-    //     sceneConfig: {
-    //       ...Navigator.SceneConfigs.FloatFromBottom,
-    //       gestures: {} //disable ability to swipe to pop back from ControllerView to QRReader once past the ip address page
-    //     }
-    //   });
-    // }
-    // utils.PairController('10.0.0.215:1337', openControllerViewCallback);
+    //for development purposes, simulates successful qr scan
+    var openControllerViewCallback = () => {
+      var navigator = this.props.navigator;
+      var turnCameraOn = this.turnCameraOn.bind(this);
+      var turnCameraOff = this.turnCameraOff.bind(this);
+      turnCameraOff();
+      //open up the ControllerView
+      navigator.push({
+        component: ControllerView,
+        turnCameraOn: turnCameraOn.bind(this),
+        sceneConfig: {
+          ...Navigator.SceneConfigs.FloatFromBottom,
+          gestures: {} //disable ability to swipe to pop back from ControllerView to QRReader once past the ip address page
+        }
+      });
+    }
+    utils.PairController('10.0.0.215:1337', openControllerViewCallback);
   }
 
   _onBarCodeRead(e) {
@@ -158,7 +171,7 @@ class QRReader extends React.Component {
                   <Text style={{fontWeight: 'bold', fontSize: 15}} allowFontScaling={false}>4.<Text style={{fontWeight: 'normal', fontSize: 15}} allowFontScaling={false}> On your phone, switch to "Scan QR" and point your camera at the QR code. Happy gaming; your phone is paired!</Text></Text>
                   <Text style={{fontSize: 15}} allowFontScaling={false}></Text>
                   <Text style={{fontSize: 15}} allowFontScaling={false}></Text>
-                  <Text style={{fontStyle: 'italic', fontSize: 15}} allowFontScaling={false}>*Remember: you can use your phone as a hotspot for your computer when Wi-Fi is spotty or nonexistant. <Text style={{color: 'blue', textDecorationLine: 'underline'}} allowFontScaling={false} onPress={() =>  Linking.openURL('prefs:root=INTERNET_TETHERING').catch(err => console.error('An error occurred', err))}>Click here</Text> to turn on Personal Hotspot.</Text>
+                  <Text style={{fontStyle: 'italic', fontSize: 15}} allowFontScaling={false}>*Remember: you can use your phone as a hotspot for your computer when Wi-Fi is spotty or nonexistant. <Text style={{color: 'blue', textDecorationLine: 'underline', fontStyle: 'normal'}} allowFontScaling={false} onPress={() =>  Linking.openURL('prefs:root=INTERNET_TETHERING').catch(err => console.error('An error occurred', err))}>Click here</Text> to turn on Personal Hotspot.</Text>
                 </ScrollView> :
                 <View style={styles.rectanglePlaceholder} pointerEvents='box-none'/>
               }
