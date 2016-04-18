@@ -3,7 +3,6 @@ var _ = require('lodash');
 
 var {
   Dimensions,
-  StyleSheet,
   View,
   PanResponder,
 } = React;
@@ -21,6 +20,7 @@ class DPad extends React.Component {
   }
 
   componentWillMount() {
+    //farthest locations of each of the 4 directions relative to the top left corner of the DPad; later we compare each coordinate with the the current touch coordinate
     const upXRelativeCoordinate = this.props.radius;
     const upYRelativeCoordinate = 0;
 
@@ -33,7 +33,7 @@ class DPad extends React.Component {
     const leftXRelativeCoordinate = 0;
     const leftYRelativeCoordinate = this.props.radius;
 
-    //The following code is used to make the D-Pad into a joystick so the user can roll their thumb between buttons and trigger a response
+    //The following code is used to make the D-Pad into a joystick so the user can roll their thumb between buttons and trigger a correct response
     //instead of having to lift a finger and tap
     this._panResponder = PanResponder.create({
       // Ask to be the responder:
@@ -71,7 +71,7 @@ class DPad extends React.Component {
       onPanResponderMove: (evt, gestureState) => {
         // The player has moved their finger after touching the D-Pad area
         // Find the identifier of the touch that corresponds to the D-Pad: this is done because if another button is clicked (ex. A/B/X/Y with the right thumb) 
-        //or another part of the screen is toucher and the user moves their right finger, it will throw off the D-Pad
+        // or another part of the screen is toucher and the user moves their right finger, it will throw off the D-Pad
         var initialX = this.state.dPadStartX;
         var initialY = this.state.dPadStartY;
         var mapped = evt.nativeEvent.touches.map(function(touch){
@@ -82,7 +82,7 @@ class DPad extends React.Component {
         var identifier = closest[0]['identifier'];
         this.setState({dPadTouchesIdentifier:identifier});
 
-        // Register dpad controls based on filtered evt.nativeEvent.touches where identifier is the state.
+        // Register DPad controls based on filtered evt.nativeEvent.touches where identifier is the state.
         var dPadTouch = evt.nativeEvent.touches.filter(function(touch){
           return touch.identifier = identifier;
         })

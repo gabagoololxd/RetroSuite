@@ -22,8 +22,6 @@ class ControllerView extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      //used to scale sizes of D-Pad depending on phone resolution
-      iPhoneSize: undefined,
       //set to true when game is paused
       showPauseModal: false,
     };
@@ -44,26 +42,7 @@ class ControllerView extends React.Component {
   }
 
   componentDidMount() {
-
     Orientation.lockToLandscapeRight(); //this will lock the view to Landscape
-
-    //buttons must scale with size of the phone (note: a zoomed iphone 6+ is a regular iphone 6, a zoomed iphone 6 is a regular iphone 5)
-    if (Platform.OS === 'ios') {
-      if(Dimensions.get('window').width===375) { //iPhone 6/6s
-        this.setState({
-          iPhoneSize: 'iPhone6',
-        })
-      } else if (Dimensions.get('window').width===414) { //iPhone 6+/6s+
-        this.setState({
-          iPhoneSize: 'iPhone6+',
-        })
-      } else if (Dimensions.get('window').width===320) { //iPhone 5/5s/SE
-        this.setState({
-          iPhoneSize: 'iPhone5',
-        })
-      }
-    }
-
   }
 
   /////////////////////////////////////////////////////////////////////
