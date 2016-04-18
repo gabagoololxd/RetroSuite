@@ -32,7 +32,7 @@ class DPad extends React.Component {
 
     const leftXRelativeCoordinate = 0;
     const leftYRelativeCoordinate = this.props.radius;
-    
+
     //The following code is used to make the D-Pad into a joystick so the user can roll their thumb between buttons and trigger a response
     //instead of having to lift a finger and tap
     this._panResponder = PanResponder.create({
@@ -195,6 +195,7 @@ class DPad extends React.Component {
         width: this.props.radius * 2,
         height: this.props.radius * 2,
         borderRadius: this.props.radius,
+        position: 'absolute',
         top: this.props.absolutePositionOfDPadCenter.x - this.props.radius,
         left: this.props.absolutePositionOfDPadCenter.y - this.props.radius,
       }]}/>
