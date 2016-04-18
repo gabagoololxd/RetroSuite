@@ -5,22 +5,19 @@ var utils = require('../Utils/utils');
 var ControllerView = require('./ControllerView');
 var _ = require('lodash');
 var Orientation = require('react-native-orientation');
-var BarcodeScanner = require('react-native-barcodescanner');
-var StatusBarAndroid = require('react-native-android-statusbar');
 
 var {
   Dimensions,
   StyleSheet,
   Text,
   View,
-  TouchableOpacity,
   TouchableWithoutFeedback,
   Navigator,
   StatusBarIOS,
   SegmentedControlIOS,
-  Platform,
   Linking,
   ScrollView,
+  NetInfo
 } = React;
 
 class QRReader extends React.Component {
@@ -29,14 +26,17 @@ class QRReader extends React.Component {
     this.state = {
       cameraTorchToggle: Camera.constants.TorchMode.off,
       handleFocusChanged: () => {},
-      androidTorch: "off",
       cameraOn: true,
-      selectedIndex: 1,
+      selectedIndex: 0,
     }
   }
 
   componentDidMount() {
     Orientation.lockToPortrait(); //this will lock the view to Portrait
+
+    NetInfo.fetch().done(
+        (connectionInfo) => { console.log(connectionInfo, 'connectionInfo') }
+    );
     
     // //for development purposes, simulates successful qr scan
     // var openControllerViewCallback = () => {
@@ -58,9 +58,7 @@ class QRReader extends React.Component {
   }
 
   _onBarCodeRead(e) {
-    //format of QR code: https://chart.googleapis.com/chart?chs=250x250&cht=qr&chl=10.6.30.50:1337
     var ipAddress = e.data;
-    console.log("QR Code Found", ipAddress);
 
     var success = () => {
       var navigator = this.props.navigator;
@@ -81,138 +79,105 @@ class QRReader extends React.Component {
     utils.PairController(ipAddress, success);
   }
 
+  _torchEnabled() {
+    this.state.cameraTorchToggle === Camera.constants.TorchMode.on ? this.setState({ cameraTorchToggle: Camera.constants.TorchMode.off }) : this.setState({ cameraTorchToggle: Camera.constants.TorchMode.on });
+  }
+
+  turnCameraOff() { //we want to turn the camera off once the ControllerView mounts because the camera is no longer necessary (until the user has to re-pair with the websockets server)
+    this.setState({cameraOn:false})
+  }
+  turnCameraOn() {
+    this.setState({cameraOn:true})
+  }
+
   _onChange(event) {
     this.setState({
       selectedIndex: event.nativeEvent.selectedSegmentIndex,
     });
   }
 
-  // For Android
-  _toggleTorch() {
-    console.log(this.state.androidTorch)
-    if (this.state.androidTorch === 'on') {
-      this.setState({androidTorch: 'off'})
-    }
-    else {
-      this.setState({androidTorch: 'on'})
-    }
-  }
-  // For IOS
-  _torchEnabled() {
-    this.state.cameraTorchToggle === Camera.constants.TorchMode.on ? this.setState({ cameraTorchToggle: Camera.constants.TorchMode.off }) : this.setState({ cameraTorchToggle: Camera.constants.TorchMode.on });
-    // Linking.openURL('prefs:root=Wifi').catch(err => console.error('An error occurred', err));
-  }
-
-  turnCameraOff() {
-    this.setState({cameraOn:false})
-  }
-
-  turnCameraOn() {
-    this.setState({cameraOn:true})
-  }
-
   render() {
-    // check for IOS specific
-    if (Platform.OS === 'ios') {
-      StatusBarIOS.setHidden('false');
-      StatusBarIOS.setStyle('light-content');
-      if (this.state.cameraOn) {
-        return (
-          <View >
-            <Camera
-              ref={(cam) => {
-                this.camera = cam;
-              }}
-              style={styles.preview}
-              torchMode={this.state.cameraTorchToggle}
-              aspect={Camera.constants.Aspect.Fill}
-              onBarCodeRead={_.once(this._onBarCodeRead.bind(this))}
-              defaultOnFocusComponent={ true }
-              orientation={Camera.constants.Orientation.portrait}
-              onFocusChanged={ this.state.handleFocusChanged }>
+    StatusBarIOS.setHidden('false');
+    StatusBarIOS.setStyle('light-content');
+    if (this.state.cameraOn) {
+      return (
+        <View >
+          <Camera
+            ref={(cam) => {
+              this.camera = cam;
+            }}
+            style={styles.camera}
+            torchMode={this.state.cameraTorchToggle}
+            aspect={Camera.constants.Aspect.Fill}
+            onBarCodeRead={_.once(this._onBarCodeRead.bind(this))}
+            defaultOnFocusComponent={true}
+            orientation={Camera.constants.Orientation.portrait}
+            onFocusChanged={ this.state.handleFocusChanged }>
 
-              <View style={styles.overlayLeft}/> 
-              <View style={styles.overlayTop}/> 
-              <View style={styles.overlayRight}/> 
-              <View style={styles.overlayBottom}/> 
+            <View style={styles.overlayLeft}/> 
+            <View style={styles.overlayTop}/> 
+            <View style={styles.overlayRight}/> 
+            <View style={styles.overlayBottom}/> 
 
+            <SegmentedControlIOS 
+              values={['Scan QR', 'Instructions']} 
+              selectedIndex={this.state.selectedIndex} 
+              style={styles.segments} 
+              tintColor="white"
+              onChange={this._onChange.bind(this)}
+              />
 
-              <SegmentedControlIOS 
-                values={['Scan QR', 'Instructions']} 
-                selectedIndex={this.state.selectedIndex} 
-                style={styles.segments} 
-                tintColor="white"
-                onChange={this._onChange.bind(this)}
-                />
+            {this.state.selectedIndex===1 ? 
+              <ScrollView style={styles.modal}>
+                <Text style={{fontWeight: 'bold', fontSize: 18}} allowFontScaling={false}>Welcome to RetroSuite Controller!</Text>
+                <Text style={{fontSize: 15}} allowFontScaling={false}></Text>
+                <Text style={{fontWeight: 'bold', fontSize: 15}} allowFontScaling={false}>1.<Text style={{fontWeight: 'normal', fontSize: 15}} allowFontScaling={false}> Download the <Text style={{color: 'blue', textDecorationLine: 'underline'}} allowFontScaling={false} onPress={() =>  Linking.openURL('https://chrome.google.com/webstore/detail/retrosuite-emu/bnjapfbdmfjehbgohiebcnmombalmbfd').catch(err => console.error('An error occurred', err))}>RetroSuite EMU Chrome App</Text> to your computer.</Text></Text>
+                <Text style={{fontSize: 15}} allowFontScaling={false}></Text>
+                <Text style={{fontWeight: 'bold', fontSize: 15}} allowFontScaling={false}>2.<Text style={{fontWeight: 'normal', fontSize: 15}} allowFontScaling={false}> Make sure your computer and your phone are connected to the same Wi-Fi network. <Text style={{color: 'blue', textDecorationLine: 'underline'}} allowFontScaling={false} onPress={() =>  Linking.openURL('prefs:root=WIFI').catch(err => console.error('An error occurred', err))}>Click here</Text> to connect your iPhone to Wi-Fi.</Text></Text>
+                <Text style={{fontSize: 15}} allowFontScaling={false}></Text>
+                <Text style={{fontWeight: 'bold', fontSize: 15}} allowFontScaling={false}>3.<Text style={{fontWeight: 'normal', fontSize: 15}} allowFontScaling={false}> On your computer, select a game. On the next "Choose Your Controller" screen, click "Mobile Phone".</Text></Text>
+                <Text style={{fontSize: 15}} allowFontScaling={false}></Text>
+                <Text style={{fontWeight: 'bold', fontSize: 15}} allowFontScaling={false}>4.<Text style={{fontWeight: 'normal', fontSize: 15}} allowFontScaling={false}> On your phone, switch to "Scan QR" and point your camera at the QR code. Happy gaming; your phone is paired!</Text></Text>
+                <Text style={{fontSize: 15}} allowFontScaling={false}></Text>
+                <Text style={{fontSize: 15}} allowFontScaling={false}></Text>
+                <Text style={{fontStyle: 'italic', fontSize: 15}} allowFontScaling={false}>*Remember: you can use your phone as a hotspot for your computer when Wi-Fi is spotty or nonexistant. <Text style={{color: 'blue', textDecorationLine: 'underline', fontStyle: 'normal'}} allowFontScaling={false} onPress={() =>  Linking.openURL('prefs:root=INTERNET_TETHERING').catch(err => console.error('An error occurred', err))}>Click here</Text> to turn on Personal Hotspot.</Text>
+              </ScrollView> :
+              <View style={styles.rectanglePlaceholder} pointerEvents='box-none'/>
+            }
 
-              {this.state.selectedIndex===1 ? 
-                <ScrollView style={styles.modal}>
-                  <Text style={{fontWeight: 'bold', fontSize: 18}} allowFontScaling={false}>Welcome to RetroSuite Controller!</Text>
-                  <Text style={{fontSize: 15}} allowFontScaling={false}></Text>
-                  <Text style={{fontWeight: 'bold', fontSize: 15}} allowFontScaling={false}>1.<Text style={{fontWeight: 'normal', fontSize: 15}} allowFontScaling={false}> Download the RetroSuite EMU Chrome App to your computer.</Text></Text>
-                  <Text style={{fontSize: 15}} allowFontScaling={false}></Text>
-                  <Text style={{fontWeight: 'bold', fontSize: 15}} allowFontScaling={false}>2.<Text style={{fontWeight: 'normal', fontSize: 15}} allowFontScaling={false}> Make sure your computer and your phone are connected to the same Wi-Fi network. Click here to connect to Wi-Fi.</Text></Text>
-                  <Text style={{fontSize: 15}} allowFontScaling={false}></Text>
-                  <Text style={{fontWeight: 'bold', fontSize: 15}} allowFontScaling={false}>3.<Text style={{fontWeight: 'normal', fontSize: 15}} allowFontScaling={false}> On your computer, select a game, and on the next "Choose Your Controller" screen, click "Mobile Phone".</Text></Text>
-                  <Text style={{fontSize: 15}} allowFontScaling={false}></Text>
-                  <Text style={{fontWeight: 'bold', fontSize: 15}} allowFontScaling={false}>4.<Text style={{fontWeight: 'normal', fontSize: 15}} allowFontScaling={false}> On your phone, switch to "Scan QR" and point your camera at the QR code. Happy gaming; your phone is paired!</Text></Text>
-                  <Text style={{fontSize: 15}} allowFontScaling={false}></Text>
-                  <Text style={{fontSize: 15}} allowFontScaling={false}></Text>
-                  <Text style={{fontStyle: 'italic', fontSize: 15}} allowFontScaling={false}>*Remember you can use your phone as a hotspot for your computer when Wi-Fi is spotty or nonexistant. Click here to turn on Personal Hotspot.</Text>
-                </ScrollView> :
-                <View style={styles.rectanglePlaceholder} pointerEvents='box-none'/>
-              }
-
-              {this.state.selectedIndex===0 ? 
-                <View style={styles.rectangleContainer} pointerEvents='box-none'>
-                  <View style={styles.rectangleTopLeft} pointerEvents='box-none'></View>
-                  <View style={styles.rectangleTopRight} pointerEvents='box-none'></View>
-                  <View style={styles.rectangleBottomLeft} pointerEvents='box-none'></View>
-                  <View style={styles.rectangleBottomRight} pointerEvents='box-none'></View>
-                </View>:
-                null
-              }
-
-              <View style={styles.bottomButtonContainer}>
-                <TouchableWithoutFeedback onPress={this._torchEnabled.bind(this)}  underlayColor={'#FC9396'}>
-                  {this.state.cameraTorchToggle === Camera.constants.TorchMode.off ? 
-                    <View style={styles.flashButton}>
-                      <IconIon name="ios-bolt-outline" size={40} allowFontScaling={false} color="rgba(237,237,237,0.5)" style={styles.flashIcon} />
-                      <Text style={styles.flashButtonText} allowFontScaling={false}>Flash Off</Text>
-                    </View> : 
-                    <View style={styles.flashButton}>
-                      <IconIon name="ios-bolt" size={40} allowFontScaling={false} color="rgba(237,237,237,0.5)" style={styles.flashIcon} />
-                      <Text style={styles.flashButtonText} allowFontScaling={false}>Flash On</Text>
-                    </View>
-                  }
-                </TouchableWithoutFeedback>
+            {this.state.selectedIndex===0 ? 
+              <View style={styles.rectangleContainer} pointerEvents='box-none'>
+                <View style={styles.rectangleTopLeft} pointerEvents='box-none'></View>
+                <View style={styles.rectangleTopRight} pointerEvents='box-none'></View>
+                <View style={styles.rectangleBottomLeft} pointerEvents='box-none'></View>
+                <View style={styles.rectangleBottomRight} pointerEvents='box-none'></View>
               </View>
+            :
+              null
+            }
 
-            </Camera>
-          </View>
-
-        );
-      } else {
-        return null;
-      }
-    } else { //TODO: android
-      if (this.state.cameraOn) {
-        return (
-            <BarcodeScanner
-              onBarCodeRead={_.once(this._onBarCodeRead.bind(this))}
-              style={{ flex: 1 }}
-              torchMode={this.state.androidTorch}
-              >
-            <View style={styles.bottomButtonContainerAndroid}>
-                <TouchableOpacity onPress={this._toggleTorch.bind(this)} style={styles.flashButton} underlayColor={'#FC9396'}>
-                  {this.state.androidTorch === 'off'? <IconIon name="ios-bolt-outline" size={55} color="rgba(237,237,237,0.5)" style={styles.flashIcon} /> : <IconIon name="ios-bolt" size={55} color="rgba(237,237,237,0.5)" style={styles.flashIcon} />}
-                </TouchableOpacity>
+            <View style={styles.bottomButtonContainer}>
+              <TouchableWithoutFeedback onPress={this._torchEnabled.bind(this)}  underlayColor={'#FC9396'}>
+                {this.state.cameraTorchToggle === Camera.constants.TorchMode.off ? 
+                  <View style={styles.flashButton}>
+                    <IconIon name="ios-bolt-outline" size={40} allowFontScaling={false} color="rgba(237,237,237,0.5)" style={styles.flashIcon} />
+                    <Text style={styles.flashButtonText} allowFontScaling={false}>Flash Off</Text>
+                  </View> 
+                : 
+                  <View style={styles.flashButton}>
+                    <IconIon name="ios-bolt" size={40} allowFontScaling={false} color="rgba(237,237,237,0.5)" style={styles.flashIcon} />
+                    <Text style={styles.flashButtonText} allowFontScaling={false}>Flash On</Text>
+                  </View>
+                }
+              </TouchableWithoutFeedback>
             </View>
-          </BarcodeScanner>
-        );
-      } else {
-        return null;
-      }
+
+          </Camera>
+        </View>
+
+      );
+    } else {
+      return null;
     }
   }
 }
@@ -221,11 +186,11 @@ var styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  preview: {
+  camera: {
     height: Dimensions.get('window').height,
     width: Dimensions.get('window').width,
   },
-  segments : {
+  segments: {
     marginTop: 25
   },
 
@@ -293,11 +258,6 @@ var styles = StyleSheet.create({
   bottomButtonContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    alignItems:'center',
-    marginBottom: 15
-  },
-  bottomButtonContainerAndroid: {
-    flexDirection: 'row',
     alignItems:'center',
     marginBottom: 15
   },
