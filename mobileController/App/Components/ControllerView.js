@@ -20,10 +20,8 @@ class ControllerView extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      //set to true when game is paused
-      showPauseModal: false,
+      showPauseModal: false,  // set to true when game is paused
     };
-    // TODO: pause and resume the game through websockets without using global scope
     global.pause = () => {
       this.setState({showPauseModal: true});
     };
@@ -40,12 +38,10 @@ class ControllerView extends React.Component {
   }
 
   componentDidMount() {
-    Orientation.lockToLandscapeRight(); //this will lock the view to Landscape
+    Orientation.lockToLandscapeRight(); // this will lock the view to Landscape
   }
 
-  /////////////////////////////////////////////////////////////////////
-  //Pause button and button options while game is paused
-  /////////////////////////////////////////////////////////////////////
+  // Pause button and button options while game is paused:
   _pause() {
     var controller = this;
     utils.Pause(function() {
@@ -156,7 +152,7 @@ var styles = StyleSheet.create({
     backgroundColor: 'transparent'
   },
   DPad: {
-    backgroundColor: 'red',
+    backgroundColor: 'transparent',
   },
   leftShoulderButton: {
     position: 'absolute',

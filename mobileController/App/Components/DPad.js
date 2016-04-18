@@ -7,34 +7,32 @@ var {
   PanResponder,
 } = React;
 
+// The following code is used to make the D-Pad into a joystick so the user can roll their thumb between buttons and trigger a correct response
+// instead of having to lift a finger and tap
 class DPad extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      //used to control logic in the D-Pad
+      // used to control logic in the D-Pad
       dPadButton: undefined, //currently pressed D-pad button
       dPadStartX: undefined,
       dPadStartY: undefined,
-      dPadTouchesIdentifier: undefined, //identifier of the D-Pad touch within the evt.nativeEvent.touches array
+      dPadTouchesIdentifier: undefined, // identifier of the D-Pad touch within the evt.nativeEvent.touches array
     };
   }
 
   componentWillMount() {
-    //farthest locations of each of the 4 directions relative to the top left corner of the DPad; later we compare each coordinate with the the current touch coordinate
+    // farthest locations of each of the 4 directions relative to the top left corner of the DPad; 
+    // later we compare each coordinate with the the current touch coordinate to see which button is being pressed
     const upXRelativeCoordinate = this.props.radius;
     const upYRelativeCoordinate = 0;
-
     const rightXRelativeCoordinate = this.props.radius * 2;
     const rightYRelativeCoordinate = this.props.radius;
-
     const downXRelativeCoordinate = this.props.radius;
     const downYRelativeCoordinate = this.props.radius * 2;
-
     const leftXRelativeCoordinate = 0;
     const leftYRelativeCoordinate = this.props.radius;
 
-    //The following code is used to make the D-Pad into a joystick so the user can roll their thumb between buttons and trigger a correct response
-    //instead of having to lift a finger and tap
     this._panResponder = PanResponder.create({
       // Ask to be the responder:
       onStartShouldSetPanResponder: (evt, gestureState) => true,
@@ -74,8 +72,8 @@ class DPad extends React.Component {
         // or another part of the screen is toucher and the user moves their right finger, it will throw off the D-Pad
         var initialX = this.state.dPadStartX;
         var initialY = this.state.dPadStartY;
-        var mapped = evt.nativeEvent.touches.map(function(touch){
-          var distance=Math.sqrt( (initialX-touch.pageX)*(initialX-touch.pageX) + (initialY-touch.pageY)*(initialY-touch.pageY) );
+        var mapped = evt.nativeEvent.touches.map(function(touch) {
+          var distance = Math.sqrt( (initialX-touch.pageX)*(initialX-touch.pageX) + (initialY-touch.pageY)*(initialY-touch.pageY) );
           return {'distance':distance, 'identifier': touch.identifier};
         });
         var closest = _.sortBy(mapped, 'distance');
@@ -118,7 +116,7 @@ class DPad extends React.Component {
   }
 
   _upArrowPressIn() {
-    if(this.state.dPadButton!==undefined && this.state.dPadButton!=='up') { //there is already another D-Pad button pressed, which means that we are changing from one D-Pad button to another
+    if(this.state.dPadButton!==undefined && this.state.dPadButton!=='up') { // there is already another D-Pad button pressed, which means that we are changing from one D-Pad button to another
       if(this.state.dPadButton==='down') {
         this._downArrowPressOut();
       } else if(this.state.dPadButton==='left') {
@@ -136,7 +134,7 @@ class DPad extends React.Component {
   }
 
   _downArrowPressIn() {
-    if(this.state.dPadButton!==undefined && this.state.dPadButton!=='down') { //there is already another D-Pad button pressed, which means that we are changing from one D-Pad button to another
+    if(this.state.dPadButton!==undefined && this.state.dPadButton!=='down') { // there is already another D-Pad button pressed, which means that we are changing from one D-Pad button to another
       if(this.state.dPadButton==='up') {
         this._upArrowPressOut();
       } else if(this.state.dPadButton==='left') {
@@ -154,7 +152,7 @@ class DPad extends React.Component {
   }
 
   _rightArrowPressIn() {
-    if(this.state.dPadButton!==undefined && this.state.dPadButton!=='right') { //there is already another D-Pad button pressed, which means that we are changing from one D-Pad button to another
+    if(this.state.dPadButton!==undefined && this.state.dPadButton!=='right') { // there is already another D-Pad button pressed, which means that we are changing from one D-Pad button to another
       if(this.state.dPadButton==='down') {
         this._downArrowPressOut();
       } else if(this.state.dPadButton==='left') {
@@ -172,7 +170,7 @@ class DPad extends React.Component {
   }
 
   _leftArrowPressIn() {
-    if(this.state.dPadButton!==undefined && this.state.dPadButton!=='left') { //there is already another D-Pad button pressed, which means that we are changing from one D-Pad button to another
+    if(this.state.dPadButton!==undefined && this.state.dPadButton!=='left') { // there is already another D-Pad button pressed, which means that we are changing from one D-Pad button to another
       if(this.state.dPadButton==='down') {
         this._downArrowPressOut();
       } else if(this.state.dPadButton==='up') {
@@ -191,14 +189,14 @@ class DPad extends React.Component {
 
   render() {
     return (
-      <View {...this._panResponder.panHandlers} style={[this.props.style, {
-        width: this.props.radius * 2,
-        height: this.props.radius * 2,
-        borderRadius: this.props.radius,
-        position: 'absolute',
-        top: this.props.absolutePositionOfDPadCenter.x - this.props.radius,
-        left: this.props.absolutePositionOfDPadCenter.y - this.props.radius,
-      }]}/>
+      <View {...this._panResponder.panHandlers} 
+            style={[this.props.style, {
+              width: this.props.radius * 2,
+              height: this.props.radius * 2,
+              borderRadius: this.props.radius,
+              position: 'absolute',
+              top: this.props.absolutePositionOfDPadCenter.x - this.props.radius,
+              left: this.props.absolutePositionOfDPadCenter.y - this.props.radius}]}/>
     );
   }
 }
