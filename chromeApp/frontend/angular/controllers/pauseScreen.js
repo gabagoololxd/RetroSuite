@@ -18,8 +18,8 @@ app.controller('pauseScreen', function($scope) {
 
           $scope.ipFound = true;
 
-          // force scope to update
-          $scope.$apply()
+          // // force scope to update
+          // $scope.$apply()
         }
       });
 

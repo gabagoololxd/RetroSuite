@@ -30,15 +30,8 @@ app.controller('gameSelection', function($scope, $http) {
     }, 5000);
 
     if(game.rom) { //this is a game the user has added in before; we retrieve from chrome.storage.local
-      var gameAsArray = game.rom.split(',').map(function(string) {
-        return parseInt(string);
-      });
-      console.log('correct or not?', gameAsArray)
-      console.log('extension', game.extension)
-
       window.play(game.rom.split(','), game.extension);
       document.getElementById('gameSelection').classList.add('hidden');
-
     } else {
       return $http({ //Fetches ROM data from ipfs, converts to readable method for emulator, loads in the ROM
         method: 'GET',
@@ -50,6 +43,7 @@ app.controller('gameSelection', function($scope, $http) {
           console.log('failuuuure', response);
         });
     }
+
 
   }
 

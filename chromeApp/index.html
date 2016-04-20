@@ -135,11 +135,17 @@
 
   <!-- these are the overlay that is the emulator + the screen that appears on right click which pauses game and shows options -->
   <div id="overlay" class="overlay"></div>
-  <div id="menuHint">
+  <div id="menuHint">`
     <div id="menuHintBubble" class="hidden">Right Click to Pause and Remap Keys</div>
+  </div>
+  <div id="controllerConnectedHint">
+    <div id="controllerConnectedHintBubble" class="hidden">Mobile Controller Connected</div>
   </div>
   <div class="menu hidden" id="menu" ng-controller="pauseScreen">
     <div id="pauseMenuModal">
+    <div id="controllerDisconnectedHint">
+      <div id="controllerDisconnectedHintBubble" class="hidden">Mobile Controller Disconnected</div>
+    </div>
       <div id="pauseMenuContainer">
         <input type="file" id="savechooser" class="chooser"/>
         <div id="pauseMenuHeader">
