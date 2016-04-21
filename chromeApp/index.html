@@ -37,6 +37,7 @@
   <!-- this is the game selection screen -->
   <div class="gameSelection hidden screen" ng-hide="gameSelection.hidden" id="gameSelection" ng-controller="gameSelection">
 
+    <!-- modal which appears when user clicks the remove sign on a game -->
     <div id="deleteGameScreen" class="hidden">
       <div id="deleteGameModal" class="modal" data-ng-click="$event.stopPropagation()">
         <div id="deleteGameModalBody" class="modal-body"> 
@@ -48,8 +49,6 @@
         </div>
       </div>
     </div>
-
-
     <!-- left side -->
     <div class="availableGames" id="availableGames">
       <h1 class='needAGame'>Your Library</h1>
@@ -88,7 +87,9 @@
             <a id='gameTitle' data-ng-click="getRom(game)">
               {{game.title}}
             </a>
-            <img src="/frontend/img/xIconGray.png" data-ng-show="game.extension" data-ng-click="removeUserAddedGame(game)" class="editOrDeleteIcon" height='20px' width='20px'> 
+            <img src="/frontend/img/spinner.gif" data-ng-show="showDetails" class="editOrDeleteIcon" height='25px' width='25px'> 
+            <img src="/frontend/img/xIconGray.png" data-ng-show="game.extension" data-ng-click="removeUserAddedGame(game)" class="editOrDeleteIcon" height='20px' width='20px'>
+
           </li>
         </ul>
       </div>
@@ -135,7 +136,7 @@
 
   <!-- these are the overlay that is the emulator + the screen that appears on right click which pauses game and shows options -->
   <div id="overlay" class="overlay"></div>
-  <div id="menuHint">`
+  <div id="menuHint">
     <div id="menuHintBubble" class="hidden">Right Click to Pause and Remap Keys</div>
   </div>
   <div id="controllerConnectedHint">

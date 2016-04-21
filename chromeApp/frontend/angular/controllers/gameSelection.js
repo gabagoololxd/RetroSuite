@@ -22,6 +22,8 @@ app.controller('gameSelection', function($scope, $http) {
   
   var loading = document.getElementById('loading');
   $scope.getRom = function (game) {
+
+    var romToLoad = game.rom.split(',');
     console.log('game', game);
     loading.classList.remove('hidden');
     setTimeout(function(){
@@ -30,7 +32,7 @@ app.controller('gameSelection', function($scope, $http) {
     }, 5000);
 
     if(game.rom) { //this is a game the user has added in before; we retrieve from chrome.storage.local
-      window.play(game.rom.split(','), game.extension);
+      window.play(romToLoad, game.extension);
       document.getElementById('gameSelection').classList.add('hidden');
     } else {
       return $http({ //Fetches ROM data from ipfs, converts to readable method for emulator, loads in the ROM

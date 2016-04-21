@@ -34,9 +34,9 @@ app.controller('pauseScreen', function($scope) {
     window.chooseNewGame();
   }
   
-  //helper function to make sure the attempted key mapping is not reserved
+  //helper function to make sure the attempted key mapping is not reserved for the mobilecontroller, or a special key that doesn't work as expected with keydown and keyup events (capslock and command)
   var notReserved = function(mapping) {
-    if(mapping !== "59" && mapping !=="61" && mapping !=="108" && mapping !=="173" && mapping !=="181" && mapping !=="182" && mapping !=="183" && mapping !=="226" && mapping !=="230" && mapping !=="233" && mapping !=="234" && mapping !=="235") {
+    if(mapping !== 59 && mapping !==61 && mapping !==108 && mapping !==173 && mapping !==181 && mapping !==182 && mapping !==183 && mapping !==226 && mapping !==230 && mapping !==233 && mapping !==234 && mapping !==235 && mapping !==91 && mapping !==93 && mapping !==20) {
       return true;
     } else {
       return false;
