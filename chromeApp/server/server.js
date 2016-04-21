@@ -7,7 +7,6 @@ try {
 window.port = 1337;
 window.host = '0.0.0.0';
 
-
 // See if there is already a server running; if so, disconnect so we can make a new one
 chrome.sockets.tcpServer.getSockets(function (sockets){
   sockets.forEach(function(socket){
@@ -35,7 +34,7 @@ wsServer.addEventListener('request', function(req) {
     $( "#controllerConnectedHintBubble" ).show().fadeOut( "slow", function() {});
   },4000)
 
-  // Listen for button presses
+  // Listen for button presses and respond accordingly
   socket.addEventListener('message', function(e) {
     console.log(e.data);
     messageParser(e.data);
@@ -58,5 +57,6 @@ wsServer.addEventListener('request', function(req) {
       }
     }
   });
+
   return true;
 });
