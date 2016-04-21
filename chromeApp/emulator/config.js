@@ -62,12 +62,11 @@ System.config({
       "github:webcomponents/webcomponentsjs@0.7.18",
       "npm:core-js@1.2.6/library/modules/$",
       "github:mohayonao/web-audio-api-shim@0.3.0/build/web-audio-api-shim",
-      "github:webcomponents/webcomponentsjs@0.7.18/webcomponents-lite"
+      "github:webcomponents/webcomponentsjs@0.7.18/webcomponents-lite",
     ],
     "./frontend/emulator/emulatorFrontEnd.js": [
       "emulatorFrontEnd",
     ]
-
   },
 
   map: {

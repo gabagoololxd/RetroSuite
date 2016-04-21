@@ -1,5 +1,5 @@
 System.registerDynamic("emulatorFrontEnd", ["github:satazor/sparkmd5@1.0.1", "github:stuk/jszip@2.5.0", "npm:localforage@1.3.0", "github:matthewbauer/x-retro@1.3.0", "settings.json!github:systemjs/plugin-json@0.1.0", "utils.js"], true, function(require, exports, module) {
-
+  
   var JSZip,
       autosaver,
       chooser,
@@ -292,14 +292,27 @@ System.registerDynamic("emulatorFrontEnd", ["github:satazor/sparkmd5@1.0.1", "gi
     }
     loading.classList.remove('hidden');
     event.preventDefault();
-    gameSelection.classList.remove('hover');
+    // gameSelection.classList.remove('hover');
     if (event.dataTransfer.files.length > 0) {
       load(event.dataTransfer.files[0]);
     }
     return false;
   });
+  window.addEventListener('dragover', function(event) {
+    event.preventDefault();
+    console.log('dragover');
+    // gameSelection.classList.add('hover');
+    return false;
+  });
+  window.addEventListener('dragleave', function(event) {
+    console.log('dragleave');
+
+    event.preventDefault();
+    // gameSelection.classList.remove('hover');
+    return false;
+  });
   window.addEventListener('focus', function() {
-    return gameSelection.classList.remove('hover');
+    // return gameSelection.classList.remove('hover');
   });
   menu = document.getElementById('menu');
   inputSelectionScreen = document.getElementById('inputSelectionScreen');
@@ -414,13 +427,13 @@ System.registerDynamic("emulatorFrontEnd", ["github:satazor/sparkmd5@1.0.1", "gi
   document.getElementById('load').addEventListener('click', window.load);
   chooser = document.getElementById('chooser');
   chooser.addEventListener('change', function() {
-    gameSelection.classList.remove('hover');
+    // gameSelection.classList.remove('hover');
     loading.classList.remove('hidden');
     return load(this.files[0]);
   });
   window.addEventListener('click', function(event) {
     if (!gameSelection.classList.contains('hidden')) {
-      gameSelection.classList.add('hover');
+      // gameSelection.classList.add('hover');
     }
   });
   document.getElementById('dragGameHere').addEventListener('click', function(event) {
