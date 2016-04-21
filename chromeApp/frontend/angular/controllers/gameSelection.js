@@ -23,29 +23,36 @@ app.controller('gameSelection', function($scope, $http) {
   var loading = document.getElementById('loading');
   $scope.getRom = function (game) {
 
-    var romToLoad = game.rom.split(',');
     console.log('game', game);
+
+    // show the loading screen
     loading.classList.remove('hidden');
+
+    // HACKY: ensures that the loading screen will appear first before the app attempts to split the rom data into an array
     setTimeout(function(){
-      document.getElementById('loadingText2').classList.remove('hidden');
-      document.getElementById('clickToRestart').classList.remove('hidden');
+      if(game.rom) { //this is a game the user has added in before; we retrieve from chrome.storage.local
+        window.play(game.rom.split(','), game.extension);
+        document.getElementById('gameSelection').classList.add('hidden');
+      } else {
+        return $http({ //Fetches ROM data from ipfs, converts to readable method for emulator, loads in the ROM
+          method: 'GET',
+          url: game.link,
+          responseType: 'arraybuffer'
+        }).then(function successCallback(response) {
+            window.loadData(game.link.split("/")[5], new Uint8Array(response.data), false);
+          }, function errorCallback(response) {
+            console.log('failuuuure', response);
+          });
+      }
+    }, 1);
+
+    // allow user to reload the app if it takes too long to get the game from IPFS
+    setTimeout(function(){
+      if(!game.rom) {
+        document.getElementById('loadingText2').classList.remove('hidden');
+        document.getElementById('clickToRestart').classList.remove('hidden');
+      }
     }, 5000);
-
-    if(game.rom) { //this is a game the user has added in before; we retrieve from chrome.storage.local
-      window.play(romToLoad, game.extension);
-      document.getElementById('gameSelection').classList.add('hidden');
-    } else {
-      return $http({ //Fetches ROM data from ipfs, converts to readable method for emulator, loads in the ROM
-        method: 'GET',
-        url: game.link,
-        responseType: 'arraybuffer'
-      }).then(function successCallback(response) {
-          window.loadData(game.link.split("/")[5], new Uint8Array(response.data), false);
-        }, function errorCallback(response) {
-          console.log('failuuuure', response);
-        });
-    }
-
 
   }
 
