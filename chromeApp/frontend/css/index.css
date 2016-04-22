@@ -292,34 +292,26 @@ html, body, canvas {
 }
 
 .dragGameHere {
-  border: 10px dashed transparent; 
-  border-left: 10px solid gray; 
   flex: 1;
-  overflow: hidden;
-  background: gray url(../img/snesconsolewithborderandtext.png) no-repeat center center;
-  background-size: 400px 400px, 100%;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  border-top: 10px solid #8D8182;
+  padding: 0 25px 0px 25px;
+  background-color: #8D8182;
 }
 
 #dragHint1 {
   margin-top: 20px;
   font-family: dockerOne;
   text-align: center;
-  color: white;
+  color: #E8E8E8;
   font-size: 2.2em;
 }
 
 .availableGames {
-  flex: 1;
-  border-top: 10px solid white;
-  padding: 0 15px 15px 15px;
+  flex: 2;
+  border-top: 10px solid #8D8182;
+  padding: 0 15px 0px 50px;
   overflow: hidden;
-  background: url(../img/snescartridge.png) no-repeat center center;
-  background-color: transparent;
-  background-size: 270px 215px, 100%;
+  background-color: #8D8182;
 }
 
 .gameSelection {
@@ -499,6 +491,11 @@ html, body, canvas {
 .filterText {
   color: gray;
 }
+
+#filterButton {
+   background: #E8E8E8;
+}
+
 .chooser {
   position: fixed;
   top: -1000px;
@@ -549,7 +546,7 @@ body ::-webkit-scrollbar-corner {
 
 .gamesList {
   margin: 0;
-  max-height: calc(100vh - 36px - 69px - 30px);
+  max-height: calc(100vh - 36px - 69px - 50px);
   overflow: auto;
 }
 
@@ -566,7 +563,7 @@ body ::-webkit-scrollbar-corner {
   border-radius: 3px;
   padding: 5px;
   margin-bottom: 3px;
-  background: -webkit-linear-gradient(right, #f8f8f8, rgba(255,255,255,0), #f8f8f8);
+  background: rgba(232,232,232,0.8);
   color: #666666;
   display: flex;
   align-items: center;
@@ -576,13 +573,14 @@ body ::-webkit-scrollbar-corner {
   margin-top: 20px;
   font-family: dockerOne;
   text-align: center;
-  color: gray;
+  color: #E8E8E8;
   font-size: 2.2em;
 }
 
 .searchBar {
-  width: calc(50vw - 92px);
+  width: calc(66vw - 150px);
   margin-left: -2px;
+  background: #E8E8E8;
 }
 
 .searchBar {

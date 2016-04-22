@@ -3706,9 +3706,9 @@ a.thumbnail:hover {
   padding: 4px 0;
   margin: 0;
   list-style: none;
-  background-color: #ffffff;
-  border-color: #ccc;
-  border-color: rgba(0, 0, 0, 0.2);
+  background-color: #ededed;
+  border-color: hsl(0,0%,50%);
+  /*border-color: rgba(0, 0, 0, 0.2);*/
   border-style: solid;
   border-width: 1px;
   -webkit-border-radius: 0 0 5px 5px;
@@ -3732,7 +3732,7 @@ a.thumbnail:hover {
   margin: 8px 1px;
   overflow: hidden;
   background-color: #e5e5e5;
-  border-bottom: 1px solid #ffffff;
+  border-bottom: 1px solid #ededed;
   *width: 100%;
   *margin: -5px 0 5px;
 }

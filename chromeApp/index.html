@@ -82,7 +82,7 @@
       </div>
       <div class='games' >
         <ul class='gamesList'>
-          <li class='gamesListEntry' data-ng-repeat="game in filtered = (games | consoleFilter:selectedConsole) | filter:search | orderBy: 'title'" ng-cloak>
+          <li class='gamesListEntry' data-ng-repeat="game in filtered = (games | consoleFilter:selectedConsole) | filter:{title: search} | orderBy: 'title'" ng-cloak>
             <img data-ng-src="{{getIcon(game.console.id)}}" height='40px' width='40px'> 
             <a id='gameTitle' data-ng-click="getRom(game)">
               {{game.title}}
@@ -97,7 +97,7 @@
     <!-- right side -->
     <div class='dragGameHere' id='dragGameHere'>
       <input type="file" id="chooser" class="chooser"/>
-        <h1 id="dragHint1">Have a new game?</h1>
+        <h1 id="dragHint1">Have a new <br/> game?</h1>
     </div>
   </div>
 

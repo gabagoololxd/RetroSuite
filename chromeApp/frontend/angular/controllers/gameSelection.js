@@ -25,24 +25,57 @@ app.controller('gameSelection', function($scope, $http) {
 
     console.log('game', game);
 
-    // show the loading screen
-    loading.classList.remove('hidden');
+    // var p1 = new Promise(function(resolve, reject) { 
 
-    // get the rom from localForage or from IPFS
-    if(game.rom) { //this is a game the user has added in before; we retrieve from chrome.storage.local
-      window.play(game.rom, game.extension);
-      document.getElementById('gameSelection').classList.add('hidden');
-    } else {
-      return $http({ //this is a game to retrieve from IPFS: fetches ROM data from ipfs, converts to readable method for emulator, loads in the ROM
-        method: 'GET',
-        url: game.link,
-        responseType: 'arraybuffer'
-      }).then(function successCallback(response) {
-          window.loadData(game.link.split("/")[5], new Uint8Array(response.data), false);
-        }, function errorCallback(response) {
-          console.log('failuuuure', response);
-        });
-    }
+
+
+
+
+
+      // get the rom from localForage or from IPFS
+      var blah = new Promise(function(resolve, reject) {
+        // if(game.rom) { //this is a game the user has added in before; we retrieve from chrome.storage.local
+        //   window.play(game.rom, game.extension);
+        //   document.getElementById('gameSelection').classList.add('hidden');
+        //   resolve('success');
+        // } else {
+        //   return $http({ //this is a game to retrieve from IPFS: fetches ROM data from ipfs, converts to readable method for emulator, loads in the ROM
+        //     method: 'GET',
+        //     url: game.link,
+        //     responseType: 'arraybuffer'
+        //   }).then(function successCallback(response) {
+        //       window.loadData(game.link.split("/")[5], new Uint8Array(response.data), false);
+        //       resolve('success');
+        //     }, function errorCallback(response) {
+        //       console.log('failuuuure', response);
+        //     });
+        // }
+      });
+
+      var p = Promise.race([
+           blah,
+           new Promise(function (resolve, reject) {
+             setTimeout(function() {reject(new Error('request timeout'))}, 20)
+           })
+         ])
+         p.then(function(response) {console.log(response)});
+         p.catch(function(error) {console.log(error)});
+      
+
+    // });
+
+    // var p2 = new Promise(function(resolve, reject) { 
+    //   setTimeout(resolve, 1000); 
+    // });
+
+    // Promise.race([p1, p2]).then(function(value) {
+    //   console.log(value);
+    // });
+
+
+
+
+
 
     // allow user to reload the app if it takes too long to get the game from IPFS
     setTimeout(function(){
@@ -111,10 +144,11 @@ app.controller('gameSelection', function($scope, $http) {
       });
     } else {
       value.forEach(function(userGame) {
-        $scope.games.push(userGame);
+        window.gamesList.push(userGame);
       });
       console.log('adding userGames array from localForage to user library', value);
     }
+    console.log('games', $scope.games)
     $scope.$apply();
   })
 
