@@ -28,23 +28,21 @@ app.controller('gameSelection', function($scope, $http) {
     // show the loading screen
     loading.classList.remove('hidden');
 
-    // HACKY: ensures that the loading screen will appear first before the app attempts to split the rom data into an array
-    // setTimeout(function(){
-      if(game.rom) { //this is a game the user has added in before; we retrieve from chrome.storage.local
-        window.play(game.rom, game.extension);
-        document.getElementById('gameSelection').classList.add('hidden');
-      } else {
-        return $http({ //Fetches ROM data from ipfs, converts to readable method for emulator, loads in the ROM
-          method: 'GET',
-          url: game.link,
-          responseType: 'arraybuffer'
-        }).then(function successCallback(response) {
-            window.loadData(game.link.split("/")[5], new Uint8Array(response.data), false);
-          }, function errorCallback(response) {
-            console.log('failuuuure', response);
-          });
-      }
-    // }, 1);
+    // get the rom from localForage or from IPFS
+    if(game.rom) { //this is a game the user has added in before; we retrieve from chrome.storage.local
+      window.play(game.rom, game.extension);
+      document.getElementById('gameSelection').classList.add('hidden');
+    } else {
+      return $http({ //this is a game to retrieve from IPFS: fetches ROM data from ipfs, converts to readable method for emulator, loads in the ROM
+        method: 'GET',
+        url: game.link,
+        responseType: 'arraybuffer'
+      }).then(function successCallback(response) {
+          window.loadData(game.link.split("/")[5], new Uint8Array(response.data), false);
+        }, function errorCallback(response) {
+          console.log('failuuuure', response);
+        });
+    }
 
     // allow user to reload the app if it takes too long to get the game from IPFS
     setTimeout(function(){
@@ -69,15 +67,7 @@ app.controller('gameSelection', function($scope, $http) {
 
   $scope.confirmDeleteGame = function(game){
     console.log('game to delete', game);
-//remove from chrome.storage.local
-// chrome.storage.local.get('userGames', function(obj) {
-//   var newGamesList = _.filter(obj.userGames, function(existingGame) {
-//     return existingGame.hash !== game.hash;
-//   })
-//   chrome.storage.local.set({'userGames': newGamesList});
-//   console.log('newGamesList', newGamesList);
-// });
-    
+    //remove from localForage
     window.localForage.getItem('userGames', function(err, value) {
       var newGamesList = _.filter(value, function(existingGame) {
         return existingGame.hash !== game.hash;
