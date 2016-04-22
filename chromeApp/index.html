@@ -84,20 +84,26 @@
         <ul class='gamesList'>
           <li class='gamesListEntry' data-ng-repeat="game in filtered = (games | consoleFilter:selectedConsole) | filter:{title: search} | orderBy: 'title'" ng-cloak>
             <img data-ng-src="{{getIcon(game.console.id)}}" height='40px' width='40px'> 
-            <a id='gameTitle' data-ng-click="getRom(game)">
+            <a id='gameTitle' data-ng-click="getRom(game)" class="pointerClick">
               {{game.title}}
             </a>
-            <img src="/frontend/img/spinner.gif" data-ng-show="showDetails" class="editOrDeleteIcon" height='25px' width='25px'> 
-            <img src="/frontend/img/xIconGray.png" data-ng-show="game.extension" data-ng-click="removeUserAddedGame(game)" class="editOrDeleteIcon" height='20px' width='20px'>
-
+            <img src="/frontend/img/xIconGray.png" data-ng-show="game.extension" data-ng-click="removeUserAddedGame(game)" class="pointerClick" class="editOrDeleteIcon" height='20px' width='20px'>
           </li>
         </ul>
       </div>
     </div>
     <!-- right side -->
     <div class='dragGameHere' id='dragGameHere'>
-      <input type="file" id="chooser" class="chooser"/>
-        <h1 id="dragHint1">Have a new <br/> game?</h1>
+      <input type="file" id="chooser" class="chooser pointerClick"/>
+      <h1 id="dragHint1">Have a new <br/> game?</h1>
+      <div id="dragHintImages">
+        <div id="arrowImageContainer">
+          <img src="/frontend/img/arrow.png" id="arrowImage">
+        </div>
+        <div  id="dragItHereImageContainer">
+          <img src="/frontend/img/dragItHere.jpg"  id="dragItHereImage">
+        </div>
+      <div>
     </div>
   </div>
 

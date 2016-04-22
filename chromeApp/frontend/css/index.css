@@ -10,6 +10,10 @@ html, body, canvas {
   overflow: hidden;
 }
 
+body {
+  background-color: #8D8182;
+}
+
 @font-face {
   font-family: dockerOne;
   src: url('../fonts/DockerOne.ttf');
@@ -293,9 +297,16 @@ html, body, canvas {
 
 .dragGameHere {
   flex: 1;
+  overflow: hidden;
+
   border-top: 10px solid #8D8182;
   padding: 0 25px 0px 25px;
   background-color: #8D8182;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
 }
 
 #dragHint1 {
@@ -306,12 +317,47 @@ html, body, canvas {
   font-size: 2.2em;
 }
 
+#dragHintImages {
+  flex: 1;
+  background-color: transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  cursor: pointer;
+}
+
+#arrowImageContainer {
+  flex: 2;
+  display: flex;
+  justify-content: flex-end;
+  flex-direction: column;
+}
+#arrowImage {
+  height: 20vh;
+}
+
+#dragItHereImageContainer {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+  flex-direction: column;
+}
+#dragItHereImage {
+  height: 25vh;
+  margin-bottom: 29px;
+}
+
 .availableGames {
   flex: 2;
   border-top: 10px solid #8D8182;
   padding: 0 15px 0px 50px;
   overflow: hidden;
   background-color: #8D8182;
+}
+
+.games {
+  padding-top: 50px;
 }
 
 .gameSelection {
@@ -524,8 +570,8 @@ body ::-webkit-scrollbar-thumb {
   border: solid transparent;
   min-height: 28px;
   padding: 100px 0 0;
-  box-shadow: inset 1px 1px 1px rgba(0,0,0,.1),inset 1px 1px 1px rgba(0,0,0,.07);
-  border-width: 1px 1px 1px 6px;
+  box-shadow: inset 1px 1px 1px rgba(0,0,0,0),inset 1px 1px 1px rgba(0,0,0,.07);
+  border-width: 1px 0px 1px 6px;
 }
 body ::-webkit-scrollbar-thumb:hover {
   background-color: rgba(0, 0, 0, 0.5);
@@ -558,12 +604,16 @@ body ::-webkit-scrollbar-corner {
   font-size: 1.5em;
 }
 
+.pointerClick {
+  cursor: pointer;
+}
+
 .gamesListEntry {
   border: 1px solid #ccc;
   border-radius: 3px;
   padding: 5px;
   margin-bottom: 3px;
-  background: rgba(232,232,232,0.8);
+  background: rgba(232,232,232,1);
   color: #666666;
   display: flex;
   align-items: center;
@@ -578,7 +628,8 @@ body ::-webkit-scrollbar-corner {
 }
 
 .searchBar {
-  width: calc(66vw - 150px);
+  width: calc(66.66vw - 142px);
+  overflow:hidden;
   margin-left: -2px;
   background: #E8E8E8;
 }
