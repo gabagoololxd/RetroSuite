@@ -437,10 +437,6 @@ var gamesList = [
 
 window.gamesList = gamesList;
 
-chrome.storage.local.get('userGames', function(obj) {
-  //Create property if it does not exist yet: this is for the user's own games
-  if(!obj.userGames) {
-    chrome.storage.local.set({"userGames": []});
-  }
-  console.log('obj.userGames', obj.userGames);
-});
+
+
+

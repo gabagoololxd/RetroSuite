@@ -34,7 +34,7 @@ System.registerDynamic("emulatorFrontEnd", ["github:satazor/sparkmd5@1.0.1", "gi
 
   sparkmd5 = require('github:satazor/sparkmd5@1.0.1');
   JSZip = require('github:stuk/jszip@2.5.0');
-  localForage = require('npm:localforage@1.3.0');
+  window.localForage = localForage = require('npm:localforage@1.3.0');
   require('github:matthewbauer/x-retro@1.3.0');
   settings = require('settings.json!github:systemjs/plugin-json@0.1.0');
   utils = require('utils.js');
@@ -252,28 +252,33 @@ System.registerDynamic("emulatorFrontEnd", ["github:satazor/sparkmd5@1.0.1", "gi
     
     var newGame = {
       title: filename.split(".")[0],
-      rom: rom.toString(),
+      rom: rom,
       extension: extension,
-      console: getConsole(extension)
+      console: getConsole(extension),
+      hash: sparkmd5.ArrayBuffer.hash(rom)
     }
 
     if(saveToLocal) {
-      chrome.storage.local.get('userGames', function(obj) {
-        console.log('obj.userGames', obj.userGames);
-        console.log('newGame', newGame);
-        console.log('userGamesRoms', _.pluck(obj.userGames, 'rom'));
-        var existingRomsArray = _.pluck(obj.userGames, 'rom');
-        //if userGames storage does not contain this rom's info, add it to the list
-        if(!_.contains(existingRomsArray, rom.toString())) {
-          obj.userGames.push(newGame);
-          console.log('obj.userGames now', obj.userGames);
-          chrome.storage.local.set({'userGames': obj.userGames});
+      localForage.getItem('userGames', function(err, value) {
+        var userGames = value;
+        var existingRomsArray = _.pluck(userGames, 'hash');
+        // if userGames storage does not contain this rom's info, add it to the list
+        if(!_.contains(existingRomsArray, sparkmd5.ArrayBuffer.hash(rom))) {
+          userGames.push(newGame);
+          localForage.setItem('userGames', userGames, function(err, value) {
+            console.log('new list of user games ', value);
+          });
+        } else {
+          console.log('already added this game');
         }
       });
     }
 
     return play(rom, extension)["catch"](error);
   };
+  
+
+
   load = function(file) {
     var reader;
     if (!file instanceof Blob) {
@@ -445,6 +450,17 @@ System.registerDynamic("emulatorFrontEnd", ["github:satazor/sparkmd5@1.0.1", "gi
     return e.preventDefault();
   });
   window.addEventListener('error', error);
+
+  $('#loadingTextEllipses').each(function() {
+      var elem = $(this);
+      setInterval(function() {
+          if (elem.css('visibility') == 'hidden') {
+              elem.css('visibility', 'visible');
+          } else {
+              elem.css('visibility', 'hidden');
+          }    
+      }, 500);
+  });
   //////////////////////////////////////////////////
   // <- Code to manipulate ends here
   //////////////////////////////////////////////////

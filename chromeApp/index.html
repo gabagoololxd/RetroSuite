@@ -17,7 +17,7 @@
   <!-- this is the loading screen -->
   <div id="loading" class="message screen hidden" ng-controller="errorScreen">
     <img id="loadingGif" src="./frontend/img/loading.gif" ng-cloak/>
-    <h1 id="loadingText">loading ...</h1>
+    <h1 id="loadingText">loading <span id="loadingTextEllipses">...<span></h1>
     <div id="loadingText2" class="hidden">Taking too long? Check your internet, or:</div>
     <button data-ng-click="restart()" id="clickToRestart" class="hidden">Click to restart</button>
   </div>
