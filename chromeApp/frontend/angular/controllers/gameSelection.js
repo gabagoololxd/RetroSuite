@@ -21,36 +21,53 @@ app.controller('gameSelection', function($scope, $http) {
   });
   
   var loading = document.getElementById('loading');
+  var inputSelectionScreen = document.getElementById('inputSelectionScreen');
   $scope.getRom = function (game) {
 
     console.log('game', game);
 
-    // show the loading screen
-    loading.classList.remove('hidden');
-
-    // get the rom from localForage or from IPFS
-    if(game.rom) { //this is a game the user has added in before; we retrieve from chrome.storage.local
-      window.play(game.rom, game.extension);
-      document.getElementById('gameSelection').classList.add('hidden');
-    } else {
-      return $http({ //this is a game to retrieve from IPFS: fetches ROM data from ipfs, converts to readable method for emulator, loads in the ROM
-        method: 'GET',
-        url: game.link,
-        responseType: 'arraybuffer'
-      }).then(function successCallback(response) {
-          window.loadData(game.link.split("/")[5], new Uint8Array(response.data), false);
-        }, function errorCallback(response) {
-          console.log('failuuuure', response);
-        });
-    }
-
-    // allow user to reload the app if it takes too long to get the game from IPFS
-    setTimeout(function(){
-      if(!game.rom) {
-        document.getElementById('loadingText2').classList.remove('hidden');
-        document.getElementById('clickToRestart').classList.remove('hidden');
+    var getRomData = new Promise(function(resolve, reject) {
+      if(game.rom) { //this is a game the user has added in before; we retrieve from chrome.storage.local
+        window.play(game.rom, game.extension);
+        document.getElementById('gameSelection').classList.add('hidden');
+        inputSelectionScreen.classList.remove('hidden');
+        resolve('loaded fast enough to not show loading screen');
+      } else {
+        return $http({ //this is a game to retrieve from IPFS: fetches ROM data from ipfs, converts to readable method for emulator, loads in the ROM
+          method: 'GET',
+          url: game.link,
+          responseType: 'arraybuffer'
+        }).then(function successCallback(response) {
+            window.loadData(game.link.split("/")[5], new Uint8Array(response.data), false);
+            resolve('loaded fast enough to not show loading screen');
+          }, function errorCallback(response) {
+            console.log('failure to get ipfs rom', response);
+          });
       }
-    }, 5000);
+    });
+    
+    // if the game can load fast enough (within half a second), don't show the loading screen; otherwise, do show it
+    var p = Promise.race([
+      getRomData,
+      new Promise(function (resolve, reject) {
+        setTimeout(function() {
+          resolve('show loading screen');
+        }, 200)
+      })
+    ])
+
+    p.then(function(response) {
+      console.log(response)
+      if(response==='show loading screen') loading.classList.remove('hidden');
+      // allow user to reload the app if it takes too long to get the game from IPFS
+      setTimeout(function(){
+        if(!game.rom) {
+          document.getElementById('loadingText2').classList.remove('hidden');
+          document.getElementById('clickToRestart').classList.remove('hidden');
+        }
+      }, 5000);
+    });
+    p.catch(function(error) {console.log(error)})
 
   }
 
