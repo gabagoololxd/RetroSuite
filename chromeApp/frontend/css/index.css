@@ -300,7 +300,7 @@ body {
   overflow: hidden;
 
   border-top: 10px solid #8D8182;
-  padding: 0 25px 0px 25px;
+  padding: 0 50px 0px 50px;
   background-color: #8D8182;
 
   display: flex;
@@ -377,7 +377,7 @@ body {
 
   background: transparent url(../img/snesConsole.png) no-repeat center calc(25vh);
   background-size: calc(30vh), calc(30vw);
-  width: calc(33vw - 65px + 50px);
+  width: calc(33.33vw - 65px + 50px);
 
 }
 #dragItHereImage {
@@ -388,7 +388,8 @@ body {
 .availableGames {
   flex: 2;
   border-top: 10px solid #8D8182;
-  padding: 0 15px 0px 50px;
+  /*padding: 0 15px 0px 50px;*/
+  padding: 0 25px 0 25px;
   overflow: hidden;
   background-color: #8D8182;
 }
@@ -670,7 +671,7 @@ body ::-webkit-scrollbar-corner {
 }
 
 .searchBar {
-  width: calc(66.66vw - 142px);
+  width: calc(66.66vw - 142px - 25px);
   overflow:hidden;
   margin-left: -2px;
   background: #E8E8E8;
