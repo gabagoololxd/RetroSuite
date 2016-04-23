@@ -1,10 +1,9 @@
 function messageParser (message) {
   if (message === 'pair') {
-    //todo: what if we arent at the pairing screen
-    if(window.retro && window.retro.classList.contains('hidden')) {
+    if(window.retro && window.retro.classList.contains('hidden')) { // qr was scanned from the pause screen
       window.closeQRScreen();
       window.resumeGame();
-    } else {
+    } else { // qr was scanned from the input selection screen
       window.toggleInputSelectionScreen();
     }
   } else if (message === 'pause') {
@@ -32,7 +31,7 @@ try {
 } catch (err) {}
 
 
-//Help functions to create keyboard events:
+//Helper functions to create keyboard events:
 function getAsciiKey(button) {
   switch (button) {
     case 'a':

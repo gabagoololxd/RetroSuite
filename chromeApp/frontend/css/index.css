@@ -10,6 +10,10 @@ html, body, canvas {
   overflow: hidden;
 }
 
+body {
+  background-color: #8D8182;
+}
+
 @font-face {
   font-family: dockerOne;
   src: url('../fonts/DockerOne.ttf');
@@ -228,21 +232,21 @@ html, body, canvas {
   background-color: transparent;
   text-align: center;
   white-space: pre;
-  color: white;
+  color: #E8E8E8;
   height: 100px;
   line-height: 40px;
   position:absolute;
   left: 0;
   right: 0;
   margin: 2.1% 5% 5%;
-  padding-right: 115px;
+  padding-right: 105px;
   font-family: dockerOne;
   font-size: 3em;
 }
 
 #bootup {
   font-family: dockerOne;
-  color: white;
+  color: #E8E8E8;
   height: 100%;
   width: 100%;
   background-color: #bdbdbf;
@@ -292,34 +296,111 @@ html, body, canvas {
 }
 
 .dragGameHere {
-  border: 10px dashed transparent; 
-  border-left: 10px solid gray; 
   flex: 1;
   overflow: hidden;
-  background: gray url(../img/snesconsolewithborderandtext.png) no-repeat center center;
-  background-size: 400px 400px, 100%;
+
+  border-top: 10px solid #8D8182;
+  padding: 0 25px 0px 25px;
+  background-color: #8D8182;
 
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  align-items: center;
+  justify-content: flex-start;
 }
+
+#haveANewGameTitle {
+  margin-top: 20px;
+  font-family: dockerOne;
+  text-align: center;
+  color: #E8E8E8;
+  font-size: 2.2em;
+  z-index: 2
+}
+
+/*#dragHintContainer {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: column;
+}*/
 
 #dragHint1 {
   margin-top: 20px;
   font-family: dockerOne;
   text-align: center;
-  color: white;
+  color: #E8E8E8;
   font-size: 2.2em;
 }
 
-.availableGames {
+#dragHint2 {
+  margin-top: 25px;
+  font-family: dockerOne;
+  text-align: center;
+  color: #E8E8E8;
+  font-size: .9em;
+  z-index: 1;
+  padding: 0 20% 0 20%;
+}
+
+#chooseRom {
+  margin-top: 5px;
+  width: 150px;
+  /*padding-bottom: 10%;*/
+  z-index: 1000;
+}
+
+#dragHintImages {
   flex: 1;
-  border-top: 10px solid white;
-  padding: 0 15px 15px 15px;
-  overflow: hidden;
-  background: url(../img/snescartridge.png) no-repeat center center;
   background-color: transparent;
-  background-size: 270px 215px, 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+#arrowImageContainer {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+#arrowImage {
+  height: 20vh;
+}
+
+#dragItHereContainer {
+  overflow: hidden;
+  flex: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  border-radius: 15px;
+  border: dashed #E8E8E8;
+  background-color: transparent;
+  margin-bottom: 40px;
+
+  background: transparent url(../img/snesConsole.png) no-repeat center calc(25vh);
+  background-size: calc(30vh), calc(30vw);
+  width: calc(33vw - 65px + 50px);
+
+}
+#dragItHereImage {
+  height: 20vh;
+  padding: 20% 25% 20% 25%;
+}
+
+.availableGames {
+  flex: 2;
+  border-top: 10px solid #8D8182;
+  padding: 0 15px 0px 50px;
+  overflow: hidden;
+  background-color: #8D8182;
+}
+
+.games {
+  padding-top: 50px;
 }
 
 .gameSelection {
@@ -337,7 +418,7 @@ html, body, canvas {
   margin: 2px 2px 2px 2px;
   border-radius: 5px;
   color: gray;
-  background-color: white;
+  background-color: #E8E8E8;
 }
 
 #menuHintBubble {
@@ -345,8 +426,20 @@ html, body, canvas {
   border-radius: 5px;
   color: white;
   background-color: rgba(0,0,0,0.5);
-  -webkit-transition: all 0.3s ease-in-out;
-  
+}
+
+#controllerConnectedHintBubble {
+  padding: 10px 10px 10px 10px;
+  border-radius: 5px;
+  color: white;
+  background-color: rgba(0,0,0,0.5);
+}
+
+#controllerDisconnectedHintBubble {
+  padding: 10px 10px 10px 10px;
+  border-radius: 5px;
+  color: white;
+  background-color: rgba(0,0,0,0.5);
 }
 
 #clickToRestart {
@@ -396,6 +489,22 @@ html, body, canvas {
   position: absolute;
   right: 20px;
   bottom: 20px;
+  font-family: dockerOne;
+  color: white;
+}
+
+#controllerConnectedHint {
+  position: absolute;
+  right: 20px;
+  bottom: 70px;
+  font-family: dockerOne;
+  color: white;
+}
+
+#controllerDisconnectedHint {
+  position: absolute;
+  right: 20px;
+  bottom: 70px;
   font-family: dockerOne;
   color: white;
 }
@@ -462,6 +571,7 @@ html, body, canvas {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  color: #E8E8E8;
 }
 
 .hidden {
@@ -471,6 +581,11 @@ html, body, canvas {
 .filterText {
   color: gray;
 }
+
+#filterButton {
+   background: #E8E8E8;
+}
+
 .chooser {
   position: fixed;
   top: -1000px;
@@ -499,8 +614,8 @@ body ::-webkit-scrollbar-thumb {
   border: solid transparent;
   min-height: 28px;
   padding: 100px 0 0;
-  box-shadow: inset 1px 1px 1px rgba(0,0,0,.1),inset 1px 1px 1px rgba(0,0,0,.07);
-  border-width: 1px 1px 1px 6px;
+  box-shadow: inset 1px 1px 1px rgba(0,0,0,0),inset 1px 1px 1px rgba(0,0,0,.07);
+  border-width: 1px 0px 1px 6px;
 }
 body ::-webkit-scrollbar-thumb:hover {
   background-color: rgba(0, 0, 0, 0.5);
@@ -521,7 +636,7 @@ body ::-webkit-scrollbar-corner {
 
 .gamesList {
   margin: 0;
-  max-height: calc(100vh - 36px - 69px - 30px);
+  max-height: calc(100vh - 36px - 69px - 50px);
   overflow: auto;
 }
 
@@ -529,8 +644,16 @@ body ::-webkit-scrollbar-corner {
   margin-left: 20px;
   flex: 1;
   font-family: dockerOne;
-  color: #9767ab;
+  color: #5b3980;
   font-size: 1.5em;
+}
+
+.cursorPointer {
+  cursor: pointer;
+}
+
+.cursorDefault {
+  cursor: default;
 }
 
 .gamesListEntry {
@@ -538,7 +661,7 @@ body ::-webkit-scrollbar-corner {
   border-radius: 3px;
   padding: 5px;
   margin-bottom: 3px;
-  background: -webkit-linear-gradient(right, #f8f8f8, rgba(255,255,255,0), #f8f8f8);
+  background: rgba(232,232,232,1);
   color: #666666;
   display: flex;
   align-items: center;
@@ -548,13 +671,15 @@ body ::-webkit-scrollbar-corner {
   margin-top: 20px;
   font-family: dockerOne;
   text-align: center;
-  color: gray;
+  color: #E8E8E8;
   font-size: 2.2em;
 }
 
 .searchBar {
-  width: calc(50vw - 92px);
+  width: calc(66.66vw - 142px);
+  overflow:hidden;
   margin-left: -2px;
+  background: #E8E8E8;
 }
 
 .searchBar {
