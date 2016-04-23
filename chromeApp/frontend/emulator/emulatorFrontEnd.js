@@ -412,19 +412,26 @@ window.save = function() {
 document.getElementById('save').addEventListener('click', window.save);
 savechooser = document.getElementById('savechooser');
 savechooser.addEventListener('change', function() {
-  var file,
-      reader;
-  file = this.files[0];
-  if (!file instanceof Blob) {
-    return;
-  }
-  gameSelection.classList.add('hidden');
-  reader = new FileReader();
-  reader.addEventListener('load', function(event) {
-    retro.core.unserialize(new Uint8Array(reader.result));
-    return window.resume();
-  });
-  return reader.readAsArrayBuffer(file);
+  console.log('saechooser called')
+
+  try {
+    var file,
+        reader1;
+    file = this.files[0];
+    console.log('file', file);
+    if (!file instanceof Blob) {
+      return;
+    }
+    gameSelection.classList.add('hidden');
+    reader = new FileReader();
+    reader.addEventListener('load', function(event) {
+      console.log('load reader.result', reader.result)
+      retro.core.unserialize(new Uint8Array(reader.result));
+      return window.resume();
+    });
+    $('#savechooser').val(""); // trick it so we can listen to a 'change' event; user can now load in same save file multiple times
+    return reader.readAsArrayBuffer(file);
+  } catch (err) {} // try catch block because when the user clicks cancel it used to crash the game
 });
 window.manualLoadSave = function() {
   return savechooser.click();
