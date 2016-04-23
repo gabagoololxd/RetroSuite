@@ -3742,7 +3742,7 @@ a.thumbnail:hover {
   clear: both;
   font-weight: normal;
   line-height: 18px;
-  color: gray;
+  color: #353632;
   white-space: nowrap;
 }
 .dropdown-menu li > a:hover,
