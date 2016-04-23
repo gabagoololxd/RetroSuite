@@ -232,7 +232,7 @@ body {
   background-color: transparent;
   text-align: center;
   white-space: pre;
-  color: white;
+  color: #E8E8E8;
   height: 100px;
   line-height: 40px;
   position:absolute;
@@ -246,7 +246,7 @@ body {
 
 #bootup {
   font-family: dockerOne;
-  color: white;
+  color: #E8E8E8;
   height: 100%;
   width: 100%;
   background-color: #bdbdbf;
@@ -315,14 +315,15 @@ body {
   text-align: center;
   color: #E8E8E8;
   font-size: 2.2em;
+  z-index: 2
 }
 
-#dragHintContainer {
+/*#dragHintContainer {
   display: flex;
   justify-content: flex-start;
   align-items: center;
   flex-direction: column;
-}
+}*/
 
 #dragHint1 {
   margin-top: 20px;
@@ -338,12 +339,14 @@ body {
   text-align: center;
   color: #E8E8E8;
   font-size: .9em;
+  z-index: 1;
+  padding: 0 20% 0 20%;
 }
 
 #chooseRom {
   margin-top: 5px;
   width: 150px;
-  padding-bottom: 10%;
+  /*padding-bottom: 10%;*/
   z-index: 1000;
 }
 
@@ -364,21 +367,23 @@ body {
 }
 #arrowImage {
   height: 20vh;
-  padding: 30% 0 30% 0;
 }
 
-#dragItHereImageContainer {
+#dragItHereContainer {
   overflow: hidden;
-  flex: 2;
+  flex: 5;
   display: flex;
-  justify-content: space-between;
   flex-direction: column;
   align-items: center;
 
-  border-radius: 25px;
-  border: dashed #ededed;
+  border-radius: 15px;
+  border: dashed #E8E8E8;
   background-color: transparent;
   margin-bottom: 40px;
+
+  background: transparent url(../img/snesConsole.png) no-repeat center calc(25vh);
+  background-size: calc(30vh), calc(30vw);
+  width: calc(33vw - 65px + 50px);
 
 }
 #dragItHereImage {
@@ -413,7 +418,7 @@ body {
   margin: 2px 2px 2px 2px;
   border-radius: 5px;
   color: gray;
-  background-color: white;
+  background-color: #E8E8E8;
 }
 
 #menuHintBubble {
@@ -566,6 +571,7 @@ body {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  color: #E8E8E8;
 }
 
 .hidden {
@@ -638,7 +644,7 @@ body ::-webkit-scrollbar-corner {
   margin-left: 20px;
   flex: 1;
   font-family: dockerOne;
-  color: #9767ab;
+  color: #5b3980;
   font-size: 1.5em;
 }
 
