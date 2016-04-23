@@ -318,13 +318,6 @@ body {
   z-index: 2
 }
 
-/*#dragHintContainer {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  flex-direction: column;
-}*/
-
 #dragHint1 {
   margin-top: 20px;
   font-family: dockerOne;
@@ -339,6 +332,8 @@ body {
   text-align: center;
   color: #E8E8E8;
   font-size: .9em;
+  display: inline;
+  width: 100%;
   z-index: 1;
   padding: 0 20% 0 20%;
 }
@@ -346,7 +341,6 @@ body {
 #chooseRom {
   margin-top: 5px;
   width: 150px;
-  /*padding-bottom: 10%;*/
   z-index: 1000;
 }
 
