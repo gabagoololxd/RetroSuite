@@ -441,7 +441,7 @@ window.addEventListener('click', function(event) {
     // gameSelection.classList.add('hover');
   }
 });
-document.getElementById('dragGameHere').addEventListener('click', function(event) {
+document.getElementById('chooseRom').addEventListener('click', function(event) {
   if (!gameSelection.classList.contains('hidden')) {
     return chooser.click();
   }
