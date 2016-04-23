@@ -3742,7 +3742,7 @@ a.thumbnail:hover {
   clear: both;
   font-weight: normal;
   line-height: 18px;
-  color: #333333;
+  color: gray;
   white-space: nowrap;
 }
 .dropdown-menu li > a:hover,
@@ -3750,7 +3750,7 @@ a.thumbnail:hover {
 .dropdown-menu .active > a:hover {
   color: #ffffff;
   text-decoration: none;
-  background-color: #0088cc;
+  background-color: #9767ab;
 }
 .dropdown.open {
   *z-index: 1000;
