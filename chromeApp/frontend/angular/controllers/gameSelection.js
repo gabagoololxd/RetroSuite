@@ -22,25 +22,18 @@ app.controller('gameSelection', function($scope, $http) {
   
   var loading = document.getElementById('loading');
   $scope.getRom = function (game) {
+
     console.log('game', game);
+
+    // show the loading screen
     loading.classList.remove('hidden');
-    setTimeout(function(){
-      document.getElementById('loadingText2').classList.remove('hidden');
-      document.getElementById('clickToRestart').classList.remove('hidden');
-    }, 5000);
 
+    // get the rom from localForage or from IPFS
     if(game.rom) { //this is a game the user has added in before; we retrieve from chrome.storage.local
-      var gameAsArray = game.rom.split(',').map(function(string) {
-        return parseInt(string);
-      });
-      console.log('correct or not?', gameAsArray)
-      console.log('extension', game.extension)
-
-      window.play(game.rom.split(','), game.extension);
+      window.play(game.rom, game.extension);
       document.getElementById('gameSelection').classList.add('hidden');
-
     } else {
-      return $http({ //Fetches ROM data from ipfs, converts to readable method for emulator, loads in the ROM
+      return $http({ //this is a game to retrieve from IPFS: fetches ROM data from ipfs, converts to readable method for emulator, loads in the ROM
         method: 'GET',
         url: game.link,
         responseType: 'arraybuffer'
@@ -50,6 +43,14 @@ app.controller('gameSelection', function($scope, $http) {
           console.log('failuuuure', response);
         });
     }
+
+    // allow user to reload the app if it takes too long to get the game from IPFS
+    setTimeout(function(){
+      if(!game.rom) {
+        document.getElementById('loadingText2').classList.remove('hidden');
+        document.getElementById('clickToRestart').classList.remove('hidden');
+      }
+    }, 5000);
 
   }
 
@@ -66,14 +67,15 @@ app.controller('gameSelection', function($scope, $http) {
 
   $scope.confirmDeleteGame = function(game){
     console.log('game to delete', game);
-    //remove from chrome.storage.local
-    chrome.storage.local.get('userGames', function(obj) {
-      var newGamesList = _.filter(obj.userGames, function(existingGame) {
-        return existingGame.rom !== game.rom;
+    //remove from localForage
+    window.localForage.getItem('userGames', function(err, value) {
+      var newGamesList = _.filter(value, function(existingGame) {
+        return existingGame.hash !== game.hash;
       })
-      chrome.storage.local.set({'userGames': newGamesList});
-      console.log('newGamesList', newGamesList);
-    });
+      window.localForage.setItem('userGames', newGamesList, function(err, value) {
+        console.log('new list of user games ', value);
+      });
+    })
 
     //remove from list of games the user sees
     var index = $scope.games.indexOf(game);
@@ -100,13 +102,21 @@ app.controller('gameSelection', function($scope, $http) {
   //initialize showing all consoles/games
   $scope.selectedConsole = [1,2,3,4]; 
   
-  //'import' list of games to render from gamesList.js
+  //'import' list of games to render from gamesList.js and from localForage
   $scope.games = window.gamesList;
-  chrome.storage.local.get('userGames', function(obj) {
-    obj.userGames.forEach(function(userGame) {
-      $scope.games.push(userGame);
-    });
-  });
+  localForage.getItem('userGames', function(err, value) {
+    if(value==null) {
+      window.localForage.setItem('userGames', [], function(err, value) {
+        console.log('initialize userGames array in localForage', value);
+      });
+    } else {
+      value.forEach(function(userGame) {
+        $scope.games.push(userGame);
+      });
+      console.log('adding userGames array from localForage to user library', value);
+    }
+    $scope.$apply();
+  })
 
   //methods to filter and show games from the list
   $scope.setSelectedConsole = function () {
@@ -130,7 +140,6 @@ app.controller('gameSelection', function($scope, $http) {
       $scope.selectedConsole = _.pluck($scope.consoleList, 'id');
   };
 
-  //
   $scope.getIcon = function (id) {
     if(id===1) {
       return './frontend/img/nes.png';

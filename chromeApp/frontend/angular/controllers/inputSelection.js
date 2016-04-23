@@ -10,7 +10,7 @@ app.controller('inputSelection', function($scope) {
     setTimeout(function(){
       $( "#menuHintBubble" ).fadeOut( "slow", function() {});
     },4000)
-    $scope.$apply();
+    // $scope.$apply();
   }
   var qrScreen = document.getElementById('qrScreen');
   $scope.openQRScreen = function() {

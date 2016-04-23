@@ -17,7 +17,7 @@
   <!-- this is the loading screen -->
   <div id="loading" class="message screen hidden" ng-controller="errorScreen">
     <img id="loadingGif" src="./frontend/img/loading.gif" ng-cloak/>
-    <h1 id="loadingText">loading ...</h1>
+    <h1 id="loadingText">loading <span id="loadingTextEllipses">...<span></h1>
     <div id="loadingText2" class="hidden">Taking too long? Check your internet, or:</div>
     <button data-ng-click="restart()" id="clickToRestart" class="hidden">Click to restart</button>
   </div>
@@ -37,6 +37,7 @@
   <!-- this is the game selection screen -->
   <div class="gameSelection hidden screen" ng-hide="gameSelection.hidden" id="gameSelection" ng-controller="gameSelection">
 
+    <!-- modal which appears when user clicks the remove sign on a game -->
     <div id="deleteGameScreen" class="hidden">
       <div id="deleteGameModal" class="modal" data-ng-click="$event.stopPropagation()">
         <div id="deleteGameModalBody" class="modal-body"> 
@@ -48,8 +49,6 @@
         </div>
       </div>
     </div>
-
-
     <!-- left side -->
     <div class="availableGames" id="availableGames">
       <h1 class='needAGame'>Your Library</h1>
@@ -83,12 +82,12 @@
       </div>
       <div class='games' >
         <ul class='gamesList'>
-          <li class='gamesListEntry' data-ng-repeat="game in filtered = (games | consoleFilter:selectedConsole) | filter:search | orderBy: 'title'" ng-cloak>
+          <li class='gamesListEntry' data-ng-repeat="game in filtered = (games | consoleFilter:selectedConsole) | filter:{title: search} | orderBy: 'title'" ng-cloak>
             <img data-ng-src="{{getIcon(game.console.id)}}" height='40px' width='40px'> 
-            <a id='gameTitle' data-ng-click="getRom(game)">
+            <a id='gameTitle' data-ng-click="getRom(game)" class="cursorPointer">
               {{game.title}}
             </a>
-            <img src="/frontend/img/xIconGray.png" data-ng-show="game.extension" data-ng-click="removeUserAddedGame(game)" class="editOrDeleteIcon" height='20px' width='20px'> 
+            <img src="/frontend/img/xIconGray.png" data-ng-show="game.extension" data-ng-click="removeUserAddedGame(game)" class="cursorPointer" class="editOrDeleteIcon" height='20px' width='20px'>
           </li>
         </ul>
       </div>
@@ -96,16 +95,26 @@
     <!-- right side -->
     <div class='dragGameHere' id='dragGameHere'>
       <input type="file" id="chooser" class="chooser"/>
-        <h1 id="dragHint1">Have a new game?</h1>
+      <h1 id="haveANewGameTitle">Have a new game?</h1>
+      <div id="dragHintImages">
+        <div id="arrowImageContainer">
+          <img src="/frontend/img/arrow.png" id="arrowImage" />
+        </div>
+        <div  id="dragItHereContainer">
+          <span id="dragHint1">Drag it here! </span>
+          <span id="dragHint2">Or, if you prefer...</span>
+          <button id="chooseRom" class="pauseMenuButton">Choose a rom to open</button>
+        </div>
+      </div>
     </div>
   </div>
 
 
   <!-- this is the Keyboard vs Mobile choice selection screen -->
-  <div class="inputSelectionScreen" id="inputSelectionScreen" ng-controller="inputSelection">
+  <div class="inputSelectionScreen hidden" id="inputSelectionScreen" ng-controller="inputSelection">
     <!-- QR modal that appears when user selects play with mobile -->
-    <div id="qrScreen" class="hidden" data-ng-click="closeQRScreen()">
-      <div id="qrModal" class="modal" data-ng-click="$event.stopPropagation()">
+    <div id="qrScreen" class="hidden cursorPointer" data-ng-click="closeQRScreen()">
+      <div id="qrModal" class="modal cursorDefault" data-ng-click="$event.stopPropagation()">
         <div id="qrModalBody" class="modal-body"> 
           <div id="qrCode"></div>
           <h3 id="qrInstructions">Scan QR to Start</h3>
@@ -120,13 +129,13 @@
     </div>
     <!-- left side -->
     <div id="keyboardSide">
-      <div id="keyboardIcon"></div>
+      <div id="keyboardIcon" class="cursorPointer"></div>
       <div id='keyboardTitle'>Keyboard</div>
       <div id='keyboardDescription'>Desktop Only</div>
     </div>
     <!-- right side -->
     <div id="mobileSide">
-      <div id="mobileIcon" data-ng-click="openQRScreen()"></div>
+      <div id="mobileIcon" class="cursorPointer" data-ng-click="openQRScreen()"></div>
       <div id='mobileTitle'>Mobile Phone</div>
       <div id='mobileDescription'>Desktop + Phone</div>
     </div>
@@ -138,8 +147,14 @@
   <div id="menuHint">
     <div id="menuHintBubble" class="hidden">Right Click to Pause and Remap Keys</div>
   </div>
+  <div id="controllerConnectedHint">
+    <div id="controllerConnectedHintBubble" class="hidden">Mobile Controller Connected</div>
+  </div>
   <div class="menu hidden" id="menu" ng-controller="pauseScreen">
     <div id="pauseMenuModal">
+    <div id="controllerDisconnectedHint">
+      <div id="controllerDisconnectedHintBubble" class="hidden">Mobile Controller Disconnected</div>
+    </div>
       <div id="pauseMenuContainer">
         <input type="file" id="savechooser" class="chooser"/>
         <div id="pauseMenuHeader">
@@ -228,8 +243,8 @@
         </div>
       </div>
     </div>
-    <div id="qrScreen2" class="hidden" data-ng-click="closeQRScreen()">
-      <div id="qrModal2" class="modal" data-ng-click="$event.stopPropagation()">
+    <div id="qrScreen2" class="hidden cursorPointer" data-ng-click="closeQRScreen()">
+      <div id="qrModal2" class="modal cursorDefault" data-ng-click="$event.stopPropagation()">
         <div id="qrModalBody2" class="modal-body"> 
           <div id="qrCode2"></div>
           <h3 id="qrInstructions2">Scan QR to Pair</h3>
@@ -245,20 +260,17 @@
   <script src="./server/server.js"></script>
   <script src="./server/messageParser.js"></script>
 
-
-  <!-- emulator dependencies -->
-  <script src="./frontend/emulator/jspm_packages/github/jmcriffey/bower-traceur-runtime@0.0.91/traceur-runtime.min.js"></script>
-  <script src="./frontend/emulator/jspm_packages/system-csp-production.js"></script>
-  <script src="./frontend/emulator/config.js"></script>
-  <script src="./frontend/emulator/bootstrap.js"></script>
-
+  <!-- raw emulator and dependencies -->
+  <script src="./emulator/jspm_packages/github/jmcriffey/bower-traceur-runtime@0.0.91/traceur-runtime.min.js"></script>
+  <script src="./emulator/jspm_packages/system-csp-production.js"></script>
+  <script src="./emulator/config.js"></script>
+  <script src="./emulator/build.js"></script>
 
   <!-- libraries -->
   <script src="./lib/underscore-min.js"></script>
   <script src="./lib/angular-min.js"></script>
   <script src="./lib/jquery-min.js"></script>
   <script src="./lib/qr-code.js"></script>
-  
 
   <!-- angular front end -->
   <script src="./frontend/angular/app.js"></script>
@@ -269,9 +281,10 @@
   <script src="./frontend/angular/helpers/keyCodes.js"></script>
   <script src="./frontend/angular/controllers/pauseScreen.js"></script>
 
-  <!-- games and emulator -->
-  <script src="./frontend/emulator/games/gamesList.js"></script>
-  <script src="./frontend/emulator/build.js"></script>
+  <!-- emulator front end -->
+  <script src="./frontend/emulator/emulatorFrontEnd.js"></script>
+  <script src="./frontend/emulator/gamesList.js"></script>
+
 
 </body>
 </html>

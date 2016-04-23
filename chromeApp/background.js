@@ -1,5 +1,6 @@
 function newWindow() {
   return new Promise(function(resolve, reject) {
+    chrome.power.requestKeepAwake('display');
     chrome.app.window.create('index.html', {
       'bounds': {
         'width': Math.round(window.screen.availWidth*0.8),

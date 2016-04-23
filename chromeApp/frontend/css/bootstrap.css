@@ -130,14 +130,14 @@ textarea {
   overflow: auto;
   vertical-align: top;
 }
-body {
+/*body {
   margin: 0;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 13px;
   line-height: 18px;
   color: #333333;
-  background-color: #ffffff;
-}
+  background-color: #8D8182;
+}*/
 a {
   color: #0088cc;
   text-decoration: none;
@@ -2172,7 +2172,7 @@ input[type="submit"].btn.btn-mini {
   background-position: -456px -118px;
 }
 .btn-group {
-  position: relative;
+  position: absolute;
   *zoom: 1;
   *margin-left: .3em;
 }
@@ -3706,9 +3706,9 @@ a.thumbnail:hover {
   padding: 4px 0;
   margin: 0;
   list-style: none;
-  background-color: #ffffff;
-  border-color: #ccc;
-  border-color: rgba(0, 0, 0, 0.2);
+  background-color: #ededed;
+  border-color: hsl(0,0%,50%);
+  /*border-color: rgba(0, 0, 0, 0.2);*/
   border-style: solid;
   border-width: 1px;
   -webkit-border-radius: 0 0 5px 5px;
@@ -3732,7 +3732,7 @@ a.thumbnail:hover {
   margin: 8px 1px;
   overflow: hidden;
   background-color: #e5e5e5;
-  border-bottom: 1px solid #ffffff;
+  border-bottom: 1px solid #ededed;
   *width: 100%;
   *margin: -5px 0 5px;
 }
@@ -3742,7 +3742,7 @@ a.thumbnail:hover {
   clear: both;
   font-weight: normal;
   line-height: 18px;
-  color: #333333;
+  color: gray;
   white-space: nowrap;
 }
 .dropdown-menu li > a:hover,
@@ -3750,7 +3750,7 @@ a.thumbnail:hover {
 .dropdown-menu .active > a:hover {
   color: #ffffff;
   text-decoration: none;
-  background-color: #0088cc;
+  background-color: #9767ab;
 }
 .dropdown.open {
   *z-index: 1000;

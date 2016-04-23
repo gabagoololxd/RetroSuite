@@ -323,6 +323,7 @@ EventSource.prototype = {
 function HttpServer() {
   EventSource.apply(this);
   this.readyState_ = 0;
+  this._socketInfo = undefined;
 }
 
 HttpServer.prototype = {
@@ -335,9 +336,11 @@ HttpServer.prototype = {
    *     This will default to 0.0.0.0 if not specified which will listen on
    *     all interfaces.
    */
+
   listen: function(port, opt_host) {
     var t = this;
     chrome.sockets.tcpServer.create(function(socketInfo) {
+      t._socketInfo = socketInfo;
       chrome.sockets.tcpServer.onAccept.addListener(function(acceptInfo) {
         if (acceptInfo.socketId === socketInfo.socketId)
           t.readRequestFromSocket_(new PSocket(acceptInfo.clientSocketId));
@@ -353,13 +356,17 @@ HttpServer.prototype = {
             t.readyState_ = 1;
           }
           else {
-            console.log(
-              'listen error ' +
+            throw (
               chrome.runtime.lastError.message +
                 ' (normal if another instance is already serving requests)');
           }
         });
     });
+  },
+
+  close: function() {
+    chrome.sockets.tcpServer.disconnect(this._socketInfo.socketId);
+    console.log('HttpServer closed');
   },
 
   readRequestFromSocket_: function(pSocket) {
