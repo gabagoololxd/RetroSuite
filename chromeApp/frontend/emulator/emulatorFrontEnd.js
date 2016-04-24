@@ -334,6 +334,9 @@ window.resumeGame = function () {
   retro.start();
   retro.classList.remove('hidden');
   $( "#controllerConnectedHintBubble" ).show();
+  setTimeout(function(){
+     $( "#controllerConnectedHintBubble" ).fadeOut( "slow", function() {});
+  },4000)
   overlay.classList.remove('hidden');
   menu.classList.add('hidden');
   document.getElementById('resumeError').classList.add('hidden');

@@ -39,22 +39,22 @@ class QRReader extends React.Component {
     );
     
     // //for development purposes, simulates successful qr scan
-    // var openControllerViewCallback = () => {
-    //   var navigator = this.props.navigator;
-    //   var turnCameraOn = this.turnCameraOn.bind(this);
-    //   var turnCameraOff = this.turnCameraOff.bind(this);
-    //   turnCameraOff();
-    //   //open up the ControllerView
-    //   navigator.push({
-    //     component: ControllerView,
-    //     turnCameraOn: turnCameraOn.bind(this),
-    //     sceneConfig: {
-    //       ...Navigator.SceneConfigs.FloatFromBottom,
-    //       gestures: {} //disable ability to swipe to pop back from ControllerView to QRReader once past the ip address page
-    //     }
-    //   });
-    // }
-    // utils.PairController('10.0.0.215:1337', openControllerViewCallback);
+    var openControllerViewCallback = () => {
+      var navigator = this.props.navigator;
+      var turnCameraOn = this.turnCameraOn.bind(this);
+      var turnCameraOff = this.turnCameraOff.bind(this);
+      turnCameraOff();
+      //open up the ControllerView
+      navigator.push({
+        component: ControllerView,
+        turnCameraOn: turnCameraOn.bind(this),
+        sceneConfig: {
+          ...Navigator.SceneConfigs.FloatFromBottom,
+          gestures: {} //disable ability to swipe to pop back from ControllerView to QRReader once past the ip address page
+        }
+      });
+    }
+    utils.PairController('172.20.10.3:1337', openControllerViewCallback);
   }
 
   _onBarCodeRead(e) {
