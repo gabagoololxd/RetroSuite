@@ -306,13 +306,17 @@ class ControllerView extends React.Component {
       <View style={styles.imageContainer}>
        
         <View style={{flex: 1}} onTouchStart={this._onTouchStart.bind(this)} onTouchMove={this._onTouchMove.bind(this)} onTouchEnd={this._onTouchEnd.bind(this)}>
-          <View style={styles.DPad} onLayout={this._onLayoutDPad.bind(this)}/>
-          <View style={styles.ABXY} onLayout={this._onLayoutABXY.bind(this)}/>
-          <View style={styles.lShoulder} onLayout={this._onLayoutLShoulder.bind(this)}/>
-          <View style={styles.rShoulder} onLayout={this._onLayoutRShoulder.bind(this)}/>
-          <View style={styles.select} onLayout={this._onLayoutSelect.bind(this)}/>
-          <View style={styles.start} onLayout={this._onLayoutStart.bind(this)}/>
+          <View style={styles.DPadArea} onLayout={this._onLayoutDPad.bind(this)}/>
+          <View style={styles.ABXYArea} onLayout={this._onLayoutABXY.bind(this)}/>
+          <View style={styles.lShoulderArea} onLayout={this._onLayoutLShoulder.bind(this)}/>
+          <View style={styles.rShoulderArea} onLayout={this._onLayoutRShoulder.bind(this)}/>
+          <View style={styles.selectArea} onLayout={this._onLayoutSelect.bind(this)}/>
+          <View style={styles.startArea} onLayout={this._onLayoutStart.bind(this)}/>
 
+          <View style={styles.lShoulderTopView}/>
+          <View style={styles.lShoulderBottomView}/>
+          <View style={styles.rShoulderTopView}/>
+          <View style={styles.rShoulderBottomView}/>
           <View style={styles.ABXYCircleView}>
             <View style={styles.XYPillView}>
               <View style={styles.XCircleView}/> 
@@ -323,7 +327,6 @@ class ControllerView extends React.Component {
               <View style={styles.BCircleView}/> 
             </View>
           </View>
-
           <View style={styles.DPadView}>
             <View style={styles.DPadOuterCircle}>
               <View style={styles.DPadInnerCircle}>
@@ -332,16 +335,13 @@ class ControllerView extends React.Component {
               </View> 
             </View>
           </View> 
-
-
-
-
-        
+          <View style={styles.selectView}/>
+          <View style={styles.startView}/>
         </View>
 
 
         <TouchableOpacity style={styles.pauseButton} onPress={this._pause.bind(this)}>
-          <FontAwesomeIcon name="pause-circle" size={30} allowFontScaling={false} color="#8c8182"/>
+          <FontAwesomeIcon name="pause-circle" size={Dimensions.get('window').width* 0.106} allowFontScaling={false} color="#353632"/>
         </TouchableOpacity>
 
         {this.state.showPauseModal ? <PauseModal _resume={this._resume.bind(this)} _pairController={this._pairController.bind(this)}/> : null}
@@ -356,7 +356,7 @@ var styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#a69f9a'
   },
-  DPad: {
+  DPadArea: {
     position: 'absolute',
     top: Dimensions.get('window').width * .15,
     left: 0, 
@@ -371,7 +371,7 @@ var styles = StyleSheet.create({
     borderBottomColor: 'transparent',
     borderBottomWidth: Dimensions.get('window').width * 0.33,
   },
-  ABXY: {
+  ABXYArea: {
     position: 'absolute',
     top: Dimensions.get('window').width * .15,
     right: 0, 
@@ -386,42 +386,42 @@ var styles = StyleSheet.create({
     borderBottomColor: 'transparent',
     borderBottomWidth: Dimensions.get('window').width * 0.425,
   },
-  lShoulder: {
+  lShoulderArea: {
     position: 'absolute',
     top: 0,
     left: 0, 
     width: Dimensions.get('window').height * 0.45,
     height: Dimensions.get('window').width * 0.15,
-    backgroundColor: 'aqua'
+    backgroundColor: 'transparent'
   },
-  rShoulder: {
+  rShoulderArea: {
     position: 'absolute',
     top: 0,
     right: 0, 
     width: Dimensions.get('window').height * 0.45,
     height: Dimensions.get('window').width * 0.15,
-    backgroundColor: 'aqua'
+    backgroundColor: 'transparent'
   },
-  select: {
+  selectArea: {
     position: 'absolute',
     bottom: 0,
-    left: 55, 
-    width: (Dimensions.get('window').width * 0.8 - 55) / 2,
-    height: Dimensions.get('window').width * 0.15,
-    backgroundColor: 'green'
+    left: 0, 
+    width: (Dimensions.get('window').width * 0.8 ) / 2,
+    height: Dimensions.get('window').width * 0.19,
+    backgroundColor: 'transparent'
   },
-  start: {
+  startArea: {
     position: 'absolute',
     bottom: 0,
-    left: 55 + (Dimensions.get('window').width * 0.8 - 55) / 2, 
-    width: (Dimensions.get('window').width * 0.8 - 55) / 2,
-    height: Dimensions.get('window').width * 0.15,
-    backgroundColor: 'orange'
+    left: (Dimensions.get('window').width * 0.8 ) / 2, 
+    width: (Dimensions.get('window').width * 0.8 ) / 2,
+    height: Dimensions.get('window').width * 0.19,
+    backgroundColor: 'transparent'
   },
   pauseButton: {
     position: 'absolute',
     bottom: 5,
-    left: 5,
+    right: 10,
   },
 
   ABXYCircleView: {
@@ -446,7 +446,7 @@ var styles = StyleSheet.create({
     borderBottomRightRadius: 95,
     transform: [
       {rotate: '44.5deg'},
-      {translate: [0, 5]}
+      {translate: [0, Dimensions.get('window').width* 0.01]}
     ]
   },
   ABPillView: {
@@ -462,7 +462,7 @@ var styles = StyleSheet.create({
     borderBottomRightRadius: 95,
     transform: [
       {rotate: '45deg'},
-      {translate: [90, 5]}
+      {translate: [Dimensions.get('window').width* 0.24, Dimensions.get('window').width* 0.01]}
     ]
   },
 
@@ -554,9 +554,105 @@ var styles = StyleSheet.create({
     height: Dimensions.get('window').width * 0.4,
     width: Dimensions.get('window').width * 0.4 / 3,
     borderRadius: Dimensions.get('window').width * .02,
-
     transform: [
       {rotate: '90deg'},
+    ]
+  },
+  selectView: {
+   position: 'absolute',
+   bottom: Dimensions.get('window').width * (0.15 - 0.1),
+   left: 0 + ( (Dimensions.get('window').width * 0.8 - 0) / 2 - ((Dimensions.get('window').width * 0.8 - 0) / 2 - Dimensions.get('window').width * 0.15) ) * 5/6,
+   height: Dimensions.get('window').width * 0.07,
+   width: (Dimensions.get('window').width * 0.8 - 0) / 2 - Dimensions.get('window').width * 0.15,
+   backgroundColor: '#353632',
+   borderTopLeftRadius: Dimensions.get('window').width* 0.288,
+   borderTopRightRadius: Dimensions.get('window').width* 0.288,
+   borderBottomLeftRadius: Dimensions.get('window').width* 0.253,
+   borderBottomRightRadius: Dimensions.get('window').width* 0.253,
+  },
+  startView: {
+    position: 'absolute',
+    bottom: Dimensions.get('window').width * (0.15 - 0.1),
+    left: Dimensions.get('window').width * (0.8/2) + ( Dimensions.get('window').width * (0.8/2)- ((Dimensions.get('window').width * 0.8 - 0) / 2 - Dimensions.get('window').width * 0.15) ) * 1/6, 
+    height: Dimensions.get('window').width * 0.07,
+    width: (Dimensions.get('window').width * 0.8 - 0) / 2 - Dimensions.get('window').width * 0.15,
+    backgroundColor: '#353632',
+    borderTopLeftRadius: Dimensions.get('window').width* 0.288,
+    borderTopRightRadius: Dimensions.get('window').width* 0.288,
+    borderBottomLeftRadius: Dimensions.get('window').width* 0.253,
+    borderBottomRightRadius: Dimensions.get('window').width* 0.253,
+  },
+
+  lShoulderTopView: {
+    backgroundColor: 'transparent',
+    position: 'absolute',
+    borderBottomColor: 'transparent',
+    borderLeftColor: 'transparent',
+    borderRightColor: 'transparent',
+    borderTopWidth: Dimensions.get('window').width * .13,
+    borderTopColor: '#8c8182',
+    borderStyle: 'solid',
+    borderTopLeftRadius: Dimensions.get('window').width * 1,
+    top: Dimensions.get('window').width * .1,
+    left: Dimensions.get('window').width * .16,
+    width: Dimensions.get('window').width * 0.5,
+    height: Dimensions.get('window').width * 0,
+    transform: [
+      {skewX: '-40deg'},
+    ]
+  },
+  lShoulderBottomView: {
+    backgroundColor: 'transparent',
+    position: 'absolute',
+    borderBottomColor: 'transparent',
+    borderLeftColor: 'transparent',
+    borderRightColor: 'transparent',
+    borderTopWidth: Dimensions.get('window').width * .13,
+    borderTopColor: '#a69f9a',
+    borderStyle: 'solid',
+    borderTopLeftRadius: Dimensions.get('window').width * 1,
+    top: Dimensions.get('window').width * .11,
+    left: Dimensions.get('window').width * .16,
+    width: Dimensions.get('window').width * 0.5,
+    height: Dimensions.get('window').width * 0,
+    transform: [
+      {skewX: '-40deg'},
+    ]
+  },
+  rShoulderTopView: {
+    backgroundColor: 'transparent',
+    position: 'absolute',
+    borderBottomColor: 'transparent',
+    borderRightColor: 'transparent',
+    borderRightColor: 'transparent',
+    borderTopWidth: Dimensions.get('window').width * .13,
+    borderTopColor: '#8c8182',
+    borderStyle: 'solid',
+    borderTopRightRadius: Dimensions.get('window').width * 1,
+    top: Dimensions.get('window').width * .1,
+    right: Dimensions.get('window').width * .16,
+    width: Dimensions.get('window').width * 0.5,
+    height: Dimensions.get('window').width * 0,
+    transform: [
+      {skewX: '40deg'},
+    ]
+  },
+  rShoulderBottomView: {
+    backgroundColor: 'transparent',
+    position: 'absolute',
+    borderBottomColor: 'transparent',
+    borderRightColor: 'transparent',
+    borderRightColor: 'transparent',
+    borderTopWidth: Dimensions.get('window').width * .13,
+    borderTopColor: '#a69f9a',
+    borderStyle: 'solid',
+    borderTopRightRadius: Dimensions.get('window').width * 1,
+    top: Dimensions.get('window').width * .11,
+    right: Dimensions.get('window').width * .16,
+    width: Dimensions.get('window').width * 0.5,
+    height: Dimensions.get('window').width * 0,
+    transform: [
+      {skewX: '40deg'},
     ]
   }
 
