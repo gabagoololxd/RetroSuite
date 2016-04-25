@@ -2,8 +2,8 @@ var React = require('react-native');
 var FontAwesomeIcon = require('react-native-vector-icons/FontAwesome');
 var Orientation = require('react-native-orientation');
 var _ = require('lodash');
+var webSocket = require('../Utils/webSocketMethods');
 var utils = require('../Utils/utils');
-var DPad = require('./DPad');
 var PauseModal = require('./PauseModal');
 
 var {
@@ -20,7 +20,11 @@ class ControllerView extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      showPauseModal: false,  // set to true when game is paused
+      // set to true when game is paused
+      showPauseModal: false, 
+
+      // stores the previous state of button presses; we compare to see if current button presses are different from previous
+      // if so, then send a 'press' or 'release' message to the chrome app webSocket server
       previousButtonPresses: {
         a: false,
         b: false,
@@ -35,6 +39,8 @@ class ControllerView extends React.Component {
         start: false,
         select: false
       },
+
+      // stores a list of currently pressed buttons
       currentButtonPresses: {
         a: false,
         b: false,
@@ -49,6 +55,9 @@ class ControllerView extends React.Component {
         start: false,
         select: false
       },
+
+      // information about the current layout of each button/set of buttons: x coord, y coord, width, height
+      // used to determine which area of the screen each button is taking up so later we can calculate if a touch is within the area of the button
       layout: {
         DPad: undefined,
         ABXY: undefined,
@@ -58,21 +67,8 @@ class ControllerView extends React.Component {
         select: undefined
       }
     };
-    // this._pointInTriangle = this._pointInTriangle.bind(this);
-    // this._pressingA = this._pressingA.bind(this);
-    // this._pressingB = this._pressingB.bind(this);
-    // this._pressingX = this._pressingX.bind(this);
-    // this._pressingY = this._pressingY.bind(this);
-    // this._pressingLShoulder = this._pressingLShoulder.bind(this);
-    // this._pressingRShoulder = this._pressingRShoulder.bind(this);
-    // this._pressingUp = this._pressingUp.bind(this);
-    // this._pressingDown = this._pressingDown.bind(this);
-    // this._pressingLeft = this._pressingLeft.bind(this);
-    // this._pressingRight = this._pressingRight.bind(this);
-    // this._pressingStart = this._pressingStart.bind(this);
-    // this._pressingSelect = this._pressingSelect.bind(this);
-    // this._determinePressesAndReleases = this._determinePressesAndReleases.bind(this);
 
+    // functions used by webSocketMethods.js defined here:
     global.pause = () => {
       this.setState({showPauseModal: true});
     };
@@ -92,156 +88,30 @@ class ControllerView extends React.Component {
     Orientation.lockToLandscapeRight(); // this will lock the view to Landscape
   }
 
-  // Pause button and button options while game is paused:
+  // Method used to pause the game and methods used while the game is paused:
   _pause() {
     var controller = this;
-    utils.Pause(function() {
+    webSocket.Pause(function() {
       controller.setState({showPauseModal: true});
     });
   }
   _resume() {
     var controller = this;
-    utils.Resume(function() {
+    webSocket.Resume(function() {
       controller.setState({showPauseModal: false});
     });
   }
   _pairController() {
     navigator = this.props.navigator;
     turnCameraOn = this.props.route.turnCameraOn.bind(this);
-    utils.RePairController(function() {
+    webSocket.RePairController(function() {
       navigator.pop();
       Orientation.lockToPortrait();
       turnCameraOn();
     });
   }
 
-  // Touch helpers
-
-  _pointInTriangle(P, A, B, C) {
-    // Compute vectors        
-    function vec(from, to) {  return [to[0] - from[0], to[1] - from[1]];  }
-    var v0 = vec(A, C);
-    var v1 = vec(A, B);
-    var v2 = vec(A, P);
-    // Compute dot products
-    function dot(u, v) {  return u[0] * v[0] + u[1] * v[1];  }
-    var dot00 = dot(v0, v0);
-    var dot01 = dot(v0, v1);
-    var dot02 = dot(v0, v2);
-    var dot11 = dot(v1, v1);
-    var dot12 = dot(v1, v2);
-    // Compute barycentric coordinates
-    var invDenom = 1.0 / (dot00 * dot11 - dot01 * dot01);
-    var u = (dot11 * dot02 - dot01 * dot12) * invDenom;
-    var v = (dot00 * dot12 - dot01 * dot02) * invDenom;
-    // Check if point is in triangle
-    return (u >= 0) && (v >= 0) && (u + v < 1);
-  }
-
-  _pointInRectangle (P, A, D) { //P is the point, A is top left corner of rectangle, D is bottom right corner of rectangle
-      x1 = Math.min(A[0], D[0]);
-      x2 = Math.max(A[0], D[0]);
-      y1 = Math.min(A[1], D[1]);
-      y2 = Math.max(A[1], D[1]);
-      if ((x1 <= P[0]) && ( P[0]<= x2) && (y1 <= P[1]) && (P[1] <= y2)) {
-        return true;
-      } else {
-        return false;
-      };
-  };
-
-  _pressingA(coordinate) {
-    return this._pointInTriangle(coordinate, 
-      [this.state.layout.ABXY.x + this.state.layout.ABXY.width, this.state.layout.ABXY.y], 
-      [this.state.layout.ABXY.x + this.state.layout.ABXY.width/2, this.state.layout.ABXY.y + this.state.layout.ABXY.height/2], 
-      [this.state.layout.ABXY.x + this.state.layout.ABXY.width , this.state.layout.ABXY.y + this.state.layout.ABXY.width]
-    );
-  }
-
-  _pressingB(coordinate) {
-    return this._pointInTriangle(coordinate, 
-      [this.state.layout.ABXY.x, this.state.layout.ABXY.y + this.state.layout.ABXY.height], 
-      [this.state.layout.ABXY.x + this.state.layout.ABXY.width/2, this.state.layout.ABXY.y + this.state.layout.ABXY.height/2], 
-      [this.state.layout.ABXY.x + this.state.layout.ABXY.width , this.state.layout.ABXY.y + this.state.layout.ABXY.width]
-    );
-  }
-
-  _pressingX(coordinate) {
-    return this._pointInTriangle(coordinate, 
-      [this.state.layout.ABXY.x, this.state.layout.ABXY.y], 
-      [this.state.layout.ABXY.x + this.state.layout.ABXY.width, this.state.layout.ABXY.y], 
-      [this.state.layout.ABXY.x + this.state.layout.ABXY.width/2 , this.state.layout.ABXY.y/2 + this.state.layout.ABXY.width/2]
-    );
-  }
-
-  _pressingY(coordinate) {
-    return this._pointInTriangle(coordinate, 
-      [this.state.layout.ABXY.x, this.state.layout.ABXY.y + this.state.layout.ABXY.height], 
-      [this.state.layout.ABXY.x + this.state.layout.ABXY.width/2, this.state.layout.ABXY.y + this.state.layout.ABXY.height/2], 
-      [this.state.layout.ABXY.x, this.state.layout.ABXY.y]
-    );
-  }
-
-  _pressingRight(coordinate) {
-    return this._pointInTriangle(coordinate, 
-      [this.state.layout.DPad.x + this.state.layout.DPad.width, this.state.layout.DPad.y], 
-      [this.state.layout.DPad.x + this.state.layout.DPad.width/2, this.state.layout.DPad.y + this.state.layout.DPad.height/2], 
-      [this.state.layout.DPad.x + this.state.layout.DPad.width , this.state.layout.DPad.y + this.state.layout.DPad.width]
-    );
-  }
-
-  _pressingDown(coordinate) {
-    return this._pointInTriangle(coordinate, 
-      [this.state.layout.DPad.x, this.state.layout.DPad.y + this.state.layout.DPad.height], 
-      [this.state.layout.DPad.x + this.state.layout.DPad.width/2, this.state.layout.DPad.y + this.state.layout.DPad.height/2], 
-      [this.state.layout.DPad.x + this.state.layout.DPad.width , this.state.layout.DPad.y + this.state.layout.DPad.width]
-    );
-  }
-
-  _pressingUp(coordinate) {
-    return this._pointInTriangle(coordinate, 
-      [this.state.layout.DPad.x, this.state.layout.DPad.y], 
-      [this.state.layout.DPad.x + this.state.layout.DPad.width, this.state.layout.DPad.y], 
-      [this.state.layout.DPad.x + this.state.layout.DPad.width/2 , this.state.layout.DPad.y/2 + this.state.layout.DPad.width/2]
-    );
-  }
-
-  _pressingLeft(coordinate) {
-    return this._pointInTriangle(coordinate, 
-      [this.state.layout.DPad.x, this.state.layout.DPad.y + this.state.layout.DPad.height], 
-      [this.state.layout.DPad.x + this.state.layout.DPad.width/2, this.state.layout.DPad.y + this.state.layout.DPad.height/2], 
-      [this.state.layout.DPad.x, this.state.layout.DPad.y]
-    );
-  }
-
-  _pressingLShoulder(coordinate) {
-    return this._pointInRectangle(coordinate, 
-      [this.state.layout.lShoulder.x, this.state.layout.lShoulder.y],
-      [this.state.layout.lShoulder.x + this.state.layout.lShoulder.width, this.state.layout.lShoulder.y + this.state.layout.lShoulder.height]
-    );
-  }
-
-  _pressingRShoulder(coordinate) {
-    return this._pointInRectangle(coordinate, 
-      [this.state.layout.rShoulder.x, this.state.layout.rShoulder.y],
-      [this.state.layout.rShoulder.x + this.state.layout.rShoulder.width, this.state.layout.rShoulder.y + this.state.layout.rShoulder.height]
-    );
-  }
-
-  _pressingSelect(coordinate) {
-    return this._pointInRectangle(coordinate, 
-      [this.state.layout.select.x, this.state.layout.select.y],
-      [this.state.layout.select.x + this.state.layout.select.width, this.state.layout.select.y + this.state.layout.select.height]
-    );
-  }
-
-  _pressingStart(coordinate) {
-    return this._pointInRectangle(coordinate, 
-      [this.state.layout.start.x, this.state.layout.start.y],
-      [this.state.layout.start.x + this.state.layout.start.width, this.state.layout.start.y + this.state.layout.start.height]
-    );
-  }
-
+  // Sets the state of layout; when the view renders, pass the information to this.state so we can calculate whether touches are within certain button areaas
   _onLayoutABXY(e) {
     this.setState({layout: _.extend(this.state.layout, {ABXY: e.nativeEvent.layout})})
   }
@@ -261,10 +131,108 @@ class ControllerView extends React.Component {
     this.setState({layout: _.extend(this.state.layout, {rShoulder: e.nativeEvent.layout})})
   }
 
+  // Touch helpers: returns true if a touch coordinate is within the area of the button
+  _pressingA(coordinate) {
+    return utils._pointInTriangle(coordinate, 
+      [this.state.layout.ABXY.x + this.state.layout.ABXY.width, this.state.layout.ABXY.y], 
+      [this.state.layout.ABXY.x + this.state.layout.ABXY.width/2, this.state.layout.ABXY.y + this.state.layout.ABXY.height/2], 
+      [this.state.layout.ABXY.x + this.state.layout.ABXY.width , this.state.layout.ABXY.y + this.state.layout.ABXY.width]
+    );
+  }
+
+  _pressingB(coordinate) {
+    return utils._pointInTriangle(coordinate, 
+      [this.state.layout.ABXY.x, this.state.layout.ABXY.y + this.state.layout.ABXY.height], 
+      [this.state.layout.ABXY.x + this.state.layout.ABXY.width/2, this.state.layout.ABXY.y + this.state.layout.ABXY.height/2], 
+      [this.state.layout.ABXY.x + this.state.layout.ABXY.width , this.state.layout.ABXY.y + this.state.layout.ABXY.width]
+    );
+  }
+
+  _pressingX(coordinate) {
+    return utils._pointInTriangle(coordinate, 
+      [this.state.layout.ABXY.x, this.state.layout.ABXY.y], 
+      [this.state.layout.ABXY.x + this.state.layout.ABXY.width, this.state.layout.ABXY.y], 
+      [this.state.layout.ABXY.x + this.state.layout.ABXY.width/2 , this.state.layout.ABXY.y/2 + this.state.layout.ABXY.width/2]
+    );
+  }
+
+  _pressingY(coordinate) {
+    return utils._pointInTriangle(coordinate, 
+      [this.state.layout.ABXY.x, this.state.layout.ABXY.y + this.state.layout.ABXY.height], 
+      [this.state.layout.ABXY.x + this.state.layout.ABXY.width/2, this.state.layout.ABXY.y + this.state.layout.ABXY.height/2], 
+      [this.state.layout.ABXY.x, this.state.layout.ABXY.y]
+    );
+  }
+
+  _pressingRight(coordinate) {
+    return utils._pointInTriangle(coordinate, 
+      [this.state.layout.DPad.x + this.state.layout.DPad.width, this.state.layout.DPad.y], 
+      [this.state.layout.DPad.x + this.state.layout.DPad.width/2, this.state.layout.DPad.y + this.state.layout.DPad.height/2], 
+      [this.state.layout.DPad.x + this.state.layout.DPad.width , this.state.layout.DPad.y + this.state.layout.DPad.width]
+    );
+  }
+
+  _pressingDown(coordinate) {
+    return utils._pointInTriangle(coordinate, 
+      [this.state.layout.DPad.x, this.state.layout.DPad.y + this.state.layout.DPad.height], 
+      [this.state.layout.DPad.x + this.state.layout.DPad.width/2, this.state.layout.DPad.y + this.state.layout.DPad.height/2], 
+      [this.state.layout.DPad.x + this.state.layout.DPad.width , this.state.layout.DPad.y + this.state.layout.DPad.width]
+    );
+  }
+
+  _pressingUp(coordinate) {
+    return utils._pointInTriangle(coordinate, 
+      [this.state.layout.DPad.x, this.state.layout.DPad.y], 
+      [this.state.layout.DPad.x + this.state.layout.DPad.width, this.state.layout.DPad.y], 
+      [this.state.layout.DPad.x + this.state.layout.DPad.width/2 , this.state.layout.DPad.y/2 + this.state.layout.DPad.width/2]
+    );
+  }
+
+  _pressingLeft(coordinate) {
+    return utils._pointInTriangle(coordinate, 
+      [this.state.layout.DPad.x, this.state.layout.DPad.y + this.state.layout.DPad.height], 
+      [this.state.layout.DPad.x + this.state.layout.DPad.width/2, this.state.layout.DPad.y + this.state.layout.DPad.height/2], 
+      [this.state.layout.DPad.x, this.state.layout.DPad.y]
+    );
+  }
+
+  _pressingLShoulder(coordinate) {
+    return utils._pointInRectangle(coordinate, 
+      [this.state.layout.lShoulder.x, this.state.layout.lShoulder.y],
+      [this.state.layout.lShoulder.x + this.state.layout.lShoulder.width, this.state.layout.lShoulder.y + this.state.layout.lShoulder.height]
+    );
+  }
+
+  _pressingRShoulder(coordinate) {
+    return utils._pointInRectangle(coordinate, 
+      [this.state.layout.rShoulder.x, this.state.layout.rShoulder.y],
+      [this.state.layout.rShoulder.x + this.state.layout.rShoulder.width, this.state.layout.rShoulder.y + this.state.layout.rShoulder.height]
+    );
+  }
+
+  _pressingSelect(coordinate) {
+    return utils._pointInRectangle(coordinate, 
+      [this.state.layout.select.x, this.state.layout.select.y],
+      [this.state.layout.select.x + this.state.layout.select.width, this.state.layout.select.y + this.state.layout.select.height]
+    );
+  }
+
+  _pressingStart(coordinate) {
+    return utils._pointInRectangle(coordinate, 
+      [this.state.layout.start.x, this.state.layout.start.y],
+      [this.state.layout.start.x + this.state.layout.start.width, this.state.layout.start.y + this.state.layout.start.height]
+    );
+  }
+
+  // This is the main function used to determine what new messages need to be sent to the chrome app websockets server
+  // Called any time there is a new touch, a touch has moved, and when a touch is released
   _determinePressesAndReleases(e) {
-    var coordinates = _.map(e.nativeEvent.touches, function(touch) {
+    // List the coordinates of all the active touches on the screen
+    var touchCoordinates = _.map(e.nativeEvent.touches, function(touch) {
       return [touch.pageX, touch.pageY];
     });
+
+    // Set previousButtonPresses to be what was currentButtonPresses and re-initialize currentButtonPresses as all false
     var self = this;
     self.setState({previousButtonPresses: self.state.currentButtonPresses});
     self.setState({currentButtonPresses: {
@@ -281,75 +249,53 @@ class ControllerView extends React.Component {
       start: false,
       select: false
     }});
-
-    _.each(coordinates, function(touch) {
-      if(self._pressingA(touch)) {
-        self.setState({currentButtonPresses: _.extend(self.state.currentButtonPresses, {a: true})})
-      } 
-      if(self._pressingB(touch)) {
-        self.setState({currentButtonPresses: _.extend(self.state.currentButtonPresses, {b: true})})
-      } 
-      if(self._pressingX(touch)) {
-        self.setState({currentButtonPresses: _.extend(self.state.currentButtonPresses, {x: true})})
-      } 
-      if(self._pressingY(touch)) {
-        self.setState({currentButtonPresses: _.extend(self.state.currentButtonPresses, {y: true})})
-      } 
-      if(self._pressingRight(touch)) {
-        self.setState({currentButtonPresses: _.extend(self.state.currentButtonPresses, {right: true})})
-      } 
-      if(self._pressingDown(touch)) {
-        self.setState({currentButtonPresses: _.extend(self.state.currentButtonPresses, {down: true})})
-      } 
-      if(self._pressingUp(touch)) {
-        self.setState({currentButtonPresses: _.extend(self.state.currentButtonPresses, {up: true})})
-      } 
-      if(self._pressingLeft(touch)) {
-        self.setState({currentButtonPresses: _.extend(self.state.currentButtonPresses, {left: true})})
-      } 
-      if(self._pressingLShoulder(touch)) {
-        self.setState({currentButtonPresses: _.extend(self.state.currentButtonPresses, {lShoulder: true})})
-      } 
-      if(self._pressingRShoulder(touch)) {
-        self.setState({currentButtonPresses: _.extend(self.state.currentButtonPresses, {rShoulder: true})})
-      } 
-      if(self._pressingSelect(touch)) {
-        self.setState({currentButtonPresses: _.extend(self.state.currentButtonPresses, {select: true})})
-      } 
-      if(self._pressingStart(touch)) {
-        self.setState({currentButtonPresses: _.extend(self.state.currentButtonPresses, {start: true})})
-      } 
+    
+    // Look through each touchCoordinate; if any touchCoordinate is pressing any of the buttons, set that button to true
+    _.each(touchCoordinates, function(touchCoordinate) {
+      self._pressingA(touchCoordinate) ? self.setState({currentButtonPresses: _.extend(self.state.currentButtonPresses, {a: true})}) : null;
+      self._pressingB(touchCoordinate) ? self.setState({currentButtonPresses: _.extend(self.state.currentButtonPresses, {b: true})}) : null;
+      self._pressingX(touchCoordinate) ? self.setState({currentButtonPresses: _.extend(self.state.currentButtonPresses, {x: true})}) : null;
+      self._pressingY(touchCoordinate) ? self.setState({currentButtonPresses: _.extend(self.state.currentButtonPresses, {y: true})}) : null;
+      self._pressingRight(touchCoordinate) ? self.setState({currentButtonPresses: _.extend(self.state.currentButtonPresses, {right: true})}) : null;
+      self._pressingDown(touchCoordinate) ? self.setState({currentButtonPresses: _.extend(self.state.currentButtonPresses, {down: true})}) : null;
+      self._pressingUp(touchCoordinate) ? self.setState({currentButtonPresses: _.extend(self.state.currentButtonPresses, {up: true})}) : null;
+      self._pressingLeft(touchCoordinate) ? self.setState({currentButtonPresses: _.extend(self.state.currentButtonPresses, {left: true})}) : null;
+      self._pressingLShoulder(touchCoordinate) ? self.setState({currentButtonPresses: _.extend(self.state.currentButtonPresses, {lShoulder: true})}) : null;
+      self._pressingRShoulder(touchCoordinate) ? self.setState({currentButtonPresses: _.extend(self.state.currentButtonPresses, {rShoulder: true})}) : null;
+      self._pressingSelect(touchCoordinate) ? self.setState({currentButtonPresses: _.extend(self.state.currentButtonPresses, {select: true})}) : null;
+      self._pressingStart(touchCoordinate) ? self.setState({currentButtonPresses: _.extend(self.state.currentButtonPresses, {start: true})}) : null;
     });
 
     console.log('state', self.state.currentButtonPresses);
 
-    this.state.currentButtonPresses.a !== this.state.previousButtonPresses.a ? (this.state.currentButtonPresses.a ? utils.Press('a') : utils.Release('a')) : null;
-    this.state.currentButtonPresses.b !== this.state.previousButtonPresses.b ? (this.state.currentButtonPresses.b ? utils.Press('b') : utils.Release('b')) : null;
-    this.state.currentButtonPresses.x !== this.state.previousButtonPresses.x ? (this.state.currentButtonPresses.x ? utils.Press('x') : utils.Release('x')) : null;
-    this.state.currentButtonPresses.y !== this.state.previousButtonPresses.y ? (this.state.currentButtonPresses.y ? utils.Press('y') : utils.Release('y')) : null;
-    this.state.currentButtonPresses.up !== this.state.previousButtonPresses.up ? (this.state.currentButtonPresses.up ? utils.Press('up') : utils.Release('up')) : null;
-    this.state.currentButtonPresses.down !== this.state.previousButtonPresses.down ? (this.state.currentButtonPresses.down ? utils.Press('down') : utils.Release('down')) : null;
-    this.state.currentButtonPresses.left !== this.state.previousButtonPresses.left ? (this.state.currentButtonPresses.left ? utils.Press('left') : utils.Release('left')) : null;
-    this.state.currentButtonPresses.right !== this.state.previousButtonPresses.right ? (this.state.currentButtonPresses.right ? utils.Press('right') : utils.Release('right')) : null;
-    this.state.currentButtonPresses.lShoulder !== this.state.previousButtonPresses.lShoulder ? (this.state.currentButtonPresses.lShoulder ? utils.Press('l-shoulder') : utils.Release('l-shoulder')) : null;
-    this.state.currentButtonPresses.rShoulder !== this.state.previousButtonPresses.rShoulder ? (this.state.currentButtonPresses.rShoulder ? utils.Press('r-shoulder') : utils.Release('r-shoulder')) : null;
-    this.state.currentButtonPresses.select !== this.state.previousButtonPresses.select ? (this.state.currentButtonPresses.select ? utils.Press('select') : utils.Release('select')) : null;
-    this.state.currentButtonPresses.start !== this.state.previousButtonPresses.start ? (this.state.currentButtonPresses.start ? utils.Press('start') : utils.Release('start')) : null;
+    // Compare previousButtonPresses with currentButtonPresses; if there is a change, then tell the chrome app webSocket server (either press or release)
+    this.state.currentButtonPresses.a !== this.state.previousButtonPresses.a ? (this.state.currentButtonPresses.a ? webSocket.Press('a') : webSocket.Release('a')) : null;
+    this.state.currentButtonPresses.b !== this.state.previousButtonPresses.b ? (this.state.currentButtonPresses.b ? webSocket.Press('b') : webSocket.Release('b')) : null;
+    this.state.currentButtonPresses.x !== this.state.previousButtonPresses.x ? (this.state.currentButtonPresses.x ? webSocket.Press('x') : webSocket.Release('x')) : null;
+    this.state.currentButtonPresses.y !== this.state.previousButtonPresses.y ? (this.state.currentButtonPresses.y ? webSocket.Press('y') : webSocket.Release('y')) : null;
+    this.state.currentButtonPresses.up !== this.state.previousButtonPresses.up ? (this.state.currentButtonPresses.up ? webSocket.Press('up') : webSocket.Release('up')) : null;
+    this.state.currentButtonPresses.down !== this.state.previousButtonPresses.down ? (this.state.currentButtonPresses.down ? webSocket.Press('down') : webSocket.Release('down')) : null;
+    this.state.currentButtonPresses.left !== this.state.previousButtonPresses.left ? (this.state.currentButtonPresses.left ? webSocket.Press('left') : webSocket.Release('left')) : null;
+    this.state.currentButtonPresses.right !== this.state.previousButtonPresses.right ? (this.state.currentButtonPresses.right ? webSocket.Press('right') : webSocket.Release('right')) : null;
+    this.state.currentButtonPresses.lShoulder !== this.state.previousButtonPresses.lShoulder ? (this.state.currentButtonPresses.lShoulder ? webSocket.Press('l-shoulder') : webSocket.Release('l-shoulder')) : null;
+    this.state.currentButtonPresses.rShoulder !== this.state.previousButtonPresses.rShoulder ? (this.state.currentButtonPresses.rShoulder ? webSocket.Press('r-shoulder') : webSocket.Release('r-shoulder')) : null;
+    this.state.currentButtonPresses.select !== this.state.previousButtonPresses.select ? (this.state.currentButtonPresses.select ? webSocket.Press('select') : webSocket.Release('select')) : null;
+    this.state.currentButtonPresses.start !== this.state.previousButtonPresses.start ? (this.state.currentButtonPresses.start ? webSocket.Press('start') : webSocket.Release('start')) : null;
   }
 
   // Touch events
   _onTouchStart(e) {
-    console.log('touch Start');
+    console.log('Touch Start');
     this._determinePressesAndReleases(e);
   }
 
   _onTouchMove(e) {
-    console.log('touch Move');
+    console.log('Touch Move');
     this._determinePressesAndReleases(e);
   }
 
   _onTouchEnd(e) {
-    console.log('touch End');
+    console.log('Touch End');
     this._determinePressesAndReleases(e);
   } 
 

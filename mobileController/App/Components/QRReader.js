@@ -1,7 +1,7 @@
 var React = require('react-native');
 var Camera = require('react-native-camera').default;
 var IconIon = require('react-native-vector-icons/Ionicons');
-var utils = require('../Utils/utils');
+var webSocket = require('../Utils/webSocketMethods');
 var ControllerView = require('./ControllerView');
 var _ = require('lodash');
 var Orientation = require('react-native-orientation');
@@ -38,7 +38,7 @@ class QRReader extends React.Component {
         (connectionInfo) => { console.log(connectionInfo, 'connectionInfo') }
     );
     
-    // //for development purposes, simulates successful qr scan
+    //for development purposes, simulates successful qr scan
     var openControllerViewCallback = () => {
       var navigator = this.props.navigator;
       var turnCameraOn = this.turnCameraOn.bind(this);
@@ -54,7 +54,7 @@ class QRReader extends React.Component {
         }
       });
     }
-    utils.PairController('172.20.10.3:1337', openControllerViewCallback);
+    webSocket.PairController('10.0.0.215:1337', openControllerViewCallback);
   }
 
   _onBarCodeRead(e) {
@@ -76,7 +76,7 @@ class QRReader extends React.Component {
       });
     }
 
-    utils.PairController(ipAddress, success);
+    webSocket.PairController(ipAddress, success);
   }
 
   _torchEnabled() {
