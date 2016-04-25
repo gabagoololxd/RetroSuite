@@ -58,6 +58,7 @@ class ControllerView extends React.Component {
 
       // information about the current layout of each button/set of buttons: x coord, y coord, width, height
       // used to determine which area of the screen each button is taking up so later we can calculate if a touch is within the area of the button
+      // filled in by _onLayout methods below
       layout: {
         DPad: undefined,
         ABXY: undefined,
@@ -250,7 +251,7 @@ class ControllerView extends React.Component {
       select: false
     }});
     
-    // Look through each touchCoordinate; if any touchCoordinate is pressing any of the buttons, set that button to true
+    // Look through each touchCoordinate; if any touchCoordinate is pressing any button, set that button to true
     _.each(touchCoordinates, function(touchCoordinate) {
       self._pressingA(touchCoordinate) ? self.setState({currentButtonPresses: _.extend(self.state.currentButtonPresses, {a: true})}) : null;
       self._pressingB(touchCoordinate) ? self.setState({currentButtonPresses: _.extend(self.state.currentButtonPresses, {b: true})}) : null;
@@ -303,19 +304,44 @@ class ControllerView extends React.Component {
     StatusBarIOS.setHidden('true');
     return (
       <View style={styles.imageContainer}>
-        <Image source={require('./Assets/snescontrollercroppedlabels.jpg')} style={styles.image}>
-          <View style={{flex: 1}} onTouchStart={this._onTouchStart.bind(this)} onTouchMove={this._onTouchMove.bind(this)} onTouchEnd={this._onTouchEnd.bind(this)}>
-            <View style={styles.DPad} onLayout={this._onLayoutDPad.bind(this)}/>
-            <View style={styles.ABXY} onLayout={this._onLayoutABXY.bind(this)}/>
-            <View style={styles.lShoulder} onLayout={this._onLayoutLShoulder.bind(this)}/>
-            <View style={styles.rShoulder} onLayout={this._onLayoutRShoulder.bind(this)}/>
-            <View style={styles.select} onLayout={this._onLayoutSelect.bind(this)}/>
-            <View style={styles.start} onLayout={this._onLayoutStart.bind(this)}/>
+       
+        <View style={{flex: 1}} onTouchStart={this._onTouchStart.bind(this)} onTouchMove={this._onTouchMove.bind(this)} onTouchEnd={this._onTouchEnd.bind(this)}>
+          <View style={styles.DPad} onLayout={this._onLayoutDPad.bind(this)}/>
+          <View style={styles.ABXY} onLayout={this._onLayoutABXY.bind(this)}/>
+          <View style={styles.lShoulder} onLayout={this._onLayoutLShoulder.bind(this)}/>
+          <View style={styles.rShoulder} onLayout={this._onLayoutRShoulder.bind(this)}/>
+          <View style={styles.select} onLayout={this._onLayoutSelect.bind(this)}/>
+          <View style={styles.start} onLayout={this._onLayoutStart.bind(this)}/>
+
+          <View style={styles.ABXYCircleView}>
+            <View style={styles.XYPillView}>
+              <View style={styles.XCircleView}/> 
+              <View style={styles.YCircleView}/> 
+            </View> 
+            <View style={styles.ABPillView}>
+              <View style={styles.ACircleView}/> 
+              <View style={styles.BCircleView}/> 
+            </View>
           </View>
-        </Image>
+
+          <View style={styles.DPadView}>
+            <View style={styles.DPadOuterCircle}>
+              <View style={styles.DPadInnerCircle}>
+                <View style={styles.leftRightView} />
+                <View style={styles.upDownView} />
+              </View> 
+            </View>
+          </View> 
+
+
+
+
+        
+        </View>
+
 
         <TouchableOpacity style={styles.pauseButton} onPress={this._pause.bind(this)}>
-          <FontAwesomeIcon name="pause-circle" size={50} allowFontScaling={false} color="#6b676e"/>
+          <FontAwesomeIcon name="pause-circle" size={30} allowFontScaling={false} color="#8c8182"/>
         </TouchableOpacity>
 
         {this.state.showPauseModal ? <PauseModal _resume={this._resume.bind(this)} _pairController={this._pairController.bind(this)}/> : null}
@@ -328,10 +354,7 @@ class ControllerView extends React.Component {
 var styles = StyleSheet.create({
   imageContainer: {
     flex: 1,
-  },
-  image: {
-    width: Dimensions.get('window').height,
-    height: Dimensions.get('window').width,
+    backgroundColor: '#a69f9a'
   },
   DPad: {
     position: 'absolute',
@@ -340,12 +363,12 @@ var styles = StyleSheet.create({
     width: 0,
     height: 0,
     borderTopWidth: Dimensions.get('window').width * 0.33,
-    borderTopColor: 'blue',
-    borderLeftColor: 'red',
+    borderTopColor: 'transparent',
+    borderLeftColor: 'transparent',
     borderLeftWidth: Dimensions.get('window').width * 0.4,
-    borderRightColor: 'green',
+    borderRightColor: 'transparent',
     borderRightWidth: Dimensions.get('window').width * 0.4,
-    borderBottomColor: 'yellow',
+    borderBottomColor: 'transparent',
     borderBottomWidth: Dimensions.get('window').width * 0.33,
   },
   ABXY: {
@@ -355,12 +378,12 @@ var styles = StyleSheet.create({
     width: 0,
     height: 0,
     borderTopWidth: Dimensions.get('window').width * 0.425,
-    borderTopColor: 'blue',
-    borderLeftColor: 'red',
+    borderTopColor: 'transparent',
+    borderLeftColor: 'transparent',
     borderLeftWidth: Dimensions.get('window').width * 0.4,
-    borderRightColor: 'green',
+    borderRightColor: 'transparent',
     borderRightWidth: Dimensions.get('window').width * 0.4,
-    borderBottomColor: 'yellow',
+    borderBottomColor: 'transparent',
     borderBottomWidth: Dimensions.get('window').width * 0.425,
   },
   lShoulder: {
@@ -400,6 +423,143 @@ var styles = StyleSheet.create({
     bottom: 5,
     left: 5,
   },
+
+  ABXYCircleView: {
+    position: 'absolute',
+    top: Dimensions.get('window').width * .15 + Dimensions.get('window').width * 0.425/8,
+    right: Dimensions.get('window').width * 0.4/16, 
+    width: Dimensions.get('window').width * 0.75,
+    height: Dimensions.get('window').width * 0.75,
+    borderRadius: Dimensions.get('window').width * 0.75/2,
+    backgroundColor: '#8c8182'
+  },
+  XYPillView: {
+    position: 'absolute',
+    top: Dimensions.get('window').width * 0.05,
+    left: Dimensions.get('window').width * 0.2, 
+    width: Dimensions.get('window').width * 0.2,
+    height: Dimensions.get('window').width * 0.45,
+    backgroundColor: '#a69f9a',
+    borderTopLeftRadius: 108,
+    borderTopRightRadius: 108,
+    borderBottomLeftRadius: 95,
+    borderBottomRightRadius: 95,
+    transform: [
+      {rotate: '44.5deg'},
+      {translate: [0, 5]}
+    ]
+  },
+  ABPillView: {
+    position: 'absolute',
+    top: Dimensions.get('window').width * 0.05,
+    left: Dimensions.get('window').width * 0.2, 
+    width: Dimensions.get('window').width * 0.2,
+    height: Dimensions.get('window').width * 0.45,
+    backgroundColor: '#a69f9a',
+    borderTopLeftRadius: 108,
+    borderTopRightRadius: 108,
+    borderBottomLeftRadius: 95,
+    borderBottomRightRadius: 95,
+    transform: [
+      {rotate: '45deg'},
+      {translate: [90, 5]}
+    ]
+  },
+
+  ACircleView: {
+    position: 'absolute',
+    top: Dimensions.get('window').width * 0.019,
+    right: Dimensions.get('window').width * 0.021, 
+    width: Dimensions.get('window').width * 0.155,
+    height: Dimensions.get('window').width * 0.155,
+    borderRadius: Dimensions.get('window').width * 0.155/2,
+    backgroundColor: '#5b3980',
+  },
+
+  BCircleView: {
+    position: 'absolute',
+    top: Dimensions.get('window').width * 0.019,
+    right: Dimensions.get('window').width * 0.021, 
+    width: Dimensions.get('window').width * 0.155,
+    height: Dimensions.get('window').width * 0.155,
+    borderRadius: Dimensions.get('window').width * 0.155/2,
+    backgroundColor: '#5b3980',
+    transform: [
+      {rotate: '-45deg'},
+      {translate: [-1 * Dimensions.get('window').width * 0.18, Dimensions.get('window').width * 0.18]}
+    ]
+  },
+
+  XCircleView: {
+    position: 'absolute',
+    top: Dimensions.get('window').width * 0.019,
+    right: Dimensions.get('window').width * 0.021, 
+    width: Dimensions.get('window').width * 0.155,
+    height: Dimensions.get('window').width * 0.155,
+    borderRadius: Dimensions.get('window').width * 0.155/2,
+    backgroundColor: '#998ca8',
+  },
+
+  YCircleView: {
+    position: 'absolute',
+    top: Dimensions.get('window').width * 0.019,
+    right: Dimensions.get('window').width * 0.021, 
+    width: Dimensions.get('window').width * 0.155,
+    height: Dimensions.get('window').width * 0.155,
+    borderRadius: Dimensions.get('window').width * 0.155/2,
+    backgroundColor: '#998ca8',
+    transform: [
+      {rotate: '-45deg'},
+      {translate: [-1 * Dimensions.get('window').width * 0.18, Dimensions.get('window').width * 0.18]}
+    ]
+  },
+
+  DPadView: {
+    position: 'absolute',
+    top: Dimensions.get('window').width * .15 +  Dimensions.get('window').width * (0.33*2 - 0.56) / 2 ,
+    left: Dimensions.get('window').width * (0.4*2 - 0.56) /2 , 
+  },
+  DPadOuterCircle: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: Dimensions.get('window').width * 0.56,
+    height: Dimensions.get('window').width * 0.56,
+    borderRadius: Dimensions.get('window').width * 0.56/2,
+    backgroundColor: '#8c8182',
+  },
+  DPadInnerCircle: {
+    position: 'absolute',
+    top: Dimensions.get('window').width * (0.56 - 0.53)/2,
+    left: Dimensions.get('window').width * (0.56 - 0.53)/2,
+    width: Dimensions.get('window').width * 0.53,
+    height: Dimensions.get('window').width * 0.53,
+    borderRadius: Dimensions.get('window').width * 0.53/2,
+    backgroundColor: '#a69f9a',
+  },
+  upDownView: {
+    position: 'absolute',
+    top: Dimensions.get('window').width * (0.53 - 0.4)/2,
+    left: Dimensions.get('window').width * (0.53 - (0.4/3))/2, 
+    backgroundColor: '#353632',
+    height: Dimensions.get('window').width * 0.4,
+    width: Dimensions.get('window').width * 0.4 / 3,
+    borderRadius: Dimensions.get('window').width * .02,
+  },
+  leftRightView: {
+    position: 'absolute',
+    top: Dimensions.get('window').width * (0.53 - 0.4)/2,
+    left: Dimensions.get('window').width * (0.53 - (0.4/3))/2, 
+    backgroundColor: '#353632',
+    height: Dimensions.get('window').width * 0.4,
+    width: Dimensions.get('window').width * 0.4 / 3,
+    borderRadius: Dimensions.get('window').width * .02,
+
+    transform: [
+      {rotate: '90deg'},
+    ]
+  }
+
 });
 
 module.exports = ControllerView;
