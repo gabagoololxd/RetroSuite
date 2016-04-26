@@ -153,7 +153,7 @@ class ControllerView extends React.Component {
     return utils._pointInTriangle(coordinate, 
       [this.state.layout.ABXY.x, this.state.layout.ABXY.y], 
       [this.state.layout.ABXY.x + this.state.layout.ABXY.width, this.state.layout.ABXY.y], 
-      [this.state.layout.ABXY.x + this.state.layout.ABXY.width/2 , this.state.layout.ABXY.y/2 + this.state.layout.ABXY.width/2]
+      [this.state.layout.ABXY.x + this.state.layout.ABXY.width/2 , this.state.layout.ABXY.y/2 + this.state.layout.ABXY.height/2]
     );
   }
 
@@ -177,7 +177,7 @@ class ControllerView extends React.Component {
     return utils._pointInTriangle(coordinate, 
       [this.state.layout.DPad.x, this.state.layout.DPad.y + this.state.layout.DPad.height], 
       [this.state.layout.DPad.x + this.state.layout.DPad.width/2, this.state.layout.DPad.y + this.state.layout.DPad.height/2], 
-      [this.state.layout.DPad.x + this.state.layout.DPad.width , this.state.layout.DPad.y + this.state.layout.DPad.width]
+      [this.state.layout.DPad.x + this.state.layout.DPad.width , this.state.layout.DPad.y + this.state.layout.DPad.height]
     );
   }
 
@@ -185,7 +185,7 @@ class ControllerView extends React.Component {
     return utils._pointInTriangle(coordinate, 
       [this.state.layout.DPad.x, this.state.layout.DPad.y], 
       [this.state.layout.DPad.x + this.state.layout.DPad.width, this.state.layout.DPad.y], 
-      [this.state.layout.DPad.x + this.state.layout.DPad.width/2 , this.state.layout.DPad.y/2 + this.state.layout.DPad.width/2]
+      [this.state.layout.DPad.x + this.state.layout.DPad.width/2 , this.state.layout.DPad.y/2 + this.state.layout.DPad.height/2]
     );
   }
 
@@ -313,32 +313,86 @@ class ControllerView extends React.Component {
           <View style={styles.selectArea} onLayout={this._onLayoutSelect.bind(this)}/>
           <View style={styles.startArea} onLayout={this._onLayoutStart.bind(this)}/>
 
-          <View style={styles.lShoulderTopView}/>
-          <View style={styles.lShoulderBottomView}/>
-          <View style={styles.rShoulderTopView}/>
-          <View style={styles.rShoulderBottomView}/>
+          <View style={[styles.lShoulderView,
+                        this.state.currentButtonPresses.lShoulder ? {transform: [{translate: [0, Dimensions.get('window').width* 0.015]}]} : null]}>
+            <View style={styles.lShoulderTopView}/>
+            <View style={styles.lShoulderBottomView}/>
+          </View>
+
+          <View style={[styles.rShoulderView,
+                        this.state.currentButtonPresses.rShoulder ? {transform: [{translate: [0, Dimensions.get('window').width* 0.015]}]} : null]}>
+            <View style={styles.rShoulderTopView}/>
+            <View style={styles.rShoulderBottomView}/>
+          </View>
+
           <View style={styles.ABXYCircleView}>
             <View style={styles.XYPillView}>
-              <View style={styles.XCircleView}/> 
-              <View style={styles.YCircleView}/> 
+              <View style={[styles.XCircleView, this.state.currentButtonPresses.x ? {backgroundColor: 'rgba(108,95,122,1)'} : null]}/> 
+              <View style={[styles.YCircleView, this.state.currentButtonPresses.y ? {backgroundColor: 'rgba(108,95,122,1)'} : null]}/> 
             </View> 
             <View style={styles.ABPillView}>
-              <View style={styles.ACircleView}/> 
-              <View style={styles.BCircleView}/> 
+              <View style={[styles.ACircleView, this.state.currentButtonPresses.a ? {backgroundColor: 'rgba(45,12,82,1)'} : null]}/> 
+              <View style={[styles.BCircleView, this.state.currentButtonPresses.b ? {backgroundColor: 'rgba(45,12,82,1)'} : null]}/> 
             </View>
           </View>
+
           <View style={styles.DPadView}>
             <View style={styles.DPadOuterCircle}>
               <View style={styles.DPadInnerCircle}>
-                <View style={styles.leftRightView} />
-                <View style={styles.upDownView} />
+                <View style={styles.leftRightView}>
+                  <View style={styles.DPadCenterCircleView}/>
+                  <View style={[styles.leftArrowView, 
+                                this.state.currentButtonPresses.left ? {borderLeftColor: '#252622', borderRightColor: '#252622', height: Dimensions.get('window').width * (0.017+ 0.4 / 3) } : null,
+                                this.state.currentButtonPresses.right ? {borderLeftColor: '#4e4f4c', borderRightColor: '#4e4f4c'} : null,
+                                this.state.currentButtonPresses.up ? {borderLeftColor: '#252622', borderRightColor: '#4e4f4c'} : null,
+                                this.state.currentButtonPresses.down ? {borderLeftColor: '#4e4f4c', borderRightColor: '#252622'} : null]}>
+                    <View style={[styles.arrowInsideView, 
+                                  this.state.currentButtonPresses.left ? { height: Dimensions.get('window').width * (0.4 / 3)} : null,
+                                  this.state.currentButtonPresses.right ? {top: -10, right: 0,    height: Dimensions.get('window').width * (0.4 / 3.5) + 10, width: Dimensions.get('window').width * 0.4 / 3} : null,
+                                  this.state.currentButtonPresses.up || this.state.currentButtonPresses.down  ? {height: Dimensions.get('window').width * (+ 0.4 / 3)  ,  borderBottomLeftRadius: 0,  borderBottomRightRadius:0, borderBottomWidth: Dimensions.get('window').width * 0.01, borderBottomColor: '#252622'} : null]}/>
+                  </View>
+                  <View style={[styles.rightArrowView, 
+                                this.state.currentButtonPresses.left ? {borderLeftColor: '#4e4f4c', borderRightColor: '#4e4f4c'} : null,
+                                this.state.currentButtonPresses.right ? {borderLeftColor: '#252622', borderRightColor: '#252622', height: Dimensions.get('window').width * (0.017+ 0.4 / 3) } : null,
+                                this.state.currentButtonPresses.up ? {borderLeftColor: '#4e4f4c', borderRightColor: '#252622'} : null,
+                                this.state.currentButtonPresses.down ? {borderLeftColor: '#252622', borderRightColor: '#4e4f4c'} : null]}>
+                    <View style={[styles.arrowInsideView, 
+                                  this.state.currentButtonPresses.right ? { height: Dimensions.get('window').width * (0.4 / 3)} : null,
+                                  this.state.currentButtonPresses.left ? {top: -10, right: 0, height: Dimensions.get('window').width * (0.4 / 3.5) + 10, width: Dimensions.get('window').width * 0.4 / 3} : null,
+                                  this.state.currentButtonPresses.up || this.state.currentButtonPresses.down  ? {height: Dimensions.get('window').width * (+ 0.4 / 3)  ,  borderBottomLeftRadius: 0,  borderBottomRightRadius:0, borderBottomWidth: Dimensions.get('window').width * 0.01, borderBottomColor: '#252622'} : null]}/>
+                  </View>
+                </View>
+                <View style={styles.upDownView}>
+                  <View style={[styles.upArrowView, 
+                                this.state.currentButtonPresses.left ? {borderLeftColor: '#4e4f4c', borderRightColor: '#252622'} : null,
+                                this.state.currentButtonPresses.right ? {borderLeftColor: '#252622', borderRightColor: '#4e4f4c'}  : null,
+                                this.state.currentButtonPresses.up ? {borderLeftColor: '#252622', borderRightColor: '#252622', height: Dimensions.get('window').width * (0.017+ 0.4 / 3)} : null,
+                                this.state.currentButtonPresses.down ? {borderLeftColor: '#4e4f4c', borderRightColor: '#4e4f4c'} : null]}>
+                    <View style={[styles.arrowInsideView, 
+                                  this.state.currentButtonPresses.up ? { height: Dimensions.get('window').width * (0.4 / 3)} : null,
+                                  this.state.currentButtonPresses.down ? {top: -10, right: 0, height: Dimensions.get('window').width * (0.4 / 3.5) + 10, width: Dimensions.get('window').width * 0.4 / 3} : null,
+                                  this.state.currentButtonPresses.left || this.state.currentButtonPresses.right  ? {height: Dimensions.get('window').width * (+ 0.4 / 3)  ,  borderBottomLeftRadius: 0,  borderBottomRightRadius:0, borderBottomWidth: Dimensions.get('window').width * 0.01, borderBottomColor: '#252622'} : null]}/>
+                  </View>
+                  <View style={[styles.downArrowView, 
+                                this.state.currentButtonPresses.left ? {borderLeftColor: '#252622', borderRightColor: '#4e4f4c'} : null,
+                                this.state.currentButtonPresses.right ? {borderLeftColor: '#4e4f4c', borderRightColor: '#252622'} : null,
+                                this.state.currentButtonPresses.up ? {borderLeftColor: '#4e4f4c', borderRightColor: '#4e4f4c'} : null,
+                                this.state.currentButtonPresses.down ? {borderLeftColor: '#252622', borderRightColor: '#252622', height: Dimensions.get('window').width * (0.017+ 0.4 / 3)} : null]}>
+                    <View style={[styles.arrowInsideView, 
+                                  this.state.currentButtonPresses.down ? { height: Dimensions.get('window').width * (0.4 / 3)} : null,
+                                  this.state.currentButtonPresses.up ? {top: -10, right: 0, height: Dimensions.get('window').width * (0.4 / 3.5) + 10, width: Dimensions.get('window').width * 0.4 / 3} : null,
+                                  this.state.currentButtonPresses.left || this.state.currentButtonPresses.right  ? {height: Dimensions.get('window').width * (+ 0.4 / 3)  ,  borderBottomLeftRadius: 0,  borderBottomRightRadius:0, borderBottomWidth: Dimensions.get('window').width * 0.01, borderBottomColor: '#252622'} : null]}/>
+                  </View>
+                </View>
               </View> 
             </View>
           </View> 
-          <View style={styles.selectView}/>
-          <View style={styles.startView}/>
-        </View>
 
+          <View style={[styles.selectView, this.state.currentButtonPresses.select ? {backgroundColor: '#252622'} : null]}/>
+
+          <View style={[styles.startView, this.state.currentButtonPresses.start ? {backgroundColor: '#252622'} : null]}/>
+
+        </View>
 
         <TouchableOpacity style={styles.pauseButton} onPress={this._pause.bind(this)}>
           <FontAwesomeIcon name="pause-circle" size={Dimensions.get('window').width* 0.106} allowFontScaling={false} color="#353632"/>
@@ -537,26 +591,108 @@ var styles = StyleSheet.create({
     borderRadius: Dimensions.get('window').width * 0.53/2,
     backgroundColor: '#a69f9a',
   },
-  upDownView: {
-    position: 'absolute',
-    top: Dimensions.get('window').width * (0.53 - 0.4)/2,
-    left: Dimensions.get('window').width * (0.53 - (0.4/3))/2, 
-    backgroundColor: '#353632',
-    height: Dimensions.get('window').width * 0.4,
-    width: Dimensions.get('window').width * 0.4 / 3,
-    borderRadius: Dimensions.get('window').width * .02,
-  },
   leftRightView: {
     position: 'absolute',
     top: Dimensions.get('window').width * (0.53 - 0.4)/2,
     left: Dimensions.get('window').width * (0.53 - (0.4/3))/2, 
-    backgroundColor: '#353632',
+    backgroundColor: 'transparent',
     height: Dimensions.get('window').width * 0.4,
     width: Dimensions.get('window').width * 0.4 / 3,
     borderRadius: Dimensions.get('window').width * .02,
     transform: [
       {rotate: '90deg'},
     ]
+  },
+  rightArrowView: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    backgroundColor: 'transparent',
+    height: Dimensions.get('window').width * (+ 0.4 / 3) ,
+    width: 0,
+    borderLeftWidth: Dimensions.get('window').width * 0.4 / 6,
+    borderLeftColor: '#353632',
+    borderRightWidth: Dimensions.get('window').width * 0.4 / 6,
+    borderRightColor: '#353632',
+    borderBottomLeftRadius: Dimensions.get('window').width * .02,
+    borderBottomRightRadius: Dimensions.get('window').width * .02,
+    transform: [
+      {rotate: '180deg'},
+    ]
+  },
+  arrowInsideView: {
+    position: 'absolute',
+    top: 0,
+    right: Dimensions.get('window').width * 0.4 / 3 * 1/8,
+    backgroundColor: '#353632',
+    height: Dimensions.get('window').width * 0.4 / 3.4 ,
+    width: Dimensions.get('window').width * 0.4 / 3 * 6/8,
+    borderBottomLeftRadius: Dimensions.get('window').width * .02,
+    borderBottomRightRadius: Dimensions.get('window').width * .02,
+  },
+  leftArrowView: {
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    backgroundColor: 'transparent',
+    height: Dimensions.get('window').width * ( + 0.4 / 3) ,
+    width: 0,
+    borderLeftWidth: Dimensions.get('window').width * 0.4 / 6,
+    borderLeftColor: '#353632',
+    borderRightWidth: Dimensions.get('window').width * 0.4 / 6,
+    borderRightColor: '#353632',
+    borderBottomLeftRadius: Dimensions.get('window').width * .02,
+    borderBottomRightRadius: Dimensions.get('window').width * .02,
+  },
+  upDownView: {
+    position: 'absolute',
+    top: Dimensions.get('window').width * (0.53 - 0.4)/2,
+    left: Dimensions.get('window').width * (0.53 - (0.4/3))/2, 
+    backgroundColor: 'transparent',
+    height: Dimensions.get('window').width * 0.4,
+    width: Dimensions.get('window').width * 0.4 / 3,
+    borderRadius: Dimensions.get('window').width * .02,
+  },
+  upArrowView: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    backgroundColor: 'transparent',
+    height: Dimensions.get('window').width * ( + 0.4 / 3) ,
+    width: 0,
+    borderLeftWidth: Dimensions.get('window').width * 0.4 / 6,
+    borderLeftColor: '#353632',
+    borderRightWidth: Dimensions.get('window').width * 0.4 / 6,
+    borderRightColor: '#353632',
+    borderBottomLeftRadius: Dimensions.get('window').width * .02,
+    borderBottomRightRadius: Dimensions.get('window').width * .02,
+    transform: [
+      {rotate: '180deg'},
+    ]
+  },
+  downArrowView: {
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    backgroundColor: 'transparent',
+    height: Dimensions.get('window').width * ( + 0.4 / 3) ,
+    width: 0,
+    borderLeftWidth: Dimensions.get('window').width * 0.4 / 6,
+    borderLeftColor: '#353632',
+    borderRightWidth: Dimensions.get('window').width * 0.4 / 6,
+    borderRightColor: '#353632',
+    borderBottomLeftRadius: Dimensions.get('window').width * .02,
+    borderBottomRightRadius: Dimensions.get('window').width * .02,
+  },
+  DPadCenterCircleView: {
+    position: 'absolute',
+    bottom: Dimensions.get('window').width * 0.4 / 3 ,
+    right: 0,
+    // backgroundColor: 'transparent',
+
+    backgroundColor: '#353632',
+    height: Dimensions.get('window').width * 0.4 / 3,
+    width: Dimensions.get('window').width * 0.4 / 3,
   },
   selectView: {
    position: 'absolute',
@@ -582,7 +718,9 @@ var styles = StyleSheet.create({
     borderBottomLeftRadius: Dimensions.get('window').width* 0.253,
     borderBottomRightRadius: Dimensions.get('window').width* 0.253,
   },
+  lShoulderView: {
 
+  },
   lShoulderTopView: {
     backgroundColor: 'transparent',
     position: 'absolute',
@@ -618,6 +756,9 @@ var styles = StyleSheet.create({
     transform: [
       {skewX: '-40deg'},
     ]
+  },
+  rShoulderView: {
+
   },
   rShoulderTopView: {
     backgroundColor: 'transparent',
