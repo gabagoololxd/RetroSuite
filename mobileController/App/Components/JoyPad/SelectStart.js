@@ -48,7 +48,6 @@ var styles = StyleSheet.create({
     borderBottomLeftRadius: Dimensions.get('window').width* 0.253,
     borderBottomRightRadius: Dimensions.get('window').width* 0.253,
   },
-
   selectText: {
     position: 'absolute',
     bottom: Dimensions.get('window').width * 0.06,
@@ -61,10 +60,8 @@ var styles = StyleSheet.create({
     transform: [
       {scaleX: 0.6},
       {skewX: '-25deg'},
-
     ]
   },
-
   startText: {
     position: 'absolute',
     bottom: Dimensions.get('window').width * 0.06,
@@ -77,7 +74,6 @@ var styles = StyleSheet.create({
     transform: [
       {scaleX: 0.6},
       {skewX: '-25deg'},
-
     ]
   },
 });

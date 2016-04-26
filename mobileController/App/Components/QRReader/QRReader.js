@@ -18,7 +18,7 @@ var {
   SegmentedControlIOS,
   Linking,
   ScrollView,
-  NetInfo
+  NetInfo,
 } = React;
 
 class QRReader extends React.Component {
@@ -110,7 +110,7 @@ class QRReader extends React.Component {
             style={styles.camera}
             torchMode={this.state.cameraTorchToggle}
             aspect={Camera.constants.Aspect.Fill}
-            onBarCodeRead={_.once(this._onBarCodeRead.bind(this))}
+            onBarCodeRead={_.throttle(this._onBarCodeRead.bind(this), 1000, {'leading': true, 'trailing': false})}
             defaultOnFocusComponent={true}
             orientation={Camera.constants.Orientation.portrait}
             onFocusChanged={ this.state.handleFocusChanged }>
