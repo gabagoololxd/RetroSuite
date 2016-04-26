@@ -11,15 +11,13 @@ app.controller('pauseScreen', function($scope) {
           $scope.ipAddress = ip4 = ipAddress.address;
           var toQ = $scope.ipAddress + ':' + port;
 
-          if($scope.ipFound === false) {
+          if($scope.ipFound == false) {
             new QRCode(document.getElementById('qrCode'), toQ);
             new QRCode(document.getElementById('qrCode2'), toQ);
           }
 
           $scope.ipFound = true;
 
-          // // force scope to update
-          // $scope.$apply()
         }
       });
 
@@ -36,7 +34,7 @@ app.controller('pauseScreen', function($scope) {
   
   //helper function to make sure the attempted key mapping is not reserved for the mobilecontroller, or a special key that doesn't work as expected with keydown and keyup events (capslock and command)
   var notReserved = function(mapping) {
-    if(mapping !== 59 && mapping !==61 && mapping !==108 && mapping !==173 && mapping !==181 && mapping !==182 && mapping !==183 && mapping !==226 && mapping !==230 && mapping !==233 && mapping !==234 && mapping !==235 && mapping !==91 && mapping !==93 && mapping !==20) {
+    if(mapping != 59 && mapping !=61 && mapping !=108 && mapping !=173 && mapping !=181 && mapping !=182 && mapping !=183 && mapping !=226 && mapping !=230 && mapping !=233 && mapping !=234 && mapping !=235 && mapping !=91 && mapping !=93 && mapping !=20) {
       return true;
     } else {
       return false;
@@ -74,84 +72,85 @@ app.controller('pauseScreen', function($scope) {
      switch (button) {
        case 'aButton':
          for(var key in mappingsList) {
-           if(mappingsList[key]==="1" && notReserved(key)) {
+          // console.log('key', key)
+           if(mappingsList[key]=="1" && notReserved(key)) {
              return window.keyCodes[key];
            }
          }
          break;
        case 'bButton':
          for(var key in mappingsList) {
-           if(mappingsList[key]==="0" && notReserved(key)) {
+           if(mappingsList[key]=="0" && notReserved(key)) {
              return window.keyCodes[key];
            }
          }
          break;
        case 'xButton':
          for(var key in mappingsList) {
-           if(mappingsList[key]==="3" && notReserved(key)) {
+           if(mappingsList[key]=="3" && notReserved(key)) {
              return window.keyCodes[key];
            }
          }
          break;
        case 'yButton':
          for(var key in mappingsList) {
-           if(mappingsList[key]==="2" && notReserved(key)) {
+           if(mappingsList[key]=="2" && notReserved(key)) {
              return window.keyCodes[key];
            }
          }
          break;
        case 'startButton':
          for(var key in mappingsList) {
-           if(mappingsList[key]==="9" && notReserved(key)) {
+           if(mappingsList[key]=="9" && notReserved(key)) {
              return window.keyCodes[key];
            }
          }
          break;
        case 'selectButton':
          for(var key in mappingsList) {
-           if(mappingsList[key]==="8" && notReserved(key)) {
+           if(mappingsList[key]=="8" && notReserved(key)) {
              return window.keyCodes[key];
            }
          }
          break;
        case 'upArrow':
          for(var key in mappingsList) {
-           if(mappingsList[key]==="12" && notReserved(key)) {
+           if(mappingsList[key]=="12" && notReserved(key)) {
              return window.keyCodes[key];
            }
          }
          break;
        case 'downArrow':
          for(var key in mappingsList) {
-           if(mappingsList[key]==="13" && notReserved(key)) {
+           if(mappingsList[key]=="13" && notReserved(key)) {
              return window.keyCodes[key];
            }
          }
          break;
        case 'leftArrow':
          for(var key in mappingsList) {
-           if(mappingsList[key]==="14" && notReserved(key)) {
+           if(mappingsList[key]=="14" && notReserved(key)) {
              return window.keyCodes[key];
            }
          }
          break;
        case 'rightArrow':
          for(var key in mappingsList) {
-           if(mappingsList[key]==="15" && notReserved(key)) {
+           if(mappingsList[key]=="15" && notReserved(key)) {
              return window.keyCodes[key];
            }
          }
          break;
        case 'lShoulder':
          for(var key in mappingsList) {
-           if(mappingsList[key]==="4" && notReserved(key)) {
+           if(mappingsList[key]=="4" && notReserved(key)) {
              return window.keyCodes[key];
            }
          }
          break;
        case 'rShoulder':
          for(var key in mappingsList) {
-           if(mappingsList[key]==="5" && notReserved(key)) {
+           if(mappingsList[key]=="5" && notReserved(key)) {
              return window.keyCodes[key];
            }
          }

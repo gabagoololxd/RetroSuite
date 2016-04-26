@@ -3742,7 +3742,7 @@ a.thumbnail:hover {
   clear: both;
   font-weight: normal;
   line-height: 18px;
-  color: gray;
+  color: #353632;
   white-space: nowrap;
 }
 .dropdown-menu li > a:hover,
@@ -4095,10 +4095,10 @@ a.thumbnail:hover {
   }
 }
 @media (max-width: 767px) {
-  body {
+/*  body {
     padding-left: 20px;
     padding-right: 20px;
-  }
+  }*/
   .navbar-fixed-top {
     margin-left: -20px;
     margin-right: -20px;
