@@ -3,7 +3,6 @@ var QRReader = require('./App/Components/QRReader/QRReader');
 
 var {
   AppRegistry,
-  StyleSheet,
   Navigator
 } = React;
 

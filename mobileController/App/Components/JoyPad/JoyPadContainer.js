@@ -19,7 +19,7 @@ var {
   StatusBarIOS,
 } = React;
 
-// This container component holds all the methods and determines the touch areas of each button
+// This container component holds all the methods, determines the touch areas of each button, determines which buttons are pressed, and what messages to send to the websocket server
 class JoyPadContainer extends React.Component {
   constructor(props) {
     super(props);
@@ -116,7 +116,8 @@ class JoyPadContainer extends React.Component {
     });
   }
 
-  // Sets the state of layout; when the view renders, pass the information to this.state so we can calculate whether touches are within certain button areaas
+  // Sets the state of layout; when the view renders, pass the information to this.state so we can calculate whether touches are within certain button areas
+  // Area sizes originate from the StyleSheet
   _onLayoutABXY(e) {
     this.setState({layout: _.extend(this.state.layout, {ABXY: e.nativeEvent.layout})})
   }
@@ -332,7 +333,7 @@ class JoyPadContainer extends React.Component {
   }
 }
 
-// Define the touch areas of each button (these are not the views, but the hit areas: lots of hit slop relative to the size of the rendered button views)
+// Define the touch areas of each button (these are not the actual views the user sees, but the hit areas: lots of hit slop relative to the size of the rendered button views so there is room for user error)
 var styles = StyleSheet.create({
   imageContainer: {
     flex: 1,
