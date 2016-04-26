@@ -137,7 +137,7 @@ class ControllerView extends React.Component {
     return utils._pointInTriangle(coordinate, 
       [this.state.layout.ABXY.x + this.state.layout.ABXY.width, this.state.layout.ABXY.y], 
       [this.state.layout.ABXY.x + this.state.layout.ABXY.width/2, this.state.layout.ABXY.y + this.state.layout.ABXY.height/2], 
-      [this.state.layout.ABXY.x + this.state.layout.ABXY.width , this.state.layout.ABXY.y + this.state.layout.ABXY.width]
+      [this.state.layout.ABXY.x + this.state.layout.ABXY.width , this.state.layout.ABXY.y + this.state.layout.ABXY.height]
     );
   }
 
@@ -145,7 +145,7 @@ class ControllerView extends React.Component {
     return utils._pointInTriangle(coordinate, 
       [this.state.layout.ABXY.x, this.state.layout.ABXY.y + this.state.layout.ABXY.height], 
       [this.state.layout.ABXY.x + this.state.layout.ABXY.width/2, this.state.layout.ABXY.y + this.state.layout.ABXY.height/2], 
-      [this.state.layout.ABXY.x + this.state.layout.ABXY.width , this.state.layout.ABXY.y + this.state.layout.ABXY.width]
+      [this.state.layout.ABXY.x + this.state.layout.ABXY.width , this.state.layout.ABXY.y + this.state.layout.ABXY.height]
     );
   }
 
@@ -169,7 +169,7 @@ class ControllerView extends React.Component {
     return utils._pointInTriangle(coordinate, 
       [this.state.layout.DPad.x + this.state.layout.DPad.width, this.state.layout.DPad.y], 
       [this.state.layout.DPad.x + this.state.layout.DPad.width/2, this.state.layout.DPad.y + this.state.layout.DPad.height/2], 
-      [this.state.layout.DPad.x + this.state.layout.DPad.width , this.state.layout.DPad.y + this.state.layout.DPad.width]
+      [this.state.layout.DPad.x + this.state.layout.DPad.width , this.state.layout.DPad.y + this.state.layout.DPad.height]
     );
   }
 
@@ -327,12 +327,16 @@ class ControllerView extends React.Component {
 
           <View style={styles.ABXYCircleView}>
             <View style={styles.XYPillView}>
-              <View style={[styles.XCircleView, this.state.currentButtonPresses.x ? {backgroundColor: 'rgba(108,95,122,1)'} : null]}/> 
-              <View style={[styles.YCircleView, this.state.currentButtonPresses.y ? {backgroundColor: 'rgba(108,95,122,1)'} : null]}/> 
+              <View style={[styles.XCircleView, 
+                            this.state.currentButtonPresses.x ? {backgroundColor: 'rgba(108,95,122,1)'} : null]}/> 
+              <View style={[styles.YCircleView, 
+                            this.state.currentButtonPresses.y ? {backgroundColor: 'rgba(108,95,122,1)'} : null]}/> 
             </View> 
             <View style={styles.ABPillView}>
-              <View style={[styles.ACircleView, this.state.currentButtonPresses.a ? {backgroundColor: 'rgba(45,12,82,1)'} : null]}/> 
-              <View style={[styles.BCircleView, this.state.currentButtonPresses.b ? {backgroundColor: 'rgba(45,12,82,1)'} : null]}/> 
+              <View style={[styles.ACircleView, 
+                            this.state.currentButtonPresses.a ? {backgroundColor: 'rgba(45,12,82,1)'} : null]}/> 
+              <View style={[styles.BCircleView, 
+                            this.state.currentButtonPresses.b ? {backgroundColor: 'rgba(45,12,82,1)'} : null]}/> 
             </View>
           </View>
 
@@ -388,9 +392,11 @@ class ControllerView extends React.Component {
             </View>
           </View> 
 
-          <View style={[styles.selectView, this.state.currentButtonPresses.select ? {backgroundColor: '#252622'} : null]}/>
+          <View style={[styles.selectView, 
+                        this.state.currentButtonPresses.select ? {backgroundColor: '#252622'} : null]}/>
 
-          <View style={[styles.startView, this.state.currentButtonPresses.start ? {backgroundColor: '#252622'} : null]}/>
+          <View style={[styles.startView, 
+                        this.state.currentButtonPresses.start ? {backgroundColor: '#252622'} : null]}/>
 
         </View>
 
