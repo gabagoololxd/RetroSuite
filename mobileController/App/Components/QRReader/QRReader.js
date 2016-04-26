@@ -1,10 +1,11 @@
 var React = require('react-native');
 var Camera = require('react-native-camera').default;
-var IconIon = require('react-native-vector-icons/Ionicons');
-var webSocket = require('../Utils/webSocketMethods');
-var ControllerView = require('./ControllerView');
 var _ = require('lodash');
 var Orientation = require('react-native-orientation');
+var IconIon = require('react-native-vector-icons/Ionicons');
+
+var webSocket = require('../../Utils/webSocketMethods');
+var JoyPadContainer = require('../JoyPad/JoyPadContainer');
 
 var {
   Dimensions,
@@ -38,23 +39,23 @@ class QRReader extends React.Component {
         (connectionInfo) => { console.log(connectionInfo, 'connectionInfo') }
     );
     
-    // //for development purposes, simulates successful qr scan
-    // var openControllerViewCallback = () => {
-    //   var navigator = this.props.navigator;
-    //   var turnCameraOn = this.turnCameraOn.bind(this);
-    //   var turnCameraOff = this.turnCameraOff.bind(this);
-    //   turnCameraOff();
-    //   //open up the ControllerView
-    //   navigator.push({
-    //     component: ControllerView,
-    //     turnCameraOn: turnCameraOn.bind(this),
-    //     sceneConfig: {
-    //       ...Navigator.SceneConfigs.FloatFromBottom,
-    //       gestures: {} //disable ability to swipe to pop back from ControllerView to QRReader once past the ip address page
-    //     }
-    //   });
-    // }
-    // webSocket.PairController('10.0.0.215:1337', openControllerViewCallback);
+    //for development purposes, simulates successful qr scan
+    var openJoyPadContainerCallback = () => {
+      var navigator = this.props.navigator;
+      var turnCameraOn = this.turnCameraOn.bind(this);
+      var turnCameraOff = this.turnCameraOff.bind(this);
+      turnCameraOff();
+      //open up the JoyPadContainer
+      navigator.push({
+        component: JoyPadContainer,
+        turnCameraOn: turnCameraOn.bind(this),
+        sceneConfig: {
+          ...Navigator.SceneConfigs.FloatFromBottom,
+          gestures: {} //disable ability to swipe to pop back from JoyPadContainer to QRReader once past the ip address page
+        }
+      });
+    }
+    webSocket.PairController('10.0.0.215:1337', openJoyPadContainerCallback);
   }
 
   _onBarCodeRead(e) {
@@ -65,13 +66,13 @@ class QRReader extends React.Component {
       var turnCameraOn = this.turnCameraOn.bind(this);
       var turnCameraOff = this.turnCameraOff.bind(this);
       turnCameraOff();
-      //open up the ControllerView
+      //open up the JoyPadContainer
       navigator.push({
-        component: ControllerView,
+        component: JoyPadContainer,
         turnCameraOn: turnCameraOn.bind(this),
         sceneConfig: {
           ...Navigator.SceneConfigs.FloatFromBottom,
-          gestures: {} //disable ability to swipe to pop back from ControllerView to QRReader once past the ip address page
+          gestures: {} //disable ability to swipe to pop back from JoyPadContainer to QRReader once past the ip address page
         }
       });
     }
@@ -83,7 +84,7 @@ class QRReader extends React.Component {
     this.state.cameraTorchToggle === Camera.constants.TorchMode.on ? this.setState({ cameraTorchToggle: Camera.constants.TorchMode.off }) : this.setState({ cameraTorchToggle: Camera.constants.TorchMode.on });
   }
 
-  turnCameraOff() { //we want to turn the camera off once the ControllerView mounts because the camera is no longer necessary (until the user has to re-pair with the websockets server)
+  turnCameraOff() { //we want to turn the camera off once the JoyPadContainer mounts because the camera is no longer necessary (until the user has to re-pair with the websockets server)
     this.setState({cameraOn:false})
   }
   turnCameraOn() {
