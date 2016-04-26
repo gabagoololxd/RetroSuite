@@ -1,11 +1,11 @@
-var React = require('react-native');
+const React = require('react-native');
 
-var DPad = require('./DPad');
-var ABXY = require('./ABXY');
-var LRShoulders = require('./LRShoulders');
-var SelectStart = require('./SelectStart');
+const DPad = require('./DPad');
+const ABXY = require('./ABXY');
+const LRShoulders = require('./LRShoulders');
+const SelectStart = require('./SelectStart');
 
-var {
+const {
   View,
 } = React;  
 

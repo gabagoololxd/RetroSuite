@@ -1,7 +1,7 @@
-var React = require('react-native');
-var Ionicon = require('react-native-vector-icons/Ionicons');
+const React = require('react-native');
+const Ionicon = require('react-native-vector-icons/Ionicons');
 
-var {
+const {
   Dimensions,
   StyleSheet,
   Text,
@@ -27,7 +27,7 @@ class PauseModal extends React.Component {
   }
 }
 
-var styles = StyleSheet.create({
+const styles = StyleSheet.create({
   pauseModal: {
     position: 'absolute',
     top: 0,

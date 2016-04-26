@@ -1,15 +1,15 @@
-var React = require('react-native');
-var FontAwesomeIcon = require('react-native-vector-icons/FontAwesome');
-var Orientation = require('react-native-orientation');
-var _ = require('lodash');
+const React = require('react-native');
+const FontAwesomeIcon = require('react-native-vector-icons/FontAwesome');
+const Orientation = require('react-native-orientation');
+const _ = require('lodash');
 
-var webSocket = require('../../Utils/webSocketMethods');
-var utils = require('../../Utils/utils');
-var PauseModal = require('./PauseModal');
-var JoyPad = require('./JoyPad');
-var SelectStart = require('./SelectStart');
+const webSocket = require('../../Utils/webSocketMethods');
+const utils = require('../../Utils/utils');
+const PauseModal = require('./PauseModal');
+const JoyPad = require('./JoyPad');
+const SelectStart = require('./SelectStart');
 
-var {
+const {
   Dimensions,
   StyleSheet,
   Text,
@@ -80,6 +80,8 @@ class JoyPadContainer extends React.Component {
     global.resume = () => {
       this.setState({showPauseModal: false});
     };
+
+    // TODO: notify user that they were disconnected
     global.onclose = () => {
       navigator = this.props.navigator;
       turnCameraOn = this.props.route.turnCameraOn.bind(this);
@@ -95,13 +97,13 @@ class JoyPadContainer extends React.Component {
 
   // Method used to pause the game and methods used while the game is paused:
   _pause() {
-    var controller = this;
+    const controller = this;
     webSocket.Pause(function() {
       controller.setState({showPauseModal: true});
     });
   }
   _resume() {
-    var controller = this;
+    const controller = this;
     webSocket.Resume(function() {
       controller.setState({showPauseModal: false});
     });
@@ -234,12 +236,12 @@ class JoyPadContainer extends React.Component {
   // Called any time there is a new touch, a touch has moved, and when a touch is released
   _determinePressesAndReleases(e) {
     // List the coordinates of all the active touches on the screen
-    var touchCoordinates = _.map(e.nativeEvent.touches, function(touch) {
+    const touchCoordinates = _.map(e.nativeEvent.touches, function(touch) {
       return [touch.pageX, touch.pageY];
     });
 
     // Set previousButtonPresses to be what was currentButtonPresses and re-initialize currentButtonPresses as all false
-    var self = this;
+    const self = this;
     self.setState({previousButtonPresses: self.state.currentButtonPresses});
     self.setState({currentButtonPresses: {
       a: false,
@@ -333,7 +335,7 @@ class JoyPadContainer extends React.Component {
 }
 
 // Define the touch areas of each button (these are not the actual views the user sees, but the hit areas: lots of hit slop relative to the size of the rendered button views so there is room for user error)
-var styles = StyleSheet.create({
+const styles = StyleSheet.create({
   DPadArea: {
     position: 'absolute',
     top: Dimensions.get('window').width * .15,

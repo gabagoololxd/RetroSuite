@@ -1,6 +1,6 @@
-var React = require('react-native');
+const React = require('react-native');
 
-var {
+const {
   Dimensions,
   StyleSheet,
   View,
@@ -65,7 +65,7 @@ class DPad extends React.Component {
   }
 }
 
-var styles = StyleSheet.create({
+const styles = StyleSheet.create({
   DPadView: {
     position: 'absolute',
     top: Dimensions.get('window').width * .15 +  Dimensions.get('window').width * (0.33*2 - 0.56) / 2 ,

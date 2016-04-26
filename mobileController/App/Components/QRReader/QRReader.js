@@ -1,13 +1,14 @@
-var React = require('react-native');
-var Camera = require('react-native-camera').default;
-var _ = require('lodash');
-var Orientation = require('react-native-orientation');
-var IconIon = require('react-native-vector-icons/Ionicons');
+const React = require('react-native');
+const Camera = require('react-native-camera').default;
+const _ = require('lodash');
+const Orientation = require('react-native-orientation');
+const IconIon = require('react-native-vector-icons/Ionicons');
+const Permissions = require('react-native-permissions');
 
-var webSocket = require('../../Utils/webSocketMethods');
-var JoyPadContainer = require('../JoyPad/JoyPadContainer');
+const webSocket = require('../../Utils/webSocketMethods');
+const JoyPadContainer = require('../JoyPad/JoyPadContainer');
 
-var {
+const {
   Dimensions,
   StyleSheet,
   Text,
@@ -25,25 +26,39 @@ class QRReader extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      cameraPermissions: false,
+      cameraOn: false,
       cameraTorchToggle: Camera.constants.TorchMode.off,
       handleFocusChanged: () => {},
-      cameraOn: true,
       selectedIndex: 0,
     }
   }
 
   componentDidMount() {
     Orientation.lockToPortrait(); //this will lock the view to Portrait
-
-    NetInfo.fetch().done(
-        (connectionInfo) => { console.log(connectionInfo, 'connectionInfo') }
-    );
+    
+    // Determine user permissions for the camera; if permission is authorized, use the camera/app; 
+    // Otherwise, notify the user that they must allow camera access and provide a link to settings
+    Permissions.cameraPermissionStatus()
+      .then(response => {
+        if (response == Permissions.StatusUndetermined) {
+          console.log("Undetermined");
+        } else if (response == Permissions.StatusDenied) {
+          console.log("Denied");
+        } else if (response == Permissions.StatusAuthorized) {
+          this.setState({cameraOn: true});
+          this.setState({cameraPermissions: true});
+          console.log("Authorized");
+        } else if (response == Permissions.StatusRestricted) {
+          console.log("Restricted");
+        }
+      });
     
     // //for development purposes, simulates successful qr scan
-    // var openJoyPadContainerCallback = () => {
-    //   var navigator = this.props.navigator;
-    //   var turnCameraOn = this.turnCameraOn.bind(this);
-    //   var turnCameraOff = this.turnCameraOff.bind(this);
+    // const openJoyPadContainerCallback = () => {
+    //   const navigator = this.props.navigator;
+    //   const turnCameraOn = this.turnCameraOn.bind(this);
+    //   const turnCameraOff = this.turnCameraOff.bind(this);
     //   turnCameraOff();
     //   //open up the JoyPadContainer
     //   navigator.push({
@@ -59,12 +74,12 @@ class QRReader extends React.Component {
   }
 
   _onBarCodeRead(e) {
-    var ipAddress = e.data;
+    const ipAddress = e.data;
 
-    var success = () => {
-      var navigator = this.props.navigator;
-      var turnCameraOn = this.turnCameraOn.bind(this);
-      var turnCameraOff = this.turnCameraOff.bind(this);
+    const success = () => {
+      const navigator = this.props.navigator;
+      const turnCameraOn = this.turnCameraOn.bind(this);
+      const turnCameraOff = this.turnCameraOff.bind(this);
       turnCameraOff();
       //open up the JoyPadContainer
       navigator.push({
@@ -77,7 +92,19 @@ class QRReader extends React.Component {
       });
     }
 
+    // TODO: 
+    // Promise race, if after 2000 it doesnt pair successfully, check to see if connected to wifi, if not, then notify the user
+    NetInfo.fetch().done(
+        (connectionInfo) => { console.log(connectionInfo, 'connectionInfo') }
+    );
     webSocket.PairController(ipAddress, success);
+
+    // TODO:
+    // make instructions better with multiple click through steps and screenshots
+    // autofocus camera
+    // when camera permissions are off, open up a modal that says we need the camera; yes link to settings to enable
+    // animate abxy select/start? 
+    // ABXY overlap / touch radius options
   }
 
   _torchEnabled() {
@@ -178,14 +205,45 @@ class QRReader extends React.Component {
 
       );
     } else {
-      return null;
+      return (
+        <View style={styles.container}>
+          <View style={styles.overlayLeft}/> 
+          <View style={styles.overlayTop}/> 
+          <View style={styles.overlayRight}/> 
+          <View style={styles.overlayBottom}/> 
+
+          <SegmentedControlIOS 
+            values={['Scan QR', 'Instructions']} 
+            selectedIndex={0} 
+            style={styles.segments} 
+            tintColor="white"/>
+         
+          <View style={styles.rectanglePlaceholder} pointerEvents='box-none'/>
+          <View style={styles.rectangleContainer} pointerEvents='box-none'>
+            <View style={styles.rectangleTopLeft} pointerEvents='box-none'></View>
+            <View style={styles.rectangleTopRight} pointerEvents='box-none'></View>
+            <View style={styles.rectangleBottomLeft} pointerEvents='box-none'></View>
+            <View style={styles.rectangleBottomRight} pointerEvents='box-none'></View>
+          </View>
+
+          <View style={styles.bottomButtonContainer}>
+            <TouchableWithoutFeedback onPress={this._torchEnabled.bind(this)}  underlayColor={'#FC9396'}>
+              <View style={styles.flashButton}>
+                <IconIon name="ios-bolt-outline" size={40} allowFontScaling={false} color="rgba(237,237,237,0.5)" style={styles.flashIcon} />
+                <Text style={styles.flashButtonText} allowFontScaling={false}>Flash Off</Text>
+              </View> 
+            </TouchableWithoutFeedback>
+          </View>
+        </View>
+      );
     }
   }
 }
 
-var styles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: 'black'
   },
   camera: {
     height: Dimensions.get('window').height,

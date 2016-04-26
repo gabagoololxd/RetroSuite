@@ -1,6 +1,6 @@
-var React = require('react-native');
+const React = require('react-native');
 
-var {
+const {
   Dimensions,
   StyleSheet,
   Text,
@@ -23,7 +23,7 @@ class SelectStart extends React.Component {
   }
 }
 
-var styles = StyleSheet.create({
+const styles = StyleSheet.create({
   selectView: {
    position: 'absolute',
    bottom: Dimensions.get('window').width * (0.15 - 0.1),

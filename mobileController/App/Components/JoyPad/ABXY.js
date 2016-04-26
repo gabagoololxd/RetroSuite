@@ -1,6 +1,6 @@
-var React = require('react-native');
+const React = require('react-native');
 
-var {
+const {
   Dimensions,
   StyleSheet,
   Text,
@@ -37,7 +37,7 @@ class ABXY extends React.Component {
   }
 }
 
-var styles = StyleSheet.create({
+const styles = StyleSheet.create({
   ABXYCircleView: {
     position: 'absolute',
     top: Dimensions.get('window').width * .15 + Dimensions.get('window').width * 0.425/8,

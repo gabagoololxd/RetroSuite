@@ -1,6 +1,6 @@
-var React = require('react-native');
+const React = require('react-native');
 
-var {
+const {
   Dimensions,
   StyleSheet,
   Text,
@@ -36,7 +36,7 @@ class LRShoulders extends React.Component {
   }
 }
 
-var styles = StyleSheet.create({
+const styles = StyleSheet.create({
   lShoulderView: {
 
   },
