@@ -13,7 +13,7 @@ var {
 class JoyPad extends React.Component { 
   render() {
     return (
-      <View style={{flex: 1}} >   
+      <View style={{flex: 1, backgroundColor: '#a69f9a'}} >   
         <LRShoulders currentButtonPresses={this.props.currentButtonPresses}/>
         <ABXY currentButtonPresses={this.props.currentButtonPresses}/>
         <DPad currentButtonPresses={this.props.currentButtonPresses}/>

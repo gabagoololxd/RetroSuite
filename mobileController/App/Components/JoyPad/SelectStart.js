@@ -16,6 +16,8 @@ class SelectStart extends React.Component {
                       this.props.currentButtonPresses.select ? {backgroundColor: '#252622'} : null]}/>
         <View style={[styles.startView, 
                       this.props.currentButtonPresses.start ? {backgroundColor: '#252622'} : null]}/>
+        <Text style={[styles.selectText]}>SELECT</Text>
+        <Text style={[styles.startText]}> START</Text>
       </View>
     );
   }
@@ -45,6 +47,38 @@ var styles = StyleSheet.create({
     borderTopRightRadius: Dimensions.get('window').width* 0.288,
     borderBottomLeftRadius: Dimensions.get('window').width* 0.253,
     borderBottomRightRadius: Dimensions.get('window').width* 0.253,
+  },
+
+  selectText: {
+    position: 'absolute',
+    bottom: Dimensions.get('window').width * 0.06,
+    left: Dimensions.get('window').width * 0.13,
+    backgroundColor: 'transparent',
+    color: '#a69f9a',
+    fontSize: 15,
+    letterSpacing: 5,
+    fontFamily: 'eurostile',
+    transform: [
+      {scaleX: 0.6},
+      {skewX: '-25deg'},
+
+    ]
+  },
+
+  startText: {
+    position: 'absolute',
+    bottom: Dimensions.get('window').width * 0.06,
+    left: Dimensions.get('window').width * 0.43,
+    backgroundColor: 'transparent',
+    color: '#a69f9a',
+    fontSize: 15,
+    letterSpacing: 5,
+    fontFamily: 'eurostile',
+    transform: [
+      {scaleX: 0.6},
+      {skewX: '-25deg'},
+
+    ]
   },
 });
 

@@ -308,8 +308,7 @@ class JoyPadContainer extends React.Component {
   render() {
     StatusBarIOS.setHidden('true');
     return (
-      <View style={styles.imageContainer}>
-       
+      <View style={{flex: 1}}>
         <View style={{flex: 1}} onTouchStart={this._onTouchStart.bind(this)} onTouchMove={this._onTouchMove.bind(this)} onTouchEnd={this._onTouchEnd.bind(this)}>
           <View style={styles.DPadArea} onLayout={this._onLayoutDPad.bind(this)}/>
           <View style={styles.ABXYArea} onLayout={this._onLayoutABXY.bind(this)}/>
@@ -335,10 +334,6 @@ class JoyPadContainer extends React.Component {
 
 // Define the touch areas of each button (these are not the actual views the user sees, but the hit areas: lots of hit slop relative to the size of the rendered button views so there is room for user error)
 var styles = StyleSheet.create({
-  imageContainer: {
-    flex: 1,
-    backgroundColor: '#a69f9a'
-  },
   DPadArea: {
     position: 'absolute',
     top: Dimensions.get('window').width * .15,
@@ -403,8 +398,8 @@ var styles = StyleSheet.create({
   },
   pauseButton: {
     position: 'absolute',
-    bottom: 5,
-    right: 10,
+    bottom: Dimensions.get('window').width * 0.04,
+    right: Dimensions.get('window').width * 0.02666,
   },
 });
 

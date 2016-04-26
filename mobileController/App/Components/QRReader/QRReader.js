@@ -39,23 +39,23 @@ class QRReader extends React.Component {
         (connectionInfo) => { console.log(connectionInfo, 'connectionInfo') }
     );
     
-    //for development purposes, simulates successful qr scan
-    var openJoyPadContainerCallback = () => {
-      var navigator = this.props.navigator;
-      var turnCameraOn = this.turnCameraOn.bind(this);
-      var turnCameraOff = this.turnCameraOff.bind(this);
-      turnCameraOff();
-      //open up the JoyPadContainer
-      navigator.push({
-        component: JoyPadContainer,
-        turnCameraOn: turnCameraOn.bind(this),
-        sceneConfig: {
-          ...Navigator.SceneConfigs.FloatFromBottom,
-          gestures: {} //disable ability to swipe to pop back from JoyPadContainer to QRReader once past the ip address page
-        }
-      });
-    }
-    webSocket.PairController('10.0.0.215:1337', openJoyPadContainerCallback);
+    // //for development purposes, simulates successful qr scan
+    // var openJoyPadContainerCallback = () => {
+    //   var navigator = this.props.navigator;
+    //   var turnCameraOn = this.turnCameraOn.bind(this);
+    //   var turnCameraOff = this.turnCameraOff.bind(this);
+    //   turnCameraOff();
+    //   //open up the JoyPadContainer
+    //   navigator.push({
+    //     component: JoyPadContainer,
+    //     turnCameraOn: turnCameraOn.bind(this),
+    //     sceneConfig: {
+    //       ...Navigator.SceneConfigs.FloatFromBottom,
+    //       gestures: {} //disable ability to swipe to pop back from JoyPadContainer to QRReader once past the ip address page
+    //     }
+    //   });
+    // }
+    // webSocket.PairController('10.0.0.215:1337', openJoyPadContainerCallback);
   }
 
   _onBarCodeRead(e) {

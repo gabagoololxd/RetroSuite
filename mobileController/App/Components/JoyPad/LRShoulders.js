@@ -23,6 +23,14 @@ class LRShoulders extends React.Component {
           <View style={styles.rShoulderTopView}/>
           <View style={styles.rShoulderBottomView}/>
         </View>
+        <Text style={[styles.lText,
+                      this.props.currentButtonPresses.lShoulder ? {transform: [ {scaleX: 1.3}, {translate: [0, Dimensions.get('window').width* 0.015]} ]} : null]}>
+          L
+        </Text>
+        <Text style={[styles.rText,
+                      this.props.currentButtonPresses.rShoulder ? {transform: [ {scaleX: 1.3}, {translate: [0, Dimensions.get('window').width* 0.015]} ]} : null]}>
+          R
+        </Text>
       </View>
     );
   }
@@ -31,6 +39,18 @@ class LRShoulders extends React.Component {
 var styles = StyleSheet.create({
   lShoulderView: {
 
+  },
+  lText: {
+    position: 'absolute',
+    top: Dimensions.get('window').width * 0.02,
+    left: Dimensions.get('window').width * 0.38,
+    backgroundColor: 'transparent',
+    color: '#8c8182',
+    fontSize: 22,
+    fontFamily: 'eurostile',
+    transform: [
+      {scaleX: 1.3},
+    ]
   },
   lShoulderTopView: {
     backgroundColor: 'transparent',
@@ -70,6 +90,18 @@ var styles = StyleSheet.create({
   },
   rShoulderView: {
 
+  },
+  rText: {
+    position: 'absolute',
+    top: Dimensions.get('window').width * 0.02,
+    right: Dimensions.get('window').width * 0.38,
+    backgroundColor: 'transparent',
+    color: '#8c8182',
+    fontSize: 22,
+    fontFamily: 'eurostile',
+    transform: [
+      {scaleX: 1.3},
+    ]
   },
   rShoulderTopView: {
     backgroundColor: 'transparent',
