@@ -16,46 +16,56 @@ class DPad extends React.Component {
             <View style={styles.leftRightView}>
               <View style={styles.DPadCenterCircleView}/>
               <View style={[styles.leftArrowView, 
+                            !this.props.currentButtonPresses.down && !this.props.currentButtonPresses.left && !this.props.currentButtonPresses.right && !this.props.currentButtonPresses.up ? {borderRightColor: '#252622'} : null,
                             this.props.currentButtonPresses.left ? {borderLeftColor: '#252622', borderRightColor: '#252622', height: Dimensions.get('window').width * (0.017+ 0.4 / 3) } : null,
-                            this.props.currentButtonPresses.right ? {borderLeftColor: '#4e4f4c', borderRightColor: '#4e4f4c'} : null,
-                            this.props.currentButtonPresses.up ? {borderLeftColor: '#252622', borderRightColor: '#4e4f4c'} : null,
-                            this.props.currentButtonPresses.down ? {borderLeftColor: '#4e4f4c', borderRightColor: '#252622'} : null]}>
+                            this.props.currentButtonPresses.right ? {borderLeftColor: '#5d5e5a', borderRightColor: '#5d5e5a'} : null,
+                            this.props.currentButtonPresses.up ? {borderLeftColor: '#252622', borderRightColor: '#5d5e5a'} : null,
+                            this.props.currentButtonPresses.down ? {borderLeftColor: '#5d5e5a', borderRightColor: '#252622'} : null]}>
                 <View style={[styles.arrowInsideView, 
-                              this.props.currentButtonPresses.left ? { height: Dimensions.get('window').width * (0.4 / 2.85), borderBottomLeftRadius: 0, borderBottomRightRadius: 0} : null,
-                              this.props.currentButtonPresses.right ? {top: -10, right: 0,    height: Dimensions.get('window').width * (0.4 / 3.5) + 10, width: Dimensions.get('window').width * 0.4 / 3} : null,
-                              this.props.currentButtonPresses.up || this.props.currentButtonPresses.down  ? {height: Dimensions.get('window').width * (+ 0.4 / 3)  ,  borderBottomLeftRadius: 0,  borderBottomRightRadius:0, borderBottomWidth: Dimensions.get('window').width * 0.01, borderBottomColor: '#252622'} : null]}/>
+                              !this.props.currentButtonPresses.down && !this.props.currentButtonPresses.left && !this.props.currentButtonPresses.right && !this.props.currentButtonPresses.up ? {left: -Dimensions.get('window').width * 0.4  * 1/8, height: Dimensions.get('window').width * (+ 0.4 / 3)  ,  width: Dimensions.get('window').width * 0.1 * 1.1 , borderBottomLeftRadius: Dimensions.get('window').width * .02,  borderBottomRightRadius: Dimensions.get('window').width * .02, borderBottomWidth: Dimensions.get('window').width * 0.01, borderBottomColor: '#353632'} : null,
+                              this.props.currentButtonPresses.left ? { height: Dimensions.get('window').width * (0.4 / 3), borderBottomLeftRadius: 0, borderBottomRightRadius: 0} : null,
+                              this.props.currentButtonPresses.right ? {top: -1 * Dimensions.get('window').width * (8/375) , right: 0,    height: Dimensions.get('window').width * (0.4 / 3.5 + 0.02), width: Dimensions.get('window').width * 0.4 / 3} : null,
+                              this.props.currentButtonPresses.up ? {height: Dimensions.get('window').width * (+ 0.4 / 3)  ,  borderBottomLeftRadius: 0,  borderBottomRightRadius:0, borderBottomWidth: Dimensions.get('window').width * 0.01, borderBottomColor: '#252622'} : null,
+                              this.props.currentButtonPresses.down  ? {right: Dimensions.get('window').width * 0.4 / 3 * 1/8 + Dimensions.get('window').width * (0.5/375), height: Dimensions.get('window').width * (+ 0.4 / 3)  ,  borderBottomLeftRadius: 0,  borderBottomRightRadius:0, borderBottomWidth: Dimensions.get('window').width * 0.01, borderBottomColor: '#252622'} : null]}/>
               </View>
               <View style={[styles.rightArrowView, 
-                            this.props.currentButtonPresses.left ? {borderLeftColor: '#4e4f4c', borderRightColor: '#4e4f4c'} : null,
+                            !this.props.currentButtonPresses.down && !this.props.currentButtonPresses.left && !this.props.currentButtonPresses.right && !this.props.currentButtonPresses.up ? {borderLeftColor: '#252622'} : null,
+                            this.props.currentButtonPresses.left ? {borderLeftColor: '#5d5e5a', borderRightColor: '#5d5e5a'} : null,
                             this.props.currentButtonPresses.right ? {borderLeftColor: '#252622', borderRightColor: '#252622', height: Dimensions.get('window').width * (0.017+ 0.4 / 3) } : null,
-                            this.props.currentButtonPresses.up ? {borderLeftColor: '#4e4f4c', borderRightColor: '#252622'} : null,
-                            this.props.currentButtonPresses.down ? {borderLeftColor: '#252622', borderRightColor: '#4e4f4c'} : null]}>
+                            this.props.currentButtonPresses.up ? {borderLeftColor: '#5d5e5a', borderRightColor: '#252622'} : null,
+                            this.props.currentButtonPresses.down ? {borderLeftColor: '#252622', borderRightColor: '#5d5e5a'} : null]}>
                 <View style={[styles.arrowInsideView, 
-                              this.props.currentButtonPresses.right ? { height: Dimensions.get('window').width * (0.4 / 2.85), borderBottomLeftRadius: 0, borderBottomRightRadius: 0} : null,
-                              this.props.currentButtonPresses.left ? {top: -10, right: 0, height: Dimensions.get('window').width * (0.4 / 3.5) + 10, width: Dimensions.get('window').width * 0.4 / 3} : null,
-                              this.props.currentButtonPresses.up || this.props.currentButtonPresses.down  ? {height: Dimensions.get('window').width * (+ 0.4 / 3)  ,  borderBottomLeftRadius: 0,  borderBottomRightRadius:0, borderBottomWidth: Dimensions.get('window').width * 0.01, borderBottomColor: '#252622'} : null]}/>
+                              !this.props.currentButtonPresses.down && !this.props.currentButtonPresses.left && !this.props.currentButtonPresses.right && !this.props.currentButtonPresses.up ? {height: Dimensions.get('window').width * (+ 0.4 / 3)  ,  width: Dimensions.get('window').width * 0.1 * 1.1 , borderBottomLeftRadius: Dimensions.get('window').width * .02,  borderBottomRightRadius: Dimensions.get('window').width * .02, borderBottomWidth: Dimensions.get('window').width * 0.01, borderBottomColor: '#353632'} : null,
+                              this.props.currentButtonPresses.right ? { height: Dimensions.get('window').width * (0.4 / 3), borderBottomLeftRadius: 0, borderBottomRightRadius: 0} : null,
+                              this.props.currentButtonPresses.left ? {top: -1 * Dimensions.get('window').width * (8/375) , right: 0, height: Dimensions.get('window').width * (0.4 / 3.5 + 0.02), width: Dimensions.get('window').width * 0.4 / 3} : null,
+                              this.props.currentButtonPresses.up ? {right: Dimensions.get('window').width * 0.4 / 3 * 1/8 + Dimensions.get('window').width * (0.5/375), height: Dimensions.get('window').width * (+ 0.4 / 3)  ,  borderBottomLeftRadius: 0,  borderBottomRightRadius:0, borderBottomWidth: Dimensions.get('window').width * 0.01, borderBottomColor: '#252622'} : null,
+                              this.props.currentButtonPresses.down  ? {height: Dimensions.get('window').width * (+ 0.4 / 3)  ,  borderBottomLeftRadius: 0,  borderBottomRightRadius:0, borderBottomWidth: Dimensions.get('window').width * 0.01, borderBottomColor: '#252622'} : null]}/>
               </View>
             </View>
             <View style={styles.upDownView}>
               <View style={[styles.upArrowView, 
-                            this.props.currentButtonPresses.left ? {borderLeftColor: '#4e4f4c', borderRightColor: '#252622'} : null,
-                            this.props.currentButtonPresses.right ? {borderLeftColor: '#252622', borderRightColor: '#4e4f4c'}  : null,
+                            this.props.currentButtonPresses.left ? {borderLeftColor: '#5d5e5a', borderRightColor: '#252622'} : null,
+                            this.props.currentButtonPresses.right ? {borderLeftColor: '#252622', borderRightColor: '#5d5e5a'}  : null,
                             this.props.currentButtonPresses.up ? {borderLeftColor: '#252622', borderRightColor: '#252622', height: Dimensions.get('window').width * (0.017+ 0.4 / 3)} : null,
-                            this.props.currentButtonPresses.down ? {borderLeftColor: '#4e4f4c', borderRightColor: '#4e4f4c'} : null]}>
+                            this.props.currentButtonPresses.down ? {borderLeftColor: '#5d5e5a', borderRightColor: '#5d5e5a'} : null]}>
                 <View style={[styles.arrowInsideView, 
-                              this.props.currentButtonPresses.up ? { height: Dimensions.get('window').width * (0.4 / 2.85), borderBottomLeftRadius: 0, borderBottomRightRadius: 0} : null,
-                              this.props.currentButtonPresses.down ? {top: -10, right: 0, height: Dimensions.get('window').width * (0.4 / 3.5) + 10, width: Dimensions.get('window').width * 0.4 / 3} : null,
-                              this.props.currentButtonPresses.left || this.props.currentButtonPresses.right  ? {height: Dimensions.get('window').width * (+ 0.4 / 3)  ,  borderBottomLeftRadius: 0,  borderBottomRightRadius:0, borderBottomWidth: Dimensions.get('window').width * 0.01, borderBottomColor: '#252622'} : null]}/>
+                              this.props.currentButtonPresses.up ? { height: Dimensions.get('window').width * (0.4 / 3), borderBottomLeftRadius: 0, borderBottomRightRadius: 0} : null,
+                              this.props.currentButtonPresses.down ? {top: -1 * Dimensions.get('window').width * (8/375) , right: 0, height: Dimensions.get('window').width * (0.4 / 3.5 + 0.02), width: Dimensions.get('window').width * 0.4 / 3} : null,
+                              this.props.currentButtonPresses.left ? {right: Dimensions.get('window').width * 0.4 / 3 * 1/8  + Dimensions.get('window').width * (0.5/375), height: Dimensions.get('window').width * (+ 0.4 / 3)  ,  borderBottomLeftRadius: 0,  borderBottomRightRadius:0, borderBottomWidth: Dimensions.get('window').width * 0.01, borderBottomColor: '#252622'} : null,
+                              this.props.currentButtonPresses.right ? {height: Dimensions.get('window').width * (+ 0.4 / 3)  ,  borderBottomLeftRadius: 0,  borderBottomRightRadius:0, borderBottomWidth: Dimensions.get('window').width * 0.01, borderBottomColor: '#252622'} : null]}/>
               </View>
               <View style={[styles.downArrowView, 
-                            this.props.currentButtonPresses.left ? {borderLeftColor: '#252622', borderRightColor: '#4e4f4c'} : null,
-                            this.props.currentButtonPresses.right ? {borderLeftColor: '#4e4f4c', borderRightColor: '#252622'} : null,
-                            this.props.currentButtonPresses.up ? {borderLeftColor: '#4e4f4c', borderRightColor: '#4e4f4c'} : null,
+                            !this.props.currentButtonPresses.down && !this.props.currentButtonPresses.left && !this.props.currentButtonPresses.right && !this.props.currentButtonPresses.up ? {borderLeftColor: '#252622', borderRightColor: '#252622'} : null,
+                            this.props.currentButtonPresses.left ? {borderLeftColor: '#252622', borderRightColor: '#5d5e5a'} : null,
+                            this.props.currentButtonPresses.right ? {borderLeftColor: '#5d5e5a', borderRightColor: '#252622'} : null,
+                            this.props.currentButtonPresses.up ? {borderLeftColor: '#5d5e5a', borderRightColor: '#5d5e5a'} : null,
                             this.props.currentButtonPresses.down ? {borderLeftColor: '#252622', borderRightColor: '#252622', height: Dimensions.get('window').width * (0.017+ 0.4 / 3)} : null]}>
                 <View style={[styles.arrowInsideView, 
-                              this.props.currentButtonPresses.down ? { height: Dimensions.get('window').width * (0.4 / 2.85), borderBottomLeftRadius: 0, borderBottomRightRadius: 0} : null,
-                              this.props.currentButtonPresses.up ? {top: -10, right: 0, height: Dimensions.get('window').width * (0.4 / 3.5) + 10, width: Dimensions.get('window').width * 0.4 / 3} : null,
-                              this.props.currentButtonPresses.left || this.props.currentButtonPresses.right  ? {height: Dimensions.get('window').width * (+ 0.4 / 3)  ,  borderBottomLeftRadius: 0,  borderBottomRightRadius:0, borderBottomWidth: Dimensions.get('window').width * 0.01, borderBottomColor: '#252622'} : null]}/>
+                              !this.props.currentButtonPresses.down && !this.props.currentButtonPresses.left && !this.props.currentButtonPresses.right && !this.props.currentButtonPresses.up ? {top: -1 * Dimensions.get('window').width * (10/375) , right: 0, height: Dimensions.get('window').width * (0.4 / 2.6), width: Dimensions.get('window').width * 0.4 / 3} : null,
+                              this.props.currentButtonPresses.down ? { height: Dimensions.get('window').width * (0.4 / 3), borderBottomLeftRadius: 0, borderBottomRightRadius: 0} : null,
+                              this.props.currentButtonPresses.up ? {top: -1 * Dimensions.get('window').width * (8/375) , right: 0, height: Dimensions.get('window').width * (0.4 / 3.5 + 0.02), width: Dimensions.get('window').width * 0.4 / 3} : null,
+                              this.props.currentButtonPresses.left ? {height: Dimensions.get('window').width * (+ 0.4 / 3)  ,  borderBottomLeftRadius: 0,  borderBottomRightRadius:0, borderBottomWidth: Dimensions.get('window').width * 0.01, borderBottomColor: '#252622'} : null,
+                              this.props.currentButtonPresses.right ? {right: Dimensions.get('window').width * 0.4 / 3 * 1/8 + Dimensions.get('window').width * (0.5/375), height: Dimensions.get('window').width * (0.4 / 3)  ,  borderBottomLeftRadius: 0,  borderBottomRightRadius:0, borderBottomWidth: Dimensions.get('window').width * 0.01, borderBottomColor: '#252622'} : null]}/>
               </View>
             </View>
           </View> 
@@ -106,7 +116,7 @@ const styles = StyleSheet.create({
     top: 0,
     right: 0,
     backgroundColor: 'transparent',
-    height: Dimensions.get('window').width * (+ 0.4 / 3) ,
+    height: Dimensions.get('window').width * (0.4 / 3) ,
     width: 0,
     borderLeftWidth: Dimensions.get('window').width * 0.4 / 6,
     borderLeftColor: '#353632',

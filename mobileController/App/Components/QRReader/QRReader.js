@@ -38,7 +38,7 @@ class QRReader extends React.Component {
     Orientation.lockToPortrait(); //this will lock the view to Portrait
     
     // Determine user permissions for the camera; if permission is authorized, use the camera/app; 
-    // Otherwise, notify the user that they must allow camera access and provide a link to settings
+    // Otherwise, notify the user that they must allow camera access and provide a link to settings where they can do so
     Permissions.cameraPermissionStatus()
       .then(response => {
         if (response == Permissions.StatusUndetermined) {
@@ -54,29 +54,8 @@ class QRReader extends React.Component {
         }
       });
     
-    // //for development purposes, simulates successful qr scan
-    // const openJoyPadContainerCallback = () => {
-    //   const navigator = this.props.navigator;
-    //   const turnCameraOn = this.turnCameraOn.bind(this);
-    //   const turnCameraOff = this.turnCameraOff.bind(this);
-    //   turnCameraOff();
-    //   //open up the JoyPadContainer
-    //   navigator.push({
-    //     component: JoyPadContainer,
-    //     turnCameraOn: turnCameraOn.bind(this),
-    //     sceneConfig: {
-    //       ...Navigator.SceneConfigs.FloatFromBottom,
-    //       gestures: {} //disable ability to swipe to pop back from JoyPadContainer to QRReader once past the ip address page
-    //     }
-    //   });
-    // }
-    // webSocket.PairController('10.0.0.215:1337', openJoyPadContainerCallback);
-  }
-
-  _onBarCodeRead(e) {
-    const ipAddress = e.data;
-
-    const success = () => {
+    //for development purposes, simulates successful qr scan
+    const openJoyPadContainerCallback = () => {
       const navigator = this.props.navigator;
       const turnCameraOn = this.turnCameraOn.bind(this);
       const turnCameraOff = this.turnCameraOff.bind(this);
@@ -91,20 +70,48 @@ class QRReader extends React.Component {
         }
       });
     }
+    webSocket.PairController('10.0.0.215:1337', openJoyPadContainerCallback);
+  }
+
+  _onBarCodeRead(e) {
+    const ipAddress = e.data;
+
+    const success = () => {
+      const navigator = this.props.navigator;
+      const turnCameraOn = this.turnCameraOn.bind(this);
+      const turnCameraOff = this.turnCameraOff.bind(this);
+      turnCameraOff();
+
+      //open up the JoyPadContainer
+      navigator.push({
+        component: JoyPadContainer,
+        turnCameraOn: turnCameraOn.bind(this),
+        sceneConfig: {
+          ...Navigator.SceneConfigs.FloatFromBottom,
+          gestures: {} //disable ability to swipe to pop back from JoyPadContainer to QRReader once past the ip address page
+        }
+      });
+    }
 
     // TODO: 
     // Promise race, if after 2000 it doesnt pair successfully, check to see if connected to wifi, if not, then notify the user
+    // What if when we scan, wifi is on, but the chrome app's wifi is off?
     NetInfo.fetch().done(
-        (connectionInfo) => { console.log(connectionInfo, 'connectionInfo') }
+      (connectionInfo) => { console.log(connectionInfo, 'connectionInfo') }
     );
+    
     webSocket.PairController(ipAddress, success);
 
     // TODO:
     // make instructions better with multiple click through steps and screenshots
+    // how to tell if its the user's first time? open instructions then
     // autofocus camera
     // when camera permissions are off, open up a modal that says we need the camera; yes link to settings to enable
+    // when power button is pressed and app reopens, the connect is lost so it should open as the camera again
+
     // animate abxy select/start? 
     // ABXY overlap / touch radius options
+    // move components around?
   }
 
   _torchEnabled() {
@@ -214,6 +221,7 @@ class QRReader extends React.Component {
 
           <SegmentedControlIOS 
             values={['Scan QR', 'Instructions']} 
+            enabled={false}
             selectedIndex={0} 
             style={styles.segments} 
             tintColor="white"/>

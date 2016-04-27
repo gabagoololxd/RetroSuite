@@ -30,7 +30,7 @@
 		8544453801EC4720B9C30F24 /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1A50C5A139C84991BEF3D6CD /* MaterialIcons.ttf */; };
 		915CB597734C49CEA64BFDF9 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 020E528E6C924A28BE900478 /* Zocial.ttf */; };
 		D367D8FCEE234EEC821FF9E3 /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9EF113A0F8124B1F8D9B7AE2 /* Octicons.ttf */; };
-		DD07C3921CCF592800FD5E06 /* eurostile-bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DD07C3911CCF592800FD5E06 /* eurostile-bold.ttf */; };
+		DD07C3B61CD023E300FD5E06 /* eurostile-bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DD07C3B51CD023E300FD5E06 /* eurostile-bold.ttf */; };
 		DD918AA11C91725B0097C557 /* build.gradle in Resources */ = {isa = PBXBuildFile; fileRef = DD918A901C91725B0097C557 /* build.gradle */; };
 		DD918AA21C91725B0097C557 /* AndroidManifest.xml in Resources */ = {isa = PBXBuildFile; fileRef = DD918A931C91725B0097C557 /* AndroidManifest.xml */; };
 		DD918AA31C91725B0097C557 /* OrientationModule.java in Sources */ = {isa = PBXBuildFile; fileRef = DD918A991C91725B0097C557 /* OrientationModule.java */; };
@@ -195,7 +195,7 @@
 		9EF113A0F8124B1F8D9B7AE2 /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
 		B35C2F29237D46E4A06E9601 /* RNVectorIcons.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNVectorIcons.xcodeproj; path = "../node_modules/react-native-vector-icons/RNVectorIcons.xcodeproj"; sourceTree = "<group>"; };
 		C35EE180DA50442B9D5ECFBB /* libRCTCamera.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRCTCamera.a; sourceTree = "<group>"; };
-		DD07C3911CCF592800FD5E06 /* eurostile-bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "eurostile-bold.ttf"; path = "../../../../../Desktop/eurostile-bold.ttf"; sourceTree = "<group>"; };
+		DD07C3B51CD023E300FD5E06 /* eurostile-bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "eurostile-bold.ttf"; path = "../App/Components/Assets/eurostile-bold.ttf"; sourceTree = "<group>"; };
 		DD1CFEB01C9163FB0046BE37 /* RCTCamera.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTCamera.xcodeproj; path = "../node_modules/react-native-camera/ios/RCTCamera.xcodeproj"; sourceTree = "<group>"; };
 		DD918A901C91725B0097C557 /* build.gradle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = build.gradle; sourceTree = "<group>"; };
 		DD918A931C91725B0097C557 /* AndroidManifest.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = AndroidManifest.xml; sourceTree = "<group>"; };
@@ -391,7 +391,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				DD07C3911CCF592800FD5E06 /* eurostile-bold.ttf */,
+				DD07C3B51CD023E300FD5E06 /* eurostile-bold.ttf */,
 				DDD330E41CC0980D00EB7624 /* DockerOne.ttf */,
 				13B07FAE1A68108700A75B9A /* mobileController */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
@@ -807,7 +807,7 @@
 				17FE73EC4E054438A64A73A9 /* Foundation.ttf in Resources */,
 				DD918AA21C91725B0097C557 /* AndroidManifest.xml in Resources */,
 				EC61FFCE12E5496FB91CBCB1 /* Ionicons.ttf in Resources */,
-				DD07C3921CCF592800FD5E06 /* eurostile-bold.ttf in Resources */,
+				DD07C3B61CD023E300FD5E06 /* eurostile-bold.ttf in Resources */,
 				DD918AA11C91725B0097C557 /* build.gradle in Resources */,
 				8544453801EC4720B9C30F24 /* MaterialIcons.ttf in Resources */,
 				D367D8FCEE234EEC821FF9E3 /* Octicons.ttf in Resources */,

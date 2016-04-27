@@ -19,7 +19,7 @@ const {
   StatusBarIOS,
 } = React;
 
-// This container component holds all the methods, determines the touch areas of each button, determines which buttons are pressed, and what messages to send to the websocket server
+// This container component holds JoyPad methods, determines the touch areas of each button, determines which buttons are pressed, and what messages to send to the websocket server
 class JoyPadContainer extends React.Component {
   constructor(props) {
     super(props);
@@ -112,7 +112,7 @@ class JoyPadContainer extends React.Component {
     navigator = this.props.navigator;
     turnCameraOn = this.props.route.turnCameraOn.bind(this);
     webSocket.RePairController(function() {
-      navigator.pop();
+      navigator.popToTop();
       Orientation.lockToPortrait();
       turnCameraOn();
     });
@@ -292,6 +292,7 @@ class JoyPadContainer extends React.Component {
   }
 
   // Touch events
+  // Call _determinePressesAndRelease any time there is a new touch, a touch has moved, and when a touch is released
   _onTouchStart(e) {
     console.log('Touch Start');
     this._determinePressesAndReleases(e);
@@ -307,6 +308,8 @@ class JoyPadContainer extends React.Component {
     this._determinePressesAndReleases(e);
   } 
 
+  // Render the transparent View tags that represent the area that each button takes up, as well as the presentational JoyPad component the user sees
+  // Render the pause modal if the user clicks the pause button
   render() {
     StatusBarIOS.setHidden('true');
     return (

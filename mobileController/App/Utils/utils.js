@@ -1,5 +1,5 @@
 var utils = {
-  _pointInTriangle(P, A, B, C) {
+  _pointInTriangle(P, A, B, C) { //P is the point, A, B, C are the points of the triangle
     // Compute vectors        
     function vec(from, to) {  return [to[0] - from[0], to[1] - from[1]];  }
     var v0 = vec(A, C);
@@ -20,7 +20,7 @@ var utils = {
     return (u >= 0) && (v >= 0) && (u + v < 1);
   },
 
-  _pointInRectangle (P, A, D) { //P is the point, A is top left corner of rectangle, D is bottom right corner of rectangle
+  _pointInRectangle(P, A, D) { //P is the point, A is top left corner of rectangle, D is bottom right corner of rectangle
     x1 = Math.min(A[0], D[0]);
     x2 = Math.max(A[0], D[0]);
     y1 = Math.min(A[1], D[1]);

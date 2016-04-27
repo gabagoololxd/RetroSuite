@@ -13,24 +13,34 @@ class ABXY extends React.Component {
     return (
       <View style={styles.ABXYCircleView}>
         <View style={styles.XYPillView}>
-          <View style={[styles.XCircleView, 
-                        this.props.currentButtonPresses.x ? {backgroundColor: 'rgba(108,95,122,1)'} : null]}> 
-            <Text style={styles.XText}>X</Text>
-          </View>   
-          <View style={[styles.YCircleView, 
-                        this.props.currentButtonPresses.y ? {backgroundColor: 'rgba(108,95,122,1)'} : null]}>
-            <Text style={styles.YText}>Y</Text>
-          </View>    
+          
+         <View style={[styles.XBottomCircleView, 
+                     this.props.currentButtonPresses.x ? {backgroundColor: '#998ca8'} : null]}/>
+         <View style={[styles.XTopCircleView, 
+                       this.props.currentButtonPresses.x ? {backgroundColor: 'transparent'} : null]}>
+           <Text style={styles.XText}>X</Text>
+         </View> 
+         <View style={[styles.YBottomCircleView, 
+                     this.props.currentButtonPresses.y ? {backgroundColor: '#998ca8'} : null]}/>
+         <View style={[styles.YTopCircleView, 
+                     this.props.currentButtonPresses.y ? {backgroundColor: 'transparent'} : null]}>
+           <Text style={styles.YText}>Y</Text>
+         </View>    
+
         </View> 
         <View style={styles.ABPillView}>
-          <View style={[styles.ACircleView, 
-                        this.props.currentButtonPresses.a ? {backgroundColor: 'rgba(45,12,82,1)'} : null]}>
+          <View style={[styles.ABottomCircleView, 
+                      this.props.currentButtonPresses.a ? {backgroundColor: '#5b3980'} : null]}/>
+          <View style={[styles.ATopCircleView, 
+                        this.props.currentButtonPresses.a ? {backgroundColor: 'transparent'} : null]}>
             <Text style={styles.AText}>A</Text>
           </View> 
-          <View style={[styles.BCircleView, 
-                        this.props.currentButtonPresses.b ? {backgroundColor: 'rgba(45,12,82,1)'} : null]}>
+          <View style={[styles.BBottomCircleView, 
+                      this.props.currentButtonPresses.b ? {backgroundColor: '#5b3980'} : null]}/>
+          <View style={[styles.BTopCircleView, 
+                      this.props.currentButtonPresses.b ? {backgroundColor: 'transparent'} : null]}>
             <Text style={styles.BText}>B</Text>
-          </View>    
+          </View>
         </View>
       </View>
     );
@@ -80,7 +90,7 @@ const styles = StyleSheet.create({
     ]
   },
 
-  ACircleView: {
+  ATopCircleView: {
     position: 'absolute',
     top: Dimensions.get('window').width * 0.019,
     right: Dimensions.get('window').width * 0.021, 
@@ -88,6 +98,18 @@ const styles = StyleSheet.create({
     height: Dimensions.get('window').width * 0.155,
     borderRadius: Dimensions.get('window').width * 0.155/2,
     backgroundColor: '#5b3980',
+    transform: [
+      {translate: [-Dimensions.get('window').width * 0.007 * 3/4, -Dimensions.get('window').width * 0.007 * 3/4]}
+    ]
+  },
+  ABottomCircleView: {
+    position: 'absolute',
+    top: Dimensions.get('window').width * 0.019,
+    right: Dimensions.get('window').width * 0.021, 
+    width: Dimensions.get('window').width * 0.155,
+    height: Dimensions.get('window').width * 0.155,
+    borderRadius: Dimensions.get('window').width * 0.155/2,
+    backgroundColor: '#2d1c40',
   },
   AText: {
     position: 'absolute',
@@ -102,7 +124,7 @@ const styles = StyleSheet.create({
     ]
   },
 
-  BCircleView: {
+  BTopCircleView: {
     position: 'absolute',
     top: Dimensions.get('window').width * 0.019,
     right: Dimensions.get('window').width * 0.021, 
@@ -110,6 +132,20 @@ const styles = StyleSheet.create({
     height: Dimensions.get('window').width * 0.155,
     borderRadius: Dimensions.get('window').width * 0.155/2,
     backgroundColor: '#5b3980',
+    transform: [
+      {rotate: '-45deg'},
+      {translate: [-1 * Dimensions.get('window').width * 0.18, Dimensions.get('window').width * 0.173]}
+    ]
+  },
+
+  BBottomCircleView: {
+    position: 'absolute',
+    top: Dimensions.get('window').width * 0.019,
+    right: Dimensions.get('window').width * 0.021, 
+    width: Dimensions.get('window').width * 0.155,
+    height: Dimensions.get('window').width * 0.155,
+    borderRadius: Dimensions.get('window').width * 0.155/2,
+    backgroundColor: '#2d1c40',
     transform: [
       {rotate: '-45deg'},
       {translate: [-1 * Dimensions.get('window').width * 0.18, Dimensions.get('window').width * 0.18]}
@@ -129,7 +165,7 @@ const styles = StyleSheet.create({
     ]
   },
 
-  XCircleView: {
+  XTopCircleView: {
     position: 'absolute',
     top: Dimensions.get('window').width * 0.019,
     right: Dimensions.get('window').width * 0.021, 
@@ -137,7 +173,21 @@ const styles = StyleSheet.create({
     height: Dimensions.get('window').width * 0.155,
     borderRadius: Dimensions.get('window').width * 0.155/2,
     backgroundColor: '#998ca8',
+    transform: [
+      {translate: [-Dimensions.get('window').width * 0.007 * 3/4, -1 * Dimensions.get('window').width * 0.007 * 3/4]}
+    ]
   },
+
+  XBottomCircleView: {
+    position: 'absolute',
+    top: Dimensions.get('window').width * 0.019,
+    right: Dimensions.get('window').width * 0.021, 
+    width: Dimensions.get('window').width * 0.155,
+    height: Dimensions.get('window').width * 0.155,
+    borderRadius: Dimensions.get('window').width * 0.155/2,
+    backgroundColor: '#7a7086',
+  },
+
   XText: {
     position: 'absolute',
     backgroundColor: 'transparent',
@@ -151,7 +201,7 @@ const styles = StyleSheet.create({
     ]
   },
 
-  YCircleView: {
+  YTopCircleView: {
     position: 'absolute',
     top: Dimensions.get('window').width * 0.019,
     right: Dimensions.get('window').width * 0.021, 
@@ -159,6 +209,20 @@ const styles = StyleSheet.create({
     height: Dimensions.get('window').width * 0.155,
     borderRadius: Dimensions.get('window').width * 0.155/2,
     backgroundColor: '#998ca8',
+    transform: [
+      {rotate: '-45deg'},
+      {translate: [-1 * Dimensions.get('window').width * 0.18, Dimensions.get('window').width * 0.173]}
+    ]
+  },
+
+  YBottomCircleView: {
+    position: 'absolute',
+    top: Dimensions.get('window').width * 0.019,
+    right: Dimensions.get('window').width * 0.021, 
+    width: Dimensions.get('window').width * 0.155,
+    height: Dimensions.get('window').width * 0.155,
+    borderRadius: Dimensions.get('window').width * 0.155/2,
+    backgroundColor: '#7a7086',
     transform: [
       {rotate: '-45deg'},
       {translate: [-1 * Dimensions.get('window').width * 0.18, Dimensions.get('window').width * 0.18]}
