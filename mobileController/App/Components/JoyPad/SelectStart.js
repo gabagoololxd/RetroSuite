@@ -22,11 +22,11 @@ class SelectStart extends React.Component {
         <View style={[styles.startTopView, 
                       this.props.currentButtonPresses.start ? {backgroundColor: 'transparent'} : null]}/>
 
-        <Text style={[styles.selectText,
+        <Text allowFontScaling={false} style={[styles.selectText,
                       this.props.currentButtonPresses.select ? { transform: [  {scaleX: 0.6}, {skewX: '-25deg'}, {translate: [Dimensions.get('window').width* 0.002, Dimensions.get('window').width* 0.005]}] } : null]}>
           SELECT
         </Text>
-        <Text style={[styles.startText,
+        <Text allowFontScaling={false} style={[styles.startText,
                       this.props.currentButtonPresses.start ? { transform: [  {scaleX: 0.6}, {skewX: '-25deg'}, {translate: [Dimensions.get('window').width* 0.002, Dimensions.get('window').width* 0.005]}] } : null]}>
           START
         </Text>
@@ -98,8 +98,8 @@ const styles = StyleSheet.create({
     left: Dimensions.get('window').width * 0.135,
     backgroundColor: 'transparent',
     color: '#a69f9a',
-    fontSize: 15,
-    letterSpacing: 5,
+    fontSize: Dimensions.get('window').width * (15/375),
+    letterSpacing: Dimensions.get('window').width * (5/375),
     fontFamily: 'eurostile',
     transform: [
       {scaleX: 0.6},
@@ -112,8 +112,8 @@ const styles = StyleSheet.create({
     left: Dimensions.get('window').width * 0.45,
     backgroundColor: 'transparent',
     color: '#a69f9a',
-    fontSize: 15,
-    letterSpacing: 5,
+    fontSize: Dimensions.get('window').width * (15/375),
+    letterSpacing: Dimensions.get('window').width * (5/375),
     fontFamily: 'eurostile',
     transform: [
       {scaleX: 0.6},

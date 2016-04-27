@@ -23,11 +23,11 @@ class LRShoulders extends React.Component {
           <View style={styles.rShoulderTopView}/>
           <View style={styles.rShoulderBottomView}/>
         </View>
-        <Text style={[styles.lText,
+        <Text allowFontScaling={false} style={[styles.lText,
                       this.props.currentButtonPresses.lShoulder ? {transform: [ {scaleX: 1.3}, {translate: [0, Dimensions.get('window').width* 0.015]} ]} : null]}>
           L
         </Text>
-        <Text style={[styles.rText,
+        <Text allowFontScaling={false} style={[styles.rText,
                       this.props.currentButtonPresses.rShoulder ? {transform: [ {scaleX: 1.3}, {translate: [0, Dimensions.get('window').width* 0.015]} ]} : null]}>
           R
         </Text>
@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
     left: Dimensions.get('window').width * 0.38,
     backgroundColor: 'transparent',
     color: '#8c8182',
-    fontSize: 22,
+    fontSize: Dimensions.get('window').width * (22/375) ,
     fontFamily: 'eurostile',
     transform: [
       {scaleX: 1.3},
@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
     right: Dimensions.get('window').width * 0.38,
     backgroundColor: 'transparent',
     color: '#8c8182',
-    fontSize: 22,
+    fontSize: Dimensions.get('window').width * (22/375),
     fontFamily: 'eurostile',
     transform: [
       {scaleX: 1.3},

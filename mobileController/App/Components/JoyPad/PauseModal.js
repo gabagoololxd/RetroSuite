@@ -13,14 +13,14 @@ class PauseModal extends React.Component {
   render() {
     return (
       <View style={styles.pauseModal}>
-        <Text style={styles.pauseText}>Your Game is Paused</Text>
+        <Text allowFontScaling={false} style={styles.pauseText}>Your Game is Paused</Text>
         <TouchableOpacity style={styles.resume} onPress={this.props._resume.bind(this)}>
           <Ionicon name="ios-play-outline" style={styles.resumeIcon} size={50} allowFontScaling={false} color="white"/>
-          <Text style={styles.resumeText}>Resume Game</Text>
+          <Text allowFontScaling={false} style={styles.resumeText}>Resume Game</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.pair} onPress={this.props._pairController.bind(this)}>
           <Ionicon name="ios-barcode-outline" style={styles.pairIcon} size={50} allowFontScaling={false} color="white"/>
-          <Text style={styles.pairText}>Re-pair controller</Text>
+          <Text allowFontScaling={false} style={styles.pairText}>Re-pair controller</Text>
         </TouchableOpacity>
       </View>
     );

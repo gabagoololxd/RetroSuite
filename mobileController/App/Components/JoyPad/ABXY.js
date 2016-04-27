@@ -18,13 +18,13 @@ class ABXY extends React.Component {
                      this.props.currentButtonPresses.x ? {backgroundColor: '#998ca8'} : null]}/>
          <View style={[styles.XTopCircleView, 
                        this.props.currentButtonPresses.x ? {backgroundColor: 'transparent'} : null]}>
-           <Text style={styles.XText}>X</Text>
+           <Text allowFontScaling={false} style={styles.XText}>X</Text>
          </View> 
          <View style={[styles.YBottomCircleView, 
                      this.props.currentButtonPresses.y ? {backgroundColor: '#998ca8'} : null]}/>
          <View style={[styles.YTopCircleView, 
                      this.props.currentButtonPresses.y ? {backgroundColor: 'transparent'} : null]}>
-           <Text style={styles.YText}>Y</Text>
+           <Text allowFontScaling={false} style={styles.YText}>Y</Text>
          </View>    
 
         </View> 
@@ -33,13 +33,13 @@ class ABXY extends React.Component {
                       this.props.currentButtonPresses.a ? {backgroundColor: '#5b3980'} : null]}/>
           <View style={[styles.ATopCircleView, 
                         this.props.currentButtonPresses.a ? {backgroundColor: 'transparent'} : null]}>
-            <Text style={styles.AText}>A</Text>
+            <Text allowFontScaling={false} style={styles.AText}>A</Text>
           </View> 
           <View style={[styles.BBottomCircleView, 
                       this.props.currentButtonPresses.b ? {backgroundColor: '#5b3980'} : null]}/>
           <View style={[styles.BTopCircleView, 
                       this.props.currentButtonPresses.b ? {backgroundColor: 'transparent'} : null]}>
-            <Text style={styles.BText}>B</Text>
+            <Text allowFontScaling={false} style={styles.BText}>B</Text>
           </View>
         </View>
       </View>
@@ -115,12 +115,12 @@ const styles = StyleSheet.create({
     position: 'absolute',
     backgroundColor: 'transparent',
     color: '#a69f9a',
-    fontSize: 22,
+    fontSize: Dimensions.get('window').width * (22/375),
     fontFamily: 'eurostile',
     transform: [
       {rotate: '-45deg'},
       {scaleX: 1.3},
-      {translate: [Dimensions.get('window').width * 0.075 * 1.3, -1 * Dimensions.get('window').width * 0.05 * 0.9]}
+      {translate: [Dimensions.get('window').width * 0.075 * 1.2, -1 * Dimensions.get('window').width * 0.05 * 0.8]}
     ]
   },
 
@@ -156,7 +156,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     backgroundColor: 'transparent',
     color: '#a69f9a',
-    fontSize: 22,
+    fontSize: Dimensions.get('window').width * (22/375),
     fontFamily: 'eurostile',
     transform: [
       {rotate: '0deg'},
@@ -192,12 +192,12 @@ const styles = StyleSheet.create({
     position: 'absolute',
     backgroundColor: 'transparent',
     color: '#a69f9a',
-    fontSize: 22,
+    fontSize: Dimensions.get('window').width * (22/375),
     fontFamily: 'eurostile',
     transform: [
       {rotate: '-45deg'},
       {scaleX: 1.3},
-      {translate: [Dimensions.get('window').width * 0.075 * 1.3, -1 * Dimensions.get('window').width * 0.05 * 0.9]}
+      {translate: [Dimensions.get('window').width * 0.075 * 1.2, -1 * Dimensions.get('window').width * 0.05 * 0.8]}
     ]
   },
 
@@ -233,7 +233,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     backgroundColor: 'transparent',
     color: '#a69f9a',
-    fontSize: 22,
+    fontSize: Dimensions.get('window').width * (22/375),
     fontFamily: 'eurostile',
     transform: [
       {rotate: '0deg'},
