@@ -37,7 +37,8 @@ class DPad extends React.Component {
               <View style={[styles.rightArrowView, 
                             !this.props.currentButtonPresses.down && !this.props.currentButtonPresses.left && !this.props.currentButtonPresses.right && !this.props.currentButtonPresses.up ? {borderLeftColor: '#252622'} : null,
                             this.props.currentButtonPresses.left ? {borderLeftColor: '#5d5e5a', borderRightColor: '#5d5e5a'} : null,
-                            this.props.currentButtonPresses.right ? {borderLeftColor: '#252622', borderRightColor: '#252622', height: Dimensions.get('window').width * (0.42 / 3) + Dimensions.get('window').width * (7.4/414)} : null,
+                            this.props.currentButtonPresses.right && Dimensions.get('window').width===320 ? {borderLeftColor: '#252622', borderRightColor: '#252622', height: Dimensions.get('window').width * (0.42 / 3) + Dimensions.get('window').width * (7/414)} : null,
+                            this.props.currentButtonPresses.right && Dimensions.get('window').width!==320 ? {borderLeftColor: '#252622', borderRightColor: '#252622', height: Dimensions.get('window').width * (0.42 / 3) + Dimensions.get('window').width * (7.4/414)} : null,
                             this.props.currentButtonPresses.up ? {borderLeftColor: '#5d5e5a', borderRightColor: '#252622'} : null,
                             this.props.currentButtonPresses.down ? {borderLeftColor: '#252622', borderRightColor: '#5d5e5a'} : null]}>
                 <View style={[this.props.currentButtonPresses.right ? styles.rightArrowFillerPressed: null,
