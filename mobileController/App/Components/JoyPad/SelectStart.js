@@ -23,11 +23,11 @@ class SelectStart extends React.Component {
                       this.props.currentButtonPresses.start ? {backgroundColor: 'transparent'} : null]}/>
 
         <Text allowFontScaling={false} style={[styles.selectText,
-                      this.props.currentButtonPresses.select ? { transform: [  {scaleX: 0.6}, {skewX: '-25deg'}, {translate: [Dimensions.get('window').width* 0.002, Dimensions.get('window').width* 0.005]}] } : null]}>
+                      this.props.currentButtonPresses.select ? { transform: [  {scaleX: 0.6}, {skewX: '-25deg'}, {translate: [Dimensions.get('window').width* 0.002, Dimensions.get('window').width* 0.003]}] } : null]}>
           SELECT
         </Text>
         <Text allowFontScaling={false} style={[styles.startText,
-                      this.props.currentButtonPresses.start ? { transform: [  {scaleX: 0.6}, {skewX: '-25deg'}, {translate: [Dimensions.get('window').width* 0.002, Dimensions.get('window').width* 0.005]}] } : null]}>
+                      this.props.currentButtonPresses.start ? { transform: [  {scaleX: 0.6}, {skewX: '-25deg'}, {translate: [Dimensions.get('window').width* 0.002, Dimensions.get('window').width* 0.003]}] } : null]}>
           START
         </Text>
 
@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: Dimensions.get('window').width* 0.253,
     borderBottomRightRadius: Dimensions.get('window').width* 0.253,
     transform: [
-      {translate: [0, Dimensions.get('window').width* 0.005]}
+      {translate: [0, Dimensions.get('window').width* 0.003]}
     ]
   },
   startBottomView: {
@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: Dimensions.get('window').width* 0.253,
     borderBottomRightRadius: Dimensions.get('window').width* 0.253,
     transform: [
-      {translate: [0, Dimensions.get('window').width* 0.005]}
+      {translate: [0, Dimensions.get('window').width* 0.003]}
     ]
   },
   selectTopView: {
@@ -79,6 +79,9 @@ const styles = StyleSheet.create({
     borderTopRightRadius: Dimensions.get('window').width* 0.288,
     borderBottomLeftRadius: Dimensions.get('window').width* 0.253,
     borderBottomRightRadius: Dimensions.get('window').width* 0.253,
+    transform: [
+      {translate: [0, Dimensions.get('window').width* -0.007]}
+    ]
   },
   startTopView: {
     position: 'absolute',
@@ -91,6 +94,9 @@ const styles = StyleSheet.create({
     borderTopRightRadius: Dimensions.get('window').width* 0.288,
     borderBottomLeftRadius: Dimensions.get('window').width* 0.253,
     borderBottomRightRadius: Dimensions.get('window').width* 0.253,
+    transform: [
+      {translate: [0, Dimensions.get('window').width* -0.007]}
+    ]
   },
   selectText: {
     position: 'absolute',
@@ -104,6 +110,7 @@ const styles = StyleSheet.create({
     transform: [
       {scaleX: 0.6},
       {skewX: '-25deg'},
+      {translate: [0, Dimensions.get('window').width* -0.007]}
     ]
   },
   startText: {
@@ -118,6 +125,7 @@ const styles = StyleSheet.create({
     transform: [
       {scaleX: 0.6},
       {skewX: '-25deg'},
+      {translate: [0, Dimensions.get('window').width* -0.007]}
     ]
   },
 });
