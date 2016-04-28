@@ -9,6 +9,16 @@ const {
   TouchableOpacity,
 } = React;
 
+// On the iPhone 6+, if the app is launched in landscape, Dimensions.get('window').width returns the height and vice versa for width so we fix that here
+var windowWidth, windowHeight;
+if (Dimensions.get('window').width===736) {
+  windowWidth = 414;
+  windowHeight = 736
+} else {
+  windowWidth = Dimensions.get('window').width;
+  windowHeight = Dimensions.get('window').height;
+}
+
 class PauseModal extends React.Component {
   render() {
     return (
@@ -32,8 +42,8 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 0,
     left: 0,
-    height: Dimensions.get('window').width,
-    width: Dimensions.get('window').height,
+    height: windowWidth,
+    width: windowHeight,
     backgroundColor: 'rgba(0,0,0,0.8)',
     flexDirection: 'column',
     alignItems:'center',
@@ -44,22 +54,22 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 30,
     fontWeight: 'bold',
-    marginTop: Dimensions.get('window').width * -0.2,
+    marginTop: windowWidth * -0.2,
   },
   resume: {
     flexDirection: 'row',
-    marginTop: Dimensions.get('window').width * 0.2
+    marginTop: windowWidth * 0.2
   },
   resumeText: {
     fontFamily: 'docker',
     color: 'white',
     fontSize: 20,
     fontWeight: 'bold',
-    marginLeft: Dimensions.get('window').width * 0.05,
-    marginTop: Dimensions.get('window').width * 0.045
+    marginLeft: windowWidth * 0.05,
+    marginTop: windowWidth * 0.045
   },
   pair: {
-    marginTop: Dimensions.get('window').width * 0.05,
+    marginTop: windowWidth * 0.05,
     flexDirection: 'row',
   },
   pairText: {
@@ -67,8 +77,8 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 20,
     fontWeight: 'bold',
-    marginLeft: Dimensions.get('window').width * 0.05,
-    marginTop: Dimensions.get('window').width * 0.045
+    marginLeft: windowWidth * 0.05,
+    marginTop: windowWidth * 0.045
   },
 });
 

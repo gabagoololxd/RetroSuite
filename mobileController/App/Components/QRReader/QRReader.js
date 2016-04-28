@@ -22,6 +22,16 @@ const {
   NetInfo,
 } = React;
 
+// On the iPhone 6+, if the app is launched in landscape, Dimensions.get('window').width returns the height and vice versa for width so we fix that here
+var windowWidth, windowHeight;
+if (Dimensions.get('window').width===736) {
+  windowWidth = 414;
+  windowHeight = 736
+} else {
+  windowWidth = Dimensions.get('window').width;
+  windowHeight = Dimensions.get('window').height;
+}
+
 class QRReader extends React.Component {
   constructor(props) {
     super(props);
@@ -36,7 +46,7 @@ class QRReader extends React.Component {
 
   componentDidMount() {
     Orientation.lockToPortrait(); //this will lock the view to Portrait
-    
+
     // Determine user permissions for the camera; if permission is authorized, use the camera/app; 
     // Otherwise, notify the user that they must allow camera access and provide a link to settings where they can do so
     Permissions.cameraPermissionStatus()
@@ -54,23 +64,23 @@ class QRReader extends React.Component {
         }
       });
     
-    // //for development purposes, simulates successful qr scan
-    // const openJoyPadContainerCallback = () => {
-    //   const navigator = this.props.navigator;
-    //   const turnCameraOn = this.turnCameraOn.bind(this);
-    //   const turnCameraOff = this.turnCameraOff.bind(this);
-    //   turnCameraOff();
-    //   //open up the JoyPadContainer
-    //   navigator.push({
-    //     component: JoyPadContainer,
-    //     turnCameraOn: turnCameraOn.bind(this),
-    //     sceneConfig: {
-    //       ...Navigator.SceneConfigs.FloatFromBottom,
-    //       gestures: {} //disable ability to swipe to pop back from JoyPadContainer to QRReader once past the ip address page
-    //     }
-    //   });
-    // }
-    // webSocket.PairController('10.0.0.215:1337', openJoyPadContainerCallback);
+    //for development purposes, simulates successful qr scan
+    const openJoyPadContainerCallback = () => {
+      const navigator = this.props.navigator;
+      const turnCameraOn = this.turnCameraOn.bind(this);
+      const turnCameraOff = this.turnCameraOff.bind(this);
+      turnCameraOff();
+      //open up the JoyPadContainer
+      navigator.push({
+        component: JoyPadContainer,
+        turnCameraOn: turnCameraOn.bind(this),
+        sceneConfig: {
+          ...Navigator.SceneConfigs.FloatFromBottom,
+          gestures: {} //disable ability to swipe to pop back from JoyPadContainer to QRReader once past the ip address page
+        }
+      });
+    }
+    webSocket.PairController('10.0.0.215:1337', openJoyPadContainerCallback);
   }
 
   _onBarCodeRead(e) {
@@ -108,11 +118,11 @@ class QRReader extends React.Component {
     // autofocus camera
     // when camera permissions are off, open up a modal that says we need the camera; yes link to settings to enable
     // when power button is pressed and app reopens, the connect is lost so it should open as the camera again
-    // when 6+ opens in landscape
+    // notify user when connection disconnects
 
-    // animate abxy select/start? 
     // ABXY overlap / touch radius options
     // move components around?
+    // pause button must be consistent with other buttons
   }
 
   _torchEnabled() {
@@ -255,13 +265,12 @@ const styles = StyleSheet.create({
     backgroundColor: 'black'
   },
   camera: {
-    height: Dimensions.get('window').height,
-    width: Dimensions.get('window').width,
+    height: windowHeight,
+    width: windowWidth,
   },
   segments: {
     marginTop: 25
   },
-
   rectanglePlaceholder: {
     flex: 1,
     alignItems: 'center',
@@ -270,8 +279,8 @@ const styles = StyleSheet.create({
   },
 
   rectangleContainer: {
-    height: Dimensions.get('window').height,
-    width: Dimensions.get('window').width,
+    height: windowHeight,
+    width: windowWidth,
     position: 'absolute',
     left: 0,
     top: 0,
@@ -279,44 +288,44 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   rectangleTopLeft: {
-    height: 1/4 * Dimensions.get('window').width,
-    width: 1/4 * Dimensions.get('window').width,
+    height: 1/4 * windowWidth,
+    width: 1/4 * windowWidth,
     position: 'absolute',
-    left: Dimensions.get('window').width - 311/375 * Dimensions.get('window').width - 7,
-    top: Dimensions.get('window').height * 0.25 - 7 ,
+    left: windowWidth - 311/375 * windowWidth - 7,
+    top: windowHeight * 0.25 - 7 ,
     borderTopWidth: 2,
     borderLeftWidth: 2,
     borderColor: '#ededed',
     backgroundColor: 'transparent',
   },
   rectangleTopRight: {
-    height: 1/4 * Dimensions.get('window').width,
-    width: 1/4 * Dimensions.get('window').width,
+    height: 1/4 * windowWidth,
+    width: 1/4 * windowWidth,
     position: 'absolute',
-    top: Dimensions.get('window').height * 0.25 - 7,
-    right: Dimensions.get('window').width - 311/375 * Dimensions.get('window').width - 7,
+    top: windowHeight * 0.25 - 7,
+    right: windowWidth - 311/375 * windowWidth - 7,
     borderTopWidth: 2,
     borderRightWidth: 2,
     borderColor: '#ededed',
     backgroundColor: 'transparent',
   },
   rectangleBottomLeft: {
-    height: 1/4 * Dimensions.get('window').width,
-    width: 1/4 * Dimensions.get('window').width,
+    height: 1/4 * windowWidth,
+    width: 1/4 * windowWidth,
     position: 'absolute',
-    left: Dimensions.get('window').width - 311/375 * Dimensions.get('window').width - 7,
-    bottom: Dimensions.get('window').height - Dimensions.get('window').height * 0.25 - Dimensions.get('window').width * 2/3 - 7,
+    left: windowWidth - 311/375 * windowWidth - 7,
+    bottom: windowHeight - windowHeight * 0.25 - windowWidth * 2/3 - 7,
     borderBottomWidth: 2,
     borderLeftWidth: 2,
     borderColor: '#ededed',
     backgroundColor: 'transparent',
   },
   rectangleBottomRight: {
-    height: 1/4 * Dimensions.get('window').width,
-    width: 1/4 * Dimensions.get('window').width,
+    height: 1/4 * windowWidth,
+    width: 1/4 * windowWidth,
     position: 'absolute',
-    right: Dimensions.get('window').width - 311/375 * Dimensions.get('window').width - 7,
-    bottom: Dimensions.get('window').height - Dimensions.get('window').height * 0.25 - Dimensions.get('window').width * 2/3 - 7,
+    right: windowWidth - 311/375 * windowWidth - 7,
+    bottom: windowHeight - windowHeight * 0.25 - windowWidth * 2/3 - 7,
     borderBottomWidth: 2,
     borderRightWidth: 2,
     borderColor: '#ededed',
@@ -351,32 +360,32 @@ const styles = StyleSheet.create({
   },
 
   overlayTop: {
-    height: Dimensions.get('window').height * 0.25,
-    width: Dimensions.get('window').width,
+    height: windowHeight * 0.25,
+    width: windowWidth,
     backgroundColor: 'rgba(0,0,0,0.65)',
     position: 'absolute',
     left: 0,
     top: 0,
   },
   overlayRight: {
-    height: Dimensions.get('window').width * 2/3,
-    width: Dimensions.get('window').width - 311/375 * Dimensions.get('window').width,
+    height: windowWidth * 2/3,
+    width: windowWidth - 311/375 * windowWidth,
     backgroundColor: 'rgba(0,0,0,0.65)',
     position: 'absolute',
     right: 0,
-    top: Dimensions.get('window').height * 0.25,
+    top: windowHeight * 0.25,
   },
   overlayLeft: {
-    height: Dimensions.get('window').width * 2/3,
-    width: Dimensions.get('window').width - 311/375 * Dimensions.get('window').width,
+    height: windowWidth * 2/3,
+    width: windowWidth - 311/375 * windowWidth,
     backgroundColor: 'rgba(0,0,0,0.65)',
     position: 'absolute',
     left: 0,
-    top: Dimensions.get('window').height * 0.25
+    top: windowHeight * 0.25
   },
   overlayBottom: {
-    height: Dimensions.get('window').height - Dimensions.get('window').height * 0.25 - Dimensions.get('window').width * 2/3,
-    width: Dimensions.get('window').width,
+    height: windowHeight - windowHeight * 0.25 - windowWidth * 2/3,
+    width: windowWidth,
     backgroundColor: 'rgba(0,0,0,0.65)',
     position: 'absolute',
     left: 0,

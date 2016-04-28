@@ -19,6 +19,16 @@ const {
   StatusBarIOS,
 } = React;
 
+// On the iPhone 6+, if the app is launched in landscape, Dimensions.get('window').width returns the height and vice versa for width so we fix that here
+var windowWidth, windowHeight;
+if (Dimensions.get('window').width===736) {
+  windowWidth = 414;
+  windowHeight = 736
+} else {
+  windowWidth = Dimensions.get('window').width;
+  windowHeight = Dimensions.get('window').height;
+}
+
 // This container component holds JoyPad methods, determines the touch areas of each button, determines which buttons are pressed, and what messages to send to the websocket server
 class JoyPadContainer extends React.Component {
   constructor(props) {
@@ -60,7 +70,7 @@ class JoyPadContainer extends React.Component {
         select: false
       },
 
-      // 
+      // the most recent DPad arrow button pressed; used to solve rendering conflicts if user presses multiple DPad buttons
       latestDPadTouch: undefined,
 
       // information about the current layout of each button/set of buttons: x coord, y coord, width, height
@@ -77,15 +87,15 @@ class JoyPadContainer extends React.Component {
     };
 
     // functions used by webSocketMethods.js defined here:
-    global.pause = () => {
+    pause = () => {
       this.setState({showPauseModal: true});
     };
-    global.resume = () => {
+    resume = () => {
       this.setState({showPauseModal: false});
     };
 
     // TODO: notify user that they were disconnected
-    global.onclose = () => {
+    onclose = () => {
       navigator = this.props.navigator;
       turnCameraOn = this.props.route.turnCameraOn.bind(this);
       navigator.pop();
@@ -349,7 +359,7 @@ class JoyPadContainer extends React.Component {
         </View>
 
         <TouchableOpacity style={styles.pauseButton} onPress={this._pause.bind(this)}>
-          <FontAwesomeIcon name="pause-circle" size={Dimensions.get('window').width* 0.106} allowFontScaling={false} color="#353632"/>
+          <FontAwesomeIcon name="pause-circle" size={windowWidth* 0.106} allowFontScaling={false} color="#353632"/>
         </TouchableOpacity>
 
         {this.state.showPauseModal ? <PauseModal _resume={this._resume.bind(this)} _pairController={this._pairController.bind(this)}/> : null}
@@ -363,70 +373,70 @@ class JoyPadContainer extends React.Component {
 const styles = StyleSheet.create({
   DPadArea: {
     position: 'absolute',
-    top: Dimensions.get('window').width * .15,
+    top: windowWidth * .15,
     left: 0, 
     width: 0,
     height: 0,
-    borderTopWidth: Dimensions.get('window').width * 0.33,
+    borderTopWidth: windowWidth * 0.33,
     borderTopColor: 'transparent',
     borderLeftColor: 'transparent',
-    borderLeftWidth: Dimensions.get('window').width * 0.4,
+    borderLeftWidth: windowWidth * 0.4,
     borderRightColor: 'transparent',
-    borderRightWidth: Dimensions.get('window').width * 0.4,
+    borderRightWidth: windowWidth * 0.4,
     borderBottomColor: 'transparent',
-    borderBottomWidth: Dimensions.get('window').width * 0.33,
+    borderBottomWidth: windowWidth * 0.33,
   },
   ABXYArea: {
     position: 'absolute',
-    top: Dimensions.get('window').width * .15,
+    top: windowWidth * .15,
     right: 0, 
     width: 0,
     height: 0,
-    borderTopWidth: Dimensions.get('window').width * 0.425,
+    borderTopWidth: windowWidth * 0.425,
     borderTopColor: 'transparent',
     borderLeftColor: 'transparent',
-    borderLeftWidth: Dimensions.get('window').width * 0.4,
+    borderLeftWidth: windowWidth * 0.4,
     borderRightColor: 'transparent',
-    borderRightWidth: Dimensions.get('window').width * 0.4,
+    borderRightWidth: windowWidth * 0.4,
     borderBottomColor: 'transparent',
-    borderBottomWidth: Dimensions.get('window').width * 0.425,
+    borderBottomWidth: windowWidth * 0.425,
   },
   lShoulderArea: {
     position: 'absolute',
     top: 0,
     left: 0, 
-    width: Dimensions.get('window').height * 0.45,
-    height: Dimensions.get('window').width * 0.15,
+    width: windowHeight * 0.45,
+    height: windowWidth * 0.15,
     backgroundColor: 'transparent'
   },
   rShoulderArea: {
     position: 'absolute',
     top: 0,
     right: 0, 
-    width: Dimensions.get('window').height * 0.45,
-    height: Dimensions.get('window').width * 0.15,
+    width: windowHeight * 0.45,
+    height: windowWidth * 0.15,
     backgroundColor: 'transparent'
   },
   selectArea: {
     position: 'absolute',
     bottom: 0,
     left: 0, 
-    width: (Dimensions.get('window').width * 0.8 ) / 2,
-    height: Dimensions.get('window').width * 0.19,
+    width: (windowWidth * 0.8 ) / 2,
+    height: windowWidth * 0.19,
     backgroundColor: 'transparent'
   },
   startArea: {
     position: 'absolute',
     bottom: 0,
-    left: (Dimensions.get('window').width * 0.8 ) / 2, 
-    width: (Dimensions.get('window').width * 0.8 ) / 2,
-    height: Dimensions.get('window').width * 0.19,
+    left: (windowWidth * 0.8 ) / 2, 
+    width: (windowWidth * 0.8 ) / 2,
+    height: windowWidth * 0.19,
     backgroundColor: 'transparent'
   },
   pauseButton: {
     position: 'absolute',
-    bottom: Dimensions.get('window').width * 0.04,
-    right: Dimensions.get('window').width * 0.02666,
+    bottom: windowWidth * 0.04,
+    right: windowWidth * 0.02666,
   },
 });
 
