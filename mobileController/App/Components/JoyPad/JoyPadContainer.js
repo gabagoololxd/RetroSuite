@@ -60,6 +60,9 @@ class JoyPadContainer extends React.Component {
         select: false
       },
 
+      // 
+      latestDPadTouch: undefined,
+
       // information about the current layout of each button/set of buttons: x coord, y coord, width, height
       // used to determine which area of the screen each button is taking up so later we can calculate if a touch is within the area of the button
       // filled in by _onLayout methods below
@@ -237,7 +240,11 @@ class JoyPadContainer extends React.Component {
   _determinePressesAndReleases(e) {
     // List the coordinates of all the active touches on the screen
     const touchCoordinates = _.map(e.nativeEvent.touches, function(touch) {
-      return [touch.pageX, touch.pageY];
+      return {
+        x: touch.pageX,
+        y: touch.pageY,
+        identifier: touch.identifier
+      };
     });
 
     // Set previousButtonPresses to be what was currentButtonPresses and re-initialize currentButtonPresses as all false
@@ -259,22 +266,37 @@ class JoyPadContainer extends React.Component {
     }});
     
     // Look through each touchCoordinate; if any touchCoordinate is pressing any button, set that button to true
+    // For the DPad buttons, set the button to be the touch identifier # so we know what order the DPad buttons were pressed in; when we render the DPad view, 
+    // only one button can be shown as pressed at one time so we need to keep track of which is the most recent one pressed, next most recent one pressed when the most recent one is released, etc.
     _.each(touchCoordinates, function(touchCoordinate) {
-      self._pressingA(touchCoordinate) ? self.setState({currentButtonPresses: _.extend(self.state.currentButtonPresses, {a: true})}) : null;
-      self._pressingB(touchCoordinate) ? self.setState({currentButtonPresses: _.extend(self.state.currentButtonPresses, {b: true})}) : null;
-      self._pressingX(touchCoordinate) ? self.setState({currentButtonPresses: _.extend(self.state.currentButtonPresses, {x: true})}) : null;
-      self._pressingY(touchCoordinate) ? self.setState({currentButtonPresses: _.extend(self.state.currentButtonPresses, {y: true})}) : null;
-      self._pressingRight(touchCoordinate) ? self.setState({currentButtonPresses: _.extend(self.state.currentButtonPresses, {right: true})}) : null;
-      self._pressingDown(touchCoordinate) ? self.setState({currentButtonPresses: _.extend(self.state.currentButtonPresses, {down: true})}) : null;
-      self._pressingUp(touchCoordinate) ? self.setState({currentButtonPresses: _.extend(self.state.currentButtonPresses, {up: true})}) : null;
-      self._pressingLeft(touchCoordinate) ? self.setState({currentButtonPresses: _.extend(self.state.currentButtonPresses, {left: true})}) : null;
-      self._pressingLShoulder(touchCoordinate) ? self.setState({currentButtonPresses: _.extend(self.state.currentButtonPresses, {lShoulder: true})}) : null;
-      self._pressingRShoulder(touchCoordinate) ? self.setState({currentButtonPresses: _.extend(self.state.currentButtonPresses, {rShoulder: true})}) : null;
-      self._pressingSelect(touchCoordinate) ? self.setState({currentButtonPresses: _.extend(self.state.currentButtonPresses, {select: true})}) : null;
-      self._pressingStart(touchCoordinate) ? self.setState({currentButtonPresses: _.extend(self.state.currentButtonPresses, {start: true})}) : null;
+      // console.log(touchCoordinate.x);
+      self._pressingA([touchCoordinate.x, touchCoordinate.y]) ? self.setState({currentButtonPresses: _.extend(self.state.currentButtonPresses, {a: true})}) : null;
+      self._pressingB([touchCoordinate.x, touchCoordinate.y]) ? self.setState({currentButtonPresses: _.extend(self.state.currentButtonPresses, {b: true})}) : null;
+      self._pressingX([touchCoordinate.x, touchCoordinate.y]) ? self.setState({currentButtonPresses: _.extend(self.state.currentButtonPresses, {x: true})}) : null;
+      self._pressingY([touchCoordinate.x, touchCoordinate.y]) ? self.setState({currentButtonPresses: _.extend(self.state.currentButtonPresses, {y: true})}) : null;
+      self._pressingRight([touchCoordinate.x, touchCoordinate.y]) ? self.setState({currentButtonPresses: _.extend(self.state.currentButtonPresses, {right: touchCoordinate.identifier})}) : null;
+      self._pressingDown([touchCoordinate.x, touchCoordinate.y]) ? self.setState({currentButtonPresses: _.extend(self.state.currentButtonPresses, {down: touchCoordinate.identifier})}) : null;
+      self._pressingUp([touchCoordinate.x, touchCoordinate.y]) ? self.setState({currentButtonPresses: _.extend(self.state.currentButtonPresses, {up: touchCoordinate.identifier})}) : null;
+      self._pressingLeft([touchCoordinate.x, touchCoordinate.y]) ? self.setState({currentButtonPresses: _.extend(self.state.currentButtonPresses, {left: touchCoordinate.identifier})}) : null;
+      self._pressingLShoulder([touchCoordinate.x, touchCoordinate.y]) ? self.setState({currentButtonPresses: _.extend(self.state.currentButtonPresses, {lShoulder: true})}) : null;
+      self._pressingRShoulder([touchCoordinate.x, touchCoordinate.y]) ? self.setState({currentButtonPresses: _.extend(self.state.currentButtonPresses, {rShoulder: true})}) : null;
+      self._pressingSelect([touchCoordinate.x, touchCoordinate.y]) ? self.setState({currentButtonPresses: _.extend(self.state.currentButtonPresses, {select: true})}) : null;
+      self._pressingStart([touchCoordinate.x, touchCoordinate.y]) ? self.setState({currentButtonPresses: _.extend(self.state.currentButtonPresses, {start: true})}) : null;
     });
-
     console.log('state', self.state.currentButtonPresses);
+
+    // Figure out which DPad button was the most recent one hit so that if the user hits two DPad buttons at the same time, there won't be strange rendering
+    var DPadTouches = {
+      'up' : self.state.currentButtonPresses.up,
+      'down' : self.state.currentButtonPresses.down,
+      'left' : self.state.currentButtonPresses.left,
+      'right' : self.state.currentButtonPresses.right,
+    }
+    var largestTouchIdentifier = Object.keys(DPadTouches).reduce(function(m, k){ return DPadTouches[k] > m ? DPadTouches[k] : m }, -Infinity);
+    var latestDPadTouch = _.findKey(DPadTouches, (DPadTouch) => {
+      return DPadTouch === largestTouchIdentifier;
+    });
+    this.setState({latestDPadTouch: latestDPadTouch});
 
     // Compare previousButtonPresses with currentButtonPresses; if there is a change, then tell the chrome app webSocket server (either press or release)
     this.state.currentButtonPresses.a !== this.state.previousButtonPresses.a ? (this.state.currentButtonPresses.a ? webSocket.Press('a') : webSocket.Release('a')) : null;
@@ -322,7 +344,7 @@ class JoyPadContainer extends React.Component {
           <View style={styles.selectArea} onLayout={this._onLayoutSelect.bind(this)}/>
           <View style={styles.startArea} onLayout={this._onLayoutStart.bind(this)}/>
 
-          <JoyPad currentButtonPresses={this.state.currentButtonPresses}/>
+          <JoyPad currentButtonPresses={this.state.currentButtonPresses} latestDPadTouch={this.state.latestDPadTouch}/>
 
         </View>
 

@@ -30,8 +30,6 @@ class SelectStart extends React.Component {
                       this.props.currentButtonPresses.start ? { transform: [  {scaleX: 0.6}, {skewX: '-25deg'}, {translate: [Dimensions.get('window').width* 0.002, Dimensions.get('window').width* 0.003]}] } : null]}>
           START
         </Text>
-
-
       </View>
     );
   }
