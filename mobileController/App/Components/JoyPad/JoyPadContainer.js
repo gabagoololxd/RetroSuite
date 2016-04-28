@@ -1,5 +1,4 @@
 const React = require('react-native');
-const FontAwesomeIcon = require('react-native-vector-icons/FontAwesome');
 const Orientation = require('react-native-orientation');
 const _ = require('lodash');
 
@@ -8,6 +7,7 @@ const utils = require('../../Utils/utils');
 const PauseModal = require('./PauseModal');
 const JoyPad = require('./JoyPad');
 const SelectStart = require('./SelectStart');
+const PauseButton = require('./PauseButton');
 
 const {
   Dimensions,
@@ -15,7 +15,6 @@ const {
   Text,
   View,
   Image,
-  TouchableOpacity,
   StatusBarIOS,
 } = React;
 
@@ -355,12 +354,9 @@ class JoyPadContainer extends React.Component {
           <View style={styles.startArea} onLayout={this._onLayoutStart.bind(this)}/>
 
           <JoyPad currentButtonPresses={this.state.currentButtonPresses} latestDPadTouch={this.state.latestDPadTouch}/>
+          <PauseButton _pause={this._pause.bind(this)}/>
 
         </View>
-
-        <TouchableOpacity style={styles.pauseButton} onPress={this._pause.bind(this)}>
-          <FontAwesomeIcon name="pause-circle" size={windowWidth* 0.106} allowFontScaling={false} color="#353632"/>
-        </TouchableOpacity>
 
         {this.state.showPauseModal ? <PauseModal _resume={this._resume.bind(this)} _pairController={this._pairController.bind(this)}/> : null}
 
@@ -432,11 +428,6 @@ const styles = StyleSheet.create({
     width: (windowWidth * 0.8 ) / 2,
     height: windowWidth * 0.19,
     backgroundColor: 'transparent'
-  },
-  pauseButton: {
-    position: 'absolute',
-    bottom: windowWidth * 0.04,
-    right: windowWidth * 0.02666,
   },
 });
 
