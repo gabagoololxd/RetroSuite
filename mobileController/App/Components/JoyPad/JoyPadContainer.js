@@ -16,6 +16,7 @@ const {
   View,
   Image,
   StatusBarIOS,
+  AppStateIOS,
 } = React;
 
 // On the iPhone 6+, if the app is launched in landscape, Dimensions.get('window').width returns the height and vice versa for width so we fix that here
@@ -33,6 +34,9 @@ class JoyPadContainer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      // tracks if app has been closed; if it it closed and loses connection to the websocket server, then pop back to QRReader
+      appState: undefined,
+
       // set to true when game is paused
       showPauseModal: false, 
 
@@ -108,6 +112,14 @@ class JoyPadContainer extends React.Component {
 
   componentDidMount() {
     Orientation.lockToLandscapeRight(); // this will lock the view to Landscape
+    AppStateIOS.addEventListener('change', this._handleAppStateChange.bind(this));  // tracks if app has been closed; if it it closed and loses connection to the websocket server, then pop back to QRReader
+  }
+
+  _handleAppStateChange(currentAppState) {
+    this.setState({ appState : currentAppState });
+    if(ws.readyState !== 1) {
+      global.onclose();
+    }
   }
 
   // Method used to pause the game and methods used while the game is paused:
@@ -346,6 +358,7 @@ class JoyPadContainer extends React.Component {
   // Render the pause modal if the user clicks the pause button
   render() {
     StatusBarIOS.setHidden('true');
+
     return (
       <View style={{flex: 1}}>
         <View style={{flex: 1}} onTouchStart={this._onTouchStart.bind(this)} onTouchMove={this._onTouchMove.bind(this)} onTouchEnd={this._onTouchEnd.bind(this)}>

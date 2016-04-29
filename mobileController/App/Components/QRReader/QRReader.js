@@ -47,7 +47,6 @@ class QRReader extends React.Component {
       handleFocusChanged: () => {},
       selectedIndex: 0,
       showDisconnectedModal: false,
-
     }
   }
 
@@ -59,27 +58,27 @@ class QRReader extends React.Component {
     // Otherwise, notify the user that they must allow camera access and provide a link to settings where they can do so
     this._checkCameraPermissions();
     
-    //for development purposes, simulates successful qr scan
-    const openJoyPadContainerCallback = () => {
-      const navigator = this.props.navigator;
-      const _turnCameraOn = this._turnCameraOn.bind(this);
-      const _turnCameraOff = this._turnCameraOff.bind(this);
+    // //for development purposes, simulates successful qr scan
+    // const openJoyPadContainerCallback = () => {
+    //   const navigator = this.props.navigator;
+    //   const _turnCameraOn = this._turnCameraOn.bind(this);
+    //   const _turnCameraOff = this._turnCameraOff.bind(this);
 
-      const _showDisconnectedModal = this._showDisconnectedModal.bind(this);
+    //   const _showDisconnectedModal = this._showDisconnectedModal.bind(this);
 
-      _turnCameraOff();
-      //open up the JoyPadContainer
-      navigator.push({
-        component: JoyPadContainer,
-        _turnCameraOn: _turnCameraOn.bind(this),
-        _showDisconnectedModal: _showDisconnectedModal.bind(this),
-        sceneConfig: {
-          ...Navigator.SceneConfigs.FloatFromBottom,
-          gestures: {} //disable ability to swipe to pop back from JoyPadContainer to QRReader once past the ip address page
-        }
-      });
-    }
-    webSocket.PairController('10.0.0.215:1337', openJoyPadContainerCallback);
+    //   _turnCameraOff();
+    //   //open up the JoyPadContainer
+    //   navigator.push({
+    //     component: JoyPadContainer,
+    //     _turnCameraOn: _turnCameraOn.bind(this),
+    //     _showDisconnectedModal: _showDisconnectedModal.bind(this),
+    //     sceneConfig: {
+    //       ...Navigator.SceneConfigs.FloatFromBottom,
+    //       gestures: {} //disable ability to swipe to pop back from JoyPadContainer to QRReader once past the ip address page
+    //     }
+    //   });
+    // }
+    // webSocket.PairController('10.0.0.215:1337', openJoyPadContainerCallback);
   }
 
   componentWillUnmount() {
@@ -88,7 +87,8 @@ class QRReader extends React.Component {
 
   _handleAppStateChange(currentAppState) {
     this.setState({ appState : currentAppState });
-    //Check again if the user switched away and came back to the app
+    // Check camera permissions again if the user switched away and came back to the app
+    // handles edge case where user clicks "Yes" button, but doesn't actually give permissions, then comes back to the app
     if(currentAppState==='active') {
       this._checkCameraPermissions();
     }
@@ -160,7 +160,6 @@ class QRReader extends React.Component {
 
     // TODO:
     // make instructions better with multiple click through steps and screenshots
-    // when power button is pressed and app reopens, the connect is lost so it should open as the camera again
 
     // autofocus camera
     // ABXY overlap / touch radius options
@@ -273,7 +272,6 @@ class QRReader extends React.Component {
 
               <Modal animated={true}
                      transparent={true}
-                     // onRequestClose={this._hideDisconnectedModal.bind(this)} 
                      visible={this.state.showDisconnectedModal}>
                 <View style={styles.disconnectedAlert} pointerEvents='box-none'> 
                   <View style={styles.disconnectedIcons}>
@@ -352,7 +350,6 @@ class QRReader extends React.Component {
                 </TouchableHighlight>
               </View>
             </Modal>
-
 
             <View style={styles.bottomButtonContainer}>
               <TouchableWithoutFeedback onPress={this._torchEnabled.bind(this)}  underlayColor={'#FC9396'}>
@@ -508,7 +505,6 @@ const styles = StyleSheet.create({
     left: 0,
     bottom: 0,
   },
-
   instructions: {
     flex: 1,
     marginTop: windowWidth * (20/414),
@@ -518,7 +514,6 @@ const styles = StyleSheet.create({
     borderRadius:10,
     padding: windowWidth * (20/414),
   },
-
   cameraPermissionsAlert: {
     flex: 1,
     marginTop: 0.32 * windowHeight,
@@ -527,10 +522,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
     borderRadius: 10,
     padding: windowWidth * (20/414),
-
     alignItems: 'center',
     justifyContent: 'flex-start',
-
   },
   useYourCameraTitleText: {
     textAlign: 'center',
@@ -566,15 +559,7 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: 'bold'
   },
-
   disconnectedAlert: {
-    // flex: 1,
-    // marginTop: 0.32 * windowHeight,
-    // marginBottom: windowWidth===320 ? windowWidth * (325/414) : (windowWidth===414 ? windowWidth * (330/414) : windowWidth * 330/414),
-    // marginHorizontal: windowWidth===320 ? windowWidth * (70/414) : (windowWidth===414 ? windowWidth * (70/414) : windowWidth * 70/414),
-    // backgroundColor: 'rgba(255,255,255, 1)',
-    // borderRadius: 10,
-    
     flex: 1,
     marginTop: 0.32 * windowHeight,
     marginBottom: windowWidth * (310/414),
@@ -582,12 +567,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255, 255, 255, 0.95)',
     borderRadius: 10,
     padding: windowWidth * (20/414),
-
-
     alignItems: 'center',
     flexDirection: 'column',
     justifyContent: 'flex-end',
-
   },
   disconnectedIcons: {
     flex: 3,
@@ -597,23 +579,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
   },
-
   iPhoneIcon: {
     width: windowWidth * (80/375),
     backgroundColor: 'transparent',
     alignItems: 'center',
     paddingRight: windowWidth * (15/375)
-
-
   },
-
   desktopIcon: {
     width: windowWidth * (80/375),
     backgroundColor: 'transparent',
     alignItems: 'center',
     paddingLeft: windowWidth * (15/375)
   },
-
   disconnectedDashXDashIcon: {
     flexDirection: 'row',
     backgroundColor: 'transparent'
@@ -627,7 +604,6 @@ const styles = StyleSheet.create({
   rightDashIcon: {
     backgroundColor: 'transparent',
   },
-
   disconnectedTitleText: {
     flex: 1,
     backgroundColor: 'transparent',
@@ -636,7 +612,6 @@ const styles = StyleSheet.create({
     fontSize: windowWidth * (19/414),
     color: 'black'
   },
-
 });
 
 module.exports = QRReader;
