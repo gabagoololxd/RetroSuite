@@ -57,6 +57,44 @@ class QRReader extends React.Component {
 
     // Determine user permissions for the camera; if permission is authorized, use the camera/app; 
     // Otherwise, notify the user that they must allow camera access and provide a link to settings where they can do so
+    this._checkCameraPermissions();
+    
+    //for development purposes, simulates successful qr scan
+    const openJoyPadContainerCallback = () => {
+      const navigator = this.props.navigator;
+      const _turnCameraOn = this._turnCameraOn.bind(this);
+      const _turnCameraOff = this._turnCameraOff.bind(this);
+
+      const _showDisconnectedModal = this._showDisconnectedModal.bind(this);
+
+      _turnCameraOff();
+      //open up the JoyPadContainer
+      navigator.push({
+        component: JoyPadContainer,
+        _turnCameraOn: _turnCameraOn.bind(this),
+        _showDisconnectedModal: _showDisconnectedModal.bind(this),
+        sceneConfig: {
+          ...Navigator.SceneConfigs.FloatFromBottom,
+          gestures: {} //disable ability to swipe to pop back from JoyPadContainer to QRReader once past the ip address page
+        }
+      });
+    }
+    webSocket.PairController('10.0.0.215:1337', openJoyPadContainerCallback);
+  }
+
+  componentWillUnmount() {
+    AppStateIOS.removeEventListener('change', this._handleAppStateChange);
+  }
+
+  _handleAppStateChange(currentAppState) {
+    this.setState({ appState : currentAppState });
+    //Check again if the user switched away and came back to the app
+    if(currentAppState==='active') {
+      this._checkCameraPermissions();
+    }
+  }
+
+  _checkCameraPermissions() {
     Permissions.cameraPermissionStatus()
       .then(response => {
         if (response == Permissions.StatusUndetermined) {
@@ -85,68 +123,6 @@ class QRReader extends React.Component {
           console.log("Restricted");
         }
       });
-    
-    // //for development purposes, simulates successful qr scan
-    // const openJoyPadContainerCallback = () => {
-    //   const navigator = this.props.navigator;
-    //   const turnCameraOn = this.turnCameraOn.bind(this);
-    //   const turnCameraOff = this.turnCameraOff.bind(this);
-
-    //   const showDisconnectedModal = this.showDisconnectedModal.bind(this);
-
-    //   turnCameraOff();
-    //   //open up the JoyPadContainer
-    //   navigator.push({
-    //     component: JoyPadContainer,
-    //     turnCameraOn: turnCameraOn.bind(this),
-    //     showDisconnectedModal: showDisconnectedModal.bind(this),
-
-    //     sceneConfig: {
-    //       ...Navigator.SceneConfigs.FloatFromBottom,
-    //       gestures: {} //disable ability to swipe to pop back from JoyPadContainer to QRReader once past the ip address page
-    //     }
-    //   });
-    // }
-    // webSocket.PairController('10.0.0.215:1337', openJoyPadContainerCallback);
-  }
-
-  componentWillUnmount() {
-    AppStateIOS.removeEventListener('change', this._handleAppStateChange);
-  }
-
-  _handleAppStateChange(currentAppState) {
-    this.setState({ appState : currentAppState });
-    //Check again if the user switched away and came back to the app
-    if(currentAppState==='active') {
-      Permissions.cameraPermissionStatus()
-        .then(response => {
-          if (response == Permissions.StatusUndetermined) {
-            this.setState({
-              cameraPermissions: undefined,
-              showCameraPermissionsModal: false,
-            });
-            console.log("Undetermined");
-          } else if (response == Permissions.StatusDenied) {
-            this.setState({
-              cameraPermissions: false,
-              showCameraPermissionsModal: true,
-            });
-            console.log("Denied");
-          } else if (response == Permissions.StatusAuthorized) {
-            this.setState({
-              cameraPermissions: true,
-              showCameraPermissionsModal: false,
-            });
-            console.log("Authorized");
-          } else if (response == Permissions.StatusRestricted) {
-            this.setState({
-              cameraPermissions: false,
-              showCameraPermissionsModal: true,
-            });
-            console.log("Restricted");
-          }
-        });
-    }
   }
 
   _onBarCodeRead(e) {
@@ -154,19 +130,18 @@ class QRReader extends React.Component {
 
     const success = () => {
       const navigator = this.props.navigator;
-      const turnCameraOn = this.turnCameraOn.bind(this);
-      const turnCameraOff = this.turnCameraOff.bind(this);
+      const _turnCameraOn = this._turnCameraOn.bind(this);
+      const _turnCameraOff = this._turnCameraOff.bind(this);
 
-      const showDisconnectedModal = this.showDisconnectedModal.bind(this);
+      const _showDisconnectedModal = this._showDisconnectedModal.bind(this);
 
-      turnCameraOff();
+      _turnCameraOff();
 
       //open up the JoyPadContainer
       navigator.push({
         component: JoyPadContainer,
-        turnCameraOn: turnCameraOn.bind(this),
-        showDisconnectedModal: showDisconnectedModal.bind(this),
-
+        _turnCameraOn: _turnCameraOn.bind(this),
+        _showDisconnectedModal: _showDisconnectedModal.bind(this),
         sceneConfig: {
           ...Navigator.SceneConfigs.FloatFromBottom,
           gestures: {} //disable ability to swipe to pop back from JoyPadContainer to QRReader once past the ip address page
@@ -185,9 +160,7 @@ class QRReader extends React.Component {
 
     // TODO:
     // make instructions better with multiple click through steps and screenshots
-    // when camera permissions are off, open up a modal that says we need the camera; yes link to settings to enable
     // when power button is pressed and app reopens, the connect is lost so it should open as the camera again
-    // notify user when connection disconnects
 
     // autofocus camera
     // ABXY overlap / touch radius options
@@ -199,26 +172,24 @@ class QRReader extends React.Component {
     this.state.cameraTorchToggle === Camera.constants.TorchMode.on ? this.setState({ cameraTorchToggle: Camera.constants.TorchMode.off }) : this.setState({ cameraTorchToggle: Camera.constants.TorchMode.on });
   }
 
-  turnCameraOff() { //we want to turn the camera off once the JoyPadContainer mounts because the camera is no longer necessary (until the user has to re-pair with the websockets server)
+  _turnCameraOff() { //we want to turn the camera off once the JoyPadContainer mounts because the camera is no longer necessary (until the user has to re-pair with the websockets server)
     this.setState({cameraOn:false})
   }
-  turnCameraOn() {
+  _turnCameraOn() {
     this.setState({cameraOn:true})
   }
 
-  showDisconnectedModal() {
-    console.log('blahhhh')
+  _showDisconnectedModal() {
     this.setState({showDisconnectedModal:true});
-    this.hideDisconnectedModal();
-  }
 
-  hideDisconnectedModal() {
     var self = this;
     setTimeout(() => {
-      console.log('hide the modalll')
-      self.setState({showDisconnectedModal:false});
-      // this.forceUpdate();
-    }, 5000);
+      self._hideDisconnectedModal();
+    }, 2000);
+  }
+
+  _hideDisconnectedModal() {
+    this.setState({showDisconnectedModal:false});
   }
 
   _onChange(event) {
@@ -228,8 +199,8 @@ class QRReader extends React.Component {
   }
 
   _openCameraPermissions() {
-    Linking.openURL('prefs:root=RETROSUITE').catch(err => console.error('An error occurred', err));
     this.setState({showCameraPermissionsModal: false});
+    Linking.openURL('app-settings:').catch(err => console.error('An error occurred', err));
   }
   
 
@@ -237,19 +208,12 @@ class QRReader extends React.Component {
     StatusBarIOS.setHidden('false');
     StatusBarIOS.setStyle('light-content');
     console.log(this.state);
-
-    // this.state.showDisconnectedModal ? this.hideDisconnectedModal() : null;
-
-    // var showDisconnectedModal = _.once(this.showDisconnectedModal.bind(this));
-
-    // showDisconnectedModal();
-
     
     if (!this.state.cameraOn) {
       return (
         <View style={styles.container}/>
       );
-    } else if(this.state.cameraOn) {
+    } else if (this.state.cameraOn) {
       if(this.state.cameraPermissions !== false) {
         return (
           <View >
@@ -309,21 +273,21 @@ class QRReader extends React.Component {
 
               <Modal animated={true}
                      transparent={true}
-                     onRequestClose={ () => this.setState({ showDisconnectedModal: false }) } 
+                     // onRequestClose={this._hideDisconnectedModal.bind(this)} 
                      visible={this.state.showDisconnectedModal}>
                 <View style={styles.disconnectedAlert} pointerEvents='box-none'> 
                   <View style={styles.disconnectedIcons}>
                     <View style={styles.desktopIcon}>
-                      <IconIon name="ios-monitor-outline" size={60} allowFontScaling={false} color="white"/>
+                      <IconIon name="ios-monitor-outline" size={windowWidth * (60/375)} allowFontScaling={false} color="black"/>
                     </View>
                     <View style={styles.disconnectedDashXDashIcon}>
-                      <IconIon name="ios-minus-empty" size={70} allowFontScaling={false} color="white" style={styles.leftDashIcon} />
-                      <IconIon name="ios-close-empty" size={70} allowFontScaling={false} color="white" style={styles.xIcon} />
-                      <IconIon name="ios-minus-empty" size={70} allowFontScaling={false} color="white" style={styles.rightDashIcon} />
+                      <IconIon name="ios-minus-empty" size={windowWidth * (70/375)} allowFontScaling={false} color="black" style={styles.leftDashIcon} />
+                      <IconIon name="ios-close-empty" size={windowWidth * (70/375)} allowFontScaling={false} color="black" style={styles.xIcon} />
+                      <IconIon name="ios-minus-empty" size={windowWidth * (70/375)} allowFontScaling={false} color="black" style={styles.rightDashIcon} />
                     </View>
 
                     <View style={styles.iPhoneIcon}>
-                      <IconIon name="ios-game-controller-a-outline" size={65} allowFontScaling={false} color="white" />
+                      <IconIon name="ios-game-controller-a-outline" size={windowWidth * (65/375)} allowFontScaling={false} color="black" />
                     </View>
 
                   </View>
@@ -437,6 +401,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   rectangleTopLeft: {
+
     height: 1/4 * windowWidth,
     width: 1/4 * windowWidth,
     position: 'absolute',
@@ -448,6 +413,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   rectangleTopRight: {
+
     height: 1/4 * windowWidth,
     width: 1/4 * windowWidth,
     position: 'absolute',
@@ -459,6 +425,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   rectangleBottomLeft: {
+
     height: 1/4 * windowWidth,
     width: 1/4 * windowWidth,
     position: 'absolute',
@@ -470,6 +437,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   rectangleBottomRight: {
+
     height: 1/4 * windowWidth,
     width: 1/4 * windowWidth,
     position: 'absolute',
@@ -547,17 +515,17 @@ const styles = StyleSheet.create({
     marginBottom: windowWidth * (20/414),
     marginHorizontal: windowWidth * (20/414),
     backgroundColor: '#ffffff',
-    borderRadius: 3,
+    borderRadius:10,
     padding: windowWidth * (20/414),
   },
 
   cameraPermissionsAlert: {
     flex: 1,
     marginTop: 0.32 * windowHeight,
-    marginBottom: windowWidth===320 ? windowWidth * (325/414) : (windowWidth===414 ? windowWidth * (330/414) : windowWidth * 330/414),
-    marginHorizontal: windowWidth===320 ? windowWidth * (62/414) : (windowWidth===414 ? windowWidth * (64/414) : windowWidth * 63/414),
+    marginBottom: windowWidth * (310/414),
+    marginHorizontal: windowWidth * (35/414),
     backgroundColor: '#ffffff',
-    borderRadius: 3,
+    borderRadius: 10,
     padding: windowWidth * (20/414),
 
     alignItems: 'center',
@@ -567,44 +535,55 @@ const styles = StyleSheet.create({
   useYourCameraTitleText: {
     textAlign: 'center',
     fontWeight: 'bold',
-    fontSize: windowWidth * (16/414)
+    fontSize: windowWidth * (20/414)
   },
   line: {
-    marginTop: windowWidth * (6/414),
-    width: windowWidth * (140/414),
+    marginTop: windowWidth * (10/414),
+    width: windowWidth * (175/414),
     height: 2,
     backgroundColor: '#d3d3d3'
   },
   useYourCameraDescriptionText: {
-    marginTop: windowWidth * (3/414),
+    marginTop: windowWidth * (10/414),
     textAlign: 'center',
-    fontSize: windowWidth * (12/414),
-    lineHeight: windowWidth * (20/414)
+    fontSize: windowWidth * (16/414),
+    lineHeight: windowWidth * (20/414),
+    fontWeight: '500'
+
   },
   yesButton: {
-    height: windowWidth * (40/414),
-    width: 180,
-    marginTop: 15,
-    borderRadius: 3,
+    height: windowWidth * (50/414),
+    width: windowWidth * (180/375),
+    marginTop: windowWidth * (15/375),
+    borderRadius: windowWidth * (10/375),
     backgroundColor: '#99559e',
     flexDirection: 'column',
     justifyContent: 'center'
   },
   yesText: {
-    fontSize: 14,
+    fontSize: windowWidth * (18/414),
     textAlign: 'center',
     color: 'white',
     fontWeight: 'bold'
   },
 
   disconnectedAlert: {
+    // flex: 1,
+    // marginTop: 0.32 * windowHeight,
+    // marginBottom: windowWidth===320 ? windowWidth * (325/414) : (windowWidth===414 ? windowWidth * (330/414) : windowWidth * 330/414),
+    // marginHorizontal: windowWidth===320 ? windowWidth * (70/414) : (windowWidth===414 ? windowWidth * (70/414) : windowWidth * 70/414),
+    // backgroundColor: 'rgba(255,255,255, 1)',
+    // borderRadius: 10,
+    
     flex: 1,
     marginTop: 0.32 * windowHeight,
-    marginBottom: windowWidth===320 ? windowWidth * (325/414) : (windowWidth===414 ? windowWidth * (330/414) : windowWidth * 330/414),
-    marginHorizontal: windowWidth===320 ? windowWidth * (62/414) : (windowWidth===414 ? windowWidth * (64/414) : windowWidth * 63/414),
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    borderRadius: 3,
-    
+    marginBottom: windowWidth * (310/414),
+    marginHorizontal: windowWidth * (35/414),
+    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+    borderRadius: 10,
+    padding: windowWidth * (20/414),
+
+
     alignItems: 'center',
     flexDirection: 'column',
     justifyContent: 'flex-end',
@@ -612,7 +591,7 @@ const styles = StyleSheet.create({
   },
   disconnectedIcons: {
     flex: 3,
-    width: windowWidth - (windowWidth===320 ? windowWidth * (62/414) : (windowWidth===414 ? windowWidth * (64/414) : windowWidth * 63/414))*2,
+    width: windowWidth - (windowWidth===320 ? windowWidth * (70/414) : (windowWidth===414 ? windowWidth * (70/414) : windowWidth * 70/414))*2,
     backgroundColor: 'transparent',
     flexDirection: 'row',
     alignItems: 'center',
@@ -620,19 +599,19 @@ const styles = StyleSheet.create({
   },
 
   iPhoneIcon: {
-    width: 90,
+    width: windowWidth * (80/375),
     backgroundColor: 'transparent',
     alignItems: 'center',
-    paddingRight: 25
+    paddingRight: windowWidth * (15/375)
 
 
   },
 
   desktopIcon: {
-    paddingLeft: 25,
-    width: 90,
+    width: windowWidth * (80/375),
     backgroundColor: 'transparent',
     alignItems: 'center',
+    paddingLeft: windowWidth * (15/375)
   },
 
   disconnectedDashXDashIcon: {
@@ -654,8 +633,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     textAlign: 'center',
     fontWeight: 'bold',
-    fontSize: windowWidth * (16/414),
-    color: 'white'
+    fontSize: windowWidth * (19/414),
+    color: 'black'
   },
 
 });

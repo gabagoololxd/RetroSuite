@@ -96,13 +96,13 @@ class JoyPadContainer extends React.Component {
     // TODO: notify user that they were disconnected
     global.onclose = () => {
       navigator = this.props.navigator;
-      turnCameraOn = this.props.route.turnCameraOn.bind(this);
-      showDisconnectedModal = this.props.route.showDisconnectedModal.bind(this);
+      _turnCameraOn = this.props.route._turnCameraOn.bind(this);
+      _showDisconnectedModal = this.props.route._showDisconnectedModal.bind(this);
 
+      _showDisconnectedModal();
       navigator.pop();
       Orientation.lockToPortrait();
-      turnCameraOn();
-      showDisconnectedModal();
+      _turnCameraOn();
     };
   }
 
@@ -125,11 +125,11 @@ class JoyPadContainer extends React.Component {
   }
   _pairController() {
     navigator = this.props.navigator;
-    turnCameraOn = this.props.route.turnCameraOn.bind(this);
+    _turnCameraOn = this.props.route._turnCameraOn.bind(this);
     webSocket.RePairController(function() {
       navigator.popToTop();
       Orientation.lockToPortrait();
-      turnCameraOn();
+      _turnCameraOn();
     });
   }
 
