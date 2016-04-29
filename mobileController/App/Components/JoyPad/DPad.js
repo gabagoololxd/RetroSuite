@@ -184,7 +184,6 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: windowWidth * .02,
   },
 
-  //windowWidth * 0.42 / 6 -  windowWidth * 0.42 / 3 * 6/8
   arrowInsideView: {
     position: 'absolute',
     top: 0,

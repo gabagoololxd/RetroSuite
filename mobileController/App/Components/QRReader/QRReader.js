@@ -4,6 +4,7 @@ const _ = require('lodash');
 const Orientation = require('react-native-orientation');
 const IconIon = require('react-native-vector-icons/Ionicons');
 const Permissions = require('react-native-permissions');
+const { BlurView, VibrancyView } = require('react-native-blur');
 
 const webSocket = require('../../Utils/webSocketMethods');
 const JoyPadContainer = require('../JoyPad/JoyPadContainer');
@@ -22,7 +23,8 @@ const {
   NetInfo,
   TouchableHighlight,
   Modal,
-  AppStateIOS
+  AppStateIOS,
+  Image
 } = React;
 
 // On the iPhone 6+, if the app is launched in landscape, Dimensions.get('window').width returns the height and vice versa for width so we fix that here
@@ -58,7 +60,7 @@ class QRReader extends React.Component {
     // Otherwise, notify the user that they must allow camera access and provide a link to settings where they can do so
     this._checkCameraPermissions();
     
-    // //for development purposes, simulates successful qr scan
+    // // //for development purposes, simulates successful qr scan
     // const openJoyPadContainerCallback = () => {
     //   const navigator = this.props.navigator;
     //   const _turnCameraOn = this._turnCameraOn.bind(this);
@@ -79,6 +81,7 @@ class QRReader extends React.Component {
     //   });
     // }
     // webSocket.PairController('10.0.0.215:1337', openJoyPadContainerCallback);
+
   }
 
   componentWillUnmount() {
@@ -161,7 +164,13 @@ class QRReader extends React.Component {
     // TODO:
     // make instructions better with multiple click through steps and screenshots
     // modularize qrreader
-    // handle scans that work but no pairing happens
+    // handle scans that work but no pairing happens/wifi issues
+    // blur modal
+    // handle weird sizing of chrome app
+    // pause sometimes doesnt pause
+    // somehow send  close message when chrome app x's out
+    // controller disconnecred modal keeps popping up when we come back
+    // pause modal 5s scale
 
     // autofocus camera
     // ABXY overlap / touch radius options
@@ -274,24 +283,29 @@ class QRReader extends React.Component {
               <Modal animated={true}
                      transparent={true}
                      visible={this.state.showDisconnectedModal}>
-                <View style={styles.disconnectedAlert} pointerEvents='box-none'> 
-                  <View style={styles.disconnectedIcons}>
-                    <View style={styles.desktopIcon}>
-                      <IconIon name="ios-monitor-outline" size={windowWidth * (60/375)} allowFontScaling={false} color="black"/>
-                    </View>
-                    <View style={styles.disconnectedDashXDashIcon}>
-                      <IconIon name="ios-minus-empty" size={windowWidth * (70/375)} allowFontScaling={false} color="black" style={styles.leftDashIcon} />
-                      <IconIon name="ios-close-empty" size={windowWidth * (70/375)} allowFontScaling={false} color="black" style={styles.xIcon} />
-                      <IconIon name="ios-minus-empty" size={windowWidth * (70/375)} allowFontScaling={false} color="black" style={styles.rightDashIcon} />
-                    </View>
 
-                    <View style={styles.iPhoneIcon}>
-                      <IconIon name="ios-game-controller-a-outline" size={windowWidth * (65/375)} allowFontScaling={false} color="black" />
-                    </View>
+                  <Image style={styles.disconnectedAlert}>
+        <BlurView blurType="light" style={styles.blur}>
+                    <View style={styles.disconnectedIcons}>
+                      <View style={styles.desktopIcon}>
+                        <IconIon name="ios-monitor-outline" size={windowWidth * (85/375)} allowFontScaling={false} color="rgba(0,0,0,0.8)"/>
+                      </View>
+                      <View style={styles.disconnectedDashXDashIcon}>
+                        <IconIon name="ios-minus-empty" size={windowWidth * (60/375)} allowFontScaling={false} color="rgba(0,0,0,0.8)" style={styles.leftDashIcon} />
+                        <IconIon name="ios-close-empty" size={windowWidth * (60/375)} allowFontScaling={false} color="rgba(0,0,0,0.8)" style={styles.xIcon} />
+                        <IconIon name="ios-minus-empty" size={windowWidth * (60/375)} allowFontScaling={false} color="rgba(0,0,0,0.8)" style={styles.rightDashIcon} />
+                      </View>
 
-                  </View>
-                  <Text style={styles.disconnectedTitleText}>Controller Disconnected</Text>
-                </View>
+                      <View style={styles.controllerIcon}>
+                        <IconIon name="ios-game-controller-a-outline" size={windowWidth * (85/375)} allowFontScaling={false} color="rgba(0,0,0,0.8)" />
+                      </View>
+
+                    </View>
+                    <Text style={styles.disconnectedTitleText}>Controller Disconnected</Text>
+        </BlurView>
+                  </Image>
+
+
               </Modal>
 
               <View style={styles.bottomButtonContainer}>
@@ -565,36 +579,43 @@ const styles = StyleSheet.create({
     marginTop: 0.32 * windowHeight,
     marginBottom: windowWidth * (310/414),
     marginHorizontal: windowWidth * (35/414),
-    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+    backgroundColor: 'transparent',
     borderRadius: 10,
-    padding: windowWidth * (20/414),
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+  },
+
+  blur: {
+    flex: 1,
+    backgroundColor: 'transparent',
+    borderRadius: 10,
     alignItems: 'center',
     flexDirection: 'column',
-    justifyContent: 'flex-end',
+    justifyContent: 'space-between',
   },
   disconnectedIcons: {
     flex: 3,
-    width: windowWidth - (windowWidth===320 ? windowWidth * (70/414) : (windowWidth===414 ? windowWidth * (70/414) : windowWidth * 70/414))*2,
     backgroundColor: 'transparent',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    paddingTop: windowWidth * (5/375)
   },
-  iPhoneIcon: {
-    width: windowWidth * (80/375),
+  controllerIcon: {
+    width: windowWidth * (90/375),
     backgroundColor: 'transparent',
     alignItems: 'center',
-    paddingRight: windowWidth * (15/375)
+    paddingRight: windowWidth * (0/375)
   },
   desktopIcon: {
-    width: windowWidth * (80/375),
+    width: windowWidth * (90/375),
     backgroundColor: 'transparent',
     alignItems: 'center',
-    paddingLeft: windowWidth * (15/375)
+    paddingLeft: windowWidth * (0/375)
   },
   disconnectedDashXDashIcon: {
     flexDirection: 'row',
-    backgroundColor: 'transparent'
+    backgroundColor: 'transparent',
   },
   leftDashIcon: {
     backgroundColor: 'transparent',
@@ -610,8 +631,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     textAlign: 'center',
     fontWeight: 'bold',
-    fontSize: windowWidth * (19/414),
-    color: 'black'
+    fontSize: windowWidth * (22/414),
+    color: 'rgba(0,0,0,0.8)',
+    paddingBottom: windowWidth * (15/375)
   },
 });
 
