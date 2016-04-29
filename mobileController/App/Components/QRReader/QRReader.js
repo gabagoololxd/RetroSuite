@@ -20,8 +20,8 @@ const {
   Linking,
   ScrollView,
   NetInfo,
-
-  AlertIOS,
+  TouchableHighlight,
+  Modal
 } = React;
 
 // On the iPhone 6+, if the app is launched in landscape, Dimensions.get('window').width returns the height and vice versa for width so we fix that here
@@ -39,10 +39,12 @@ class QRReader extends React.Component {
     super(props);
     this.state = {
       cameraPermissions: false,
+      showCameraPermissionsModal: false,
       cameraOn: true,
       cameraTorchToggle: Camera.constants.TorchMode.off,
       handleFocusChanged: () => {},
       selectedIndex: 0,
+
     }
   }
 
@@ -54,16 +56,28 @@ class QRReader extends React.Component {
     Permissions.cameraPermissionStatus()
       .then(response => {
         if (response == Permissions.StatusUndetermined) {
-          this.setState({cameraPermissions: undefined});
+          this.setState({
+            cameraPermissions: undefined,
+            showCameraPermissionsModal: false,
+          });
           console.log("Undetermined");
         } else if (response == Permissions.StatusDenied) {
-          this.setState({cameraPermissions: false});
+          this.setState({
+            cameraPermissions: false,
+            showCameraPermissionsModal: true,
+          });
           console.log("Denied");
         } else if (response == Permissions.StatusAuthorized) {
-          this.setState({cameraPermissions: true});
+          this.setState({
+            cameraPermissions: true,
+            showCameraPermissionsModal: false,
+          });
           console.log("Authorized");
         } else if (response == Permissions.StatusRestricted) {
-          this.setState({cameraPermissions: false});
+          this.setState({
+            cameraPermissions: false,
+            showCameraPermissionsModal: true,
+          });
           console.log("Restricted");
         }
       });
@@ -270,20 +284,36 @@ class QRReader extends React.Component {
             <View style={styles.overlayBottom}/> 
 
             <SegmentedControlIOS 
-              values={['We need', 'Your Camera']} 
-              // values={['Scan QR', 'Instructions']} 
+              values={['Scan QR', 'Instructions']} 
               enabled={false}
               selectedIndex={0} 
               style={styles.segments} 
               tintColor="white"/>
-           
+
             <View style={styles.rectanglePlaceholder} pointerEvents='box-none'/>
             <View style={styles.rectangleContainer} pointerEvents='box-none'>
-              <View style={styles.rectangleTopLeft} pointerEvents='box-none'></View>
-              <View style={styles.rectangleTopRight} pointerEvents='box-none'></View>
-              <View style={styles.rectangleBottomLeft} pointerEvents='box-none'></View>
-              <View style={styles.rectangleBottomRight} pointerEvents='box-none'></View>
+              <View style={[styles.rectangleTopLeft, {borderColor: "rgba(237,237,237,0.5)"}]} pointerEvents='box-none'></View>
+              <View style={[styles.rectangleTopRight, {borderColor: "rgba(237,237,237,0.5)"}]} pointerEvents='box-none'></View>
+              <View style={[styles.rectangleBottomLeft, {borderColor: "rgba(237,237,237,0.5)"}]} pointerEvents='box-none'></View>
+              <View style={[styles.rectangleBottomRight, {borderColor: "rgba(237,237,237,0.5)"}]} pointerEvents='box-none'></View>
             </View>
+
+            <Modal animated={true}
+                   transparent={true}
+                   visible={this.state.showCameraPermissionsModal}>
+              <View style={styles.cameraPermissionsAlert} pointerEvents='box-none'> 
+                <Text style={styles.useYourCameraTitleText}>Use your camera?</Text>
+                <View style={styles.line}/>
+                <Text style={styles.useYourCameraDescriptionText}>Pairing your controller requires access to your camera.</Text>
+
+                <TouchableHighlight style={styles.yesButton}
+                                    onPress={null}
+                                    underlayColor='#8d4e91'>
+                  <Text style={styles.yesText}>Yes</Text>
+                </TouchableHighlight>
+              </View>
+            </Modal>
+
 
             <View style={styles.bottomButtonContainer}>
               <TouchableWithoutFeedback onPress={this._torchEnabled.bind(this)}  underlayColor={'#FC9396'}>
@@ -398,7 +428,7 @@ const styles = StyleSheet.create({
     fontFamily: 'docker',
     marginBottom: 10,
     marginLeft: -20,
-    color: 'white',
+    color: 'rgba(237,237,237,0.5)',
     fontSize: 20,
     fontWeight: 'bold',
   },
@@ -438,13 +468,58 @@ const styles = StyleSheet.create({
 
   modal: {
     flex: 1,
-    marginTop: 20,
-    marginBottom: 20,
-    marginHorizontal: 20,
+    marginTop: windowWidth * (20/414),
+    marginBottom: windowWidth * (20/414),
+    marginHorizontal: windowWidth * (20/414),
     backgroundColor: '#ffffff',
     borderRadius: 3,
-    padding: 20,
-  }
+    padding: windowWidth * (20/414),
+  },
+
+  cameraPermissionsAlert: {
+    flex: 1,
+    marginTop: 0.32 * windowHeight,
+    marginBottom: windowWidth===320 ? windowWidth * (325/414) : (windowWidth===414 ? windowWidth * (325/414) : windowWidth * 330/414),
+    marginHorizontal: windowWidth===320 ? windowWidth * (62/414) : (windowWidth===414 ? windowWidth * (63/414) : windowWidth * 63/414),
+    backgroundColor: '#ffffff',
+    borderRadius: 3,
+    padding: windowWidth * (20/414),
+
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+
+  },
+  useYourCameraTitleText: {
+    textAlign: 'center',
+    fontWeight: 'bold',
+    fontSize: windowWidth * (16/414)
+  },
+  line: {
+    marginTop: windowWidth * (6/414),
+    width: windowWidth * (140/414),
+    height: 2,
+    backgroundColor: '#d3d3d3'
+  },
+  useYourCameraDescriptionText: {
+    marginTop: windowWidth * (3/414),
+    textAlign: 'center',
+    fontSize: windowWidth * (12/414),
+    lineHeight: windowWidth * (20/414)
+  },
+  yesButton: {
+    height: windowWidth * (40/414),
+    width: 180,
+    marginTop: 15,
+    borderRadius: 3,
+    backgroundColor: '#99559e',
+    flexDirection: 'column',
+    justifyContent: 'center'
+  },
+  yesText: {
+    fontSize: 14,
+    textAlign: 'center',
+    color: 'white'
+  },
 });
 
 module.exports = QRReader;
