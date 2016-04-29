@@ -24,7 +24,8 @@ const {
   TouchableHighlight,
   Modal,
   AppStateIOS,
-  Image
+  Image,
+  Animated
 } = React;
 
 // On the iPhone 6+, if the app is launched in landscape, Dimensions.get('window').width returns the height and vice versa for width so we fix that here
@@ -49,12 +50,16 @@ class QRReader extends React.Component {
       handleFocusChanged: () => {},
       selectedIndex: 0,
       showDisconnectedModal: false,
+      fadeAnim: new Animated.Value(0),
     }
   }
 
   componentDidMount() {
     Orientation.lockToPortrait(); //this will lock the view to Portrait
+
     AppStateIOS.addEventListener('change', this._handleAppStateChange.bind(this));
+
+    // Animated.timing(this.state.fadeAnim, {toValue: 1}).start(); 
 
     // Determine user permissions for the camera; if permission is authorized, use the camera/app; 
     // Otherwise, notify the user that they must allow camera access and provide a link to settings where they can do so
@@ -165,10 +170,11 @@ class QRReader extends React.Component {
     // make instructions better with multiple click through steps and screenshots
     // modularize qrreader
     // handle scans that work but no pairing happens/wifi issues
-    // blur modal
+
     // handle weird sizing of chrome app
     // pause sometimes doesnt pause
     // somehow send  close message when chrome app x's out
+
     // controller disconnecred modal keeps popping up when we come back
     // pause modal 5s scale
 
@@ -189,12 +195,17 @@ class QRReader extends React.Component {
   }
 
   _showDisconnectedModal() {
+    Animated.timing(this.state.fadeAnim, {duration: 500, toValue: 1}).start(); 
     this.setState({showDisconnectedModal:true});
+
+    setTimeout(() => {
+      Animated.timing(this.state.fadeAnim, {duration: 750, toValue: 0}).start(); 
+    }, 2000);
 
     var self = this;
     setTimeout(() => {
       self._hideDisconnectedModal();
-    }, 2000);
+    }, 2750);
   }
 
   _hideDisconnectedModal() {
@@ -283,29 +294,26 @@ class QRReader extends React.Component {
               <Modal animated={true}
                      transparent={true}
                      visible={this.state.showDisconnectedModal}>
-
+                <Animated.View style={{opacity: this.state.fadeAnim, flex: 1}}>
                   <Image style={styles.disconnectedAlert}>
-        <BlurView blurType="light" style={styles.blur}>
-                    <View style={styles.disconnectedIcons}>
-                      <View style={styles.desktopIcon}>
-                        <IconIon name="ios-monitor-outline" size={windowWidth * (85/375)} allowFontScaling={false} color="rgba(0,0,0,0.8)"/>
+                   <BlurView blurType="light" style={styles.blur}>
+                      <View style={styles.disconnectedIcons}>
+                        <View style={styles.desktopIcon}>
+                          <IconIon name="ios-monitor-outline" size={windowWidth * (85/375)} allowFontScaling={false} color="rgba(0,0,0,0.8)"/>
+                        </View>
+                        <View style={styles.disconnectedDashXDashIcon}>
+                          <IconIon name="ios-minus-empty" size={windowWidth * (60/375)} allowFontScaling={false} color="rgba(0,0,0,0.8)" style={styles.leftDashIcon} />
+                          <IconIon name="ios-close-empty" size={windowWidth * (60/375)} allowFontScaling={false} color="rgba(0,0,0,0.8)" style={styles.xIcon} />
+                          <IconIon name="ios-minus-empty" size={windowWidth * (60/375)} allowFontScaling={false} color="rgba(0,0,0,0.8)" style={styles.rightDashIcon} />
+                        </View>
+                        <View style={styles.controllerIcon}>
+                          <IconIon name="ios-game-controller-a-outline" size={windowWidth * (85/375)} allowFontScaling={false} color="rgba(0,0,0,0.8)" />
+                        </View>
                       </View>
-                      <View style={styles.disconnectedDashXDashIcon}>
-                        <IconIon name="ios-minus-empty" size={windowWidth * (60/375)} allowFontScaling={false} color="rgba(0,0,0,0.8)" style={styles.leftDashIcon} />
-                        <IconIon name="ios-close-empty" size={windowWidth * (60/375)} allowFontScaling={false} color="rgba(0,0,0,0.8)" style={styles.xIcon} />
-                        <IconIon name="ios-minus-empty" size={windowWidth * (60/375)} allowFontScaling={false} color="rgba(0,0,0,0.8)" style={styles.rightDashIcon} />
-                      </View>
-
-                      <View style={styles.controllerIcon}>
-                        <IconIon name="ios-game-controller-a-outline" size={windowWidth * (85/375)} allowFontScaling={false} color="rgba(0,0,0,0.8)" />
-                      </View>
-
-                    </View>
-                    <Text style={styles.disconnectedTitleText}>Controller Disconnected</Text>
-        </BlurView>
+                      <Text style={styles.disconnectedTitleText}>Controller Disconnected</Text>
+                    </BlurView>
                   </Image>
-
-
+                </Animated.View>
               </Modal>
 
               <View style={styles.bottomButtonContainer}>
