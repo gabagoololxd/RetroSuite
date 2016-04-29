@@ -86,20 +86,23 @@ class JoyPadContainer extends React.Component {
     };
 
     // functions used by webSocketMethods.js defined here:
-    pause = () => {
+    global.pause = () => {
       this.setState({showPauseModal: true});
     };
-    resume = () => {
+    global.resume = () => {
       this.setState({showPauseModal: false});
     };
 
     // TODO: notify user that they were disconnected
-    onclose = () => {
+    global.onclose = () => {
       navigator = this.props.navigator;
       turnCameraOn = this.props.route.turnCameraOn.bind(this);
+      showDisconnectedModal = this.props.route.showDisconnectedModal.bind(this);
+
       navigator.pop();
       Orientation.lockToPortrait();
       turnCameraOn();
+      showDisconnectedModal();
     };
   }
 
