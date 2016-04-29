@@ -2,9 +2,11 @@ function newWindow() {
   return new Promise(function(resolve, reject) {
     chrome.power.requestKeepAwake('display');
     chrome.app.window.create('index.html', {
+        'minWidth': Math.round(window.screen.availWidth*0.5),
+        'minHeight': Math.round(window.screen.availHeight*0.5),
       'bounds': {
         'width': Math.round(window.screen.availWidth*0.8),
-        'height': Math.round(window.screen.availHeight*0.8)
+        'height': Math.round(window.screen.availHeight*0.8),
       }
     }, resolve)
   })

@@ -160,11 +160,12 @@ class QRReader extends React.Component {
 
     // TODO:
     // make instructions better with multiple click through steps and screenshots
+    // modularize qrreader
+    // handle scans that work but no pairing happens
 
     // autofocus camera
     // ABXY overlap / touch radius options
     // move components around?
-    // how to tell if its the user's first time? open instructions then
   }
 
   _torchEnabled() {
