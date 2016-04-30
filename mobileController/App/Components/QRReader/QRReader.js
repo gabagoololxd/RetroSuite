@@ -135,10 +135,10 @@ class QRReader extends React.Component {
   _onBarCodeRead(e) {
     const ipAddress = e.data;
 
-
+    var self = this;
 
     const success = () => {
-      this.setState({ipAddressFound: undefined})
+      self.setState({ipAddressFound: undefined})
       const navigator = this.props.navigator;
       const _turnCameraOn = this._turnCameraOn.bind(this);
       const _turnCameraOff = this._turnCameraOff.bind(this);
@@ -162,8 +162,8 @@ class QRReader extends React.Component {
 
     
     console.log('scanned it!')
-    if(this.state.ipAddress !== ipAddress) {
-      this.setState({ipAddress: ipAddress})
+    if(this.state.ipAddressFound !== ipAddress) {
+      this.setState({ipAddressFound: ipAddress})
       console.log('tryna send')
       webSocket.PairController(ipAddress, success);
     };
