@@ -24,7 +24,8 @@ const {
   Linking,
   NetInfo,
   AppStateIOS,
-  Animated
+  Animated,
+  AlertIOS
 } = React;
 
 // On the iPhone 6+, if the app is launched in landscape, Dimensions.get('window').width returns the height and vice versa for width so we fix that here
@@ -51,7 +52,8 @@ class QRReader extends React.Component {
       selectedIndex: 0,
       showDisconnectedModal: false,
       fadeAnim: new Animated.Value(0),
-      ipAddressFound: undefined
+      ipAddressFound: undefined,
+      connectionInfo: undefined
     };
   }
 
@@ -137,7 +139,8 @@ class QRReader extends React.Component {
 
     var self = this;
 
-    const success = () => {
+    const success = (resolveCallback) => {
+      resolveCallback();
       self.setState({ipAddressFound: undefined})
       const navigator = this.props.navigator;
       const _turnCameraOn = this._turnCameraOn.bind(this);
@@ -165,17 +168,53 @@ class QRReader extends React.Component {
     if(this.state.ipAddressFound !== ipAddress) {
       this.setState({ipAddressFound: ipAddress})
       console.log('tryna send')
-      webSocket.PairController(ipAddress, success);
+      
+
+      NetInfo.fetch().done(
+        (connectionInfo) => { self.setState({connectionInfo: connectionInfo}) }
+      );
+      // Promise race, if after 2000 it doesnt pair successfully, check to see if connected to wifi, 
+      // if it is not, then notify the user
+      // if wifi is on but still can't pair, tell the user it tried to pair but still didn't work
+      var pairController = new Promise(function (resolve, reject) {
+        var resolveCallback = () => {
+          resolve('paired');
+        };
+        webSocket.PairController(ipAddress, success, resolveCallback);
+      }); 
+
+      var showPairError = new Promise(function (resolve, reject) {
+        setTimeout(() => {
+          resolve('did not pair');
+        }, 2000);
+      });
+
+
+
+      var p = Promise.race([
+        pairController,
+        showPairError
+      ])
+      p.then((response) => {
+        AlertIOS.alert(response);
+        if(response=='did not pair') {
+          if(self.state.connectionInfo==='wifi') {
+            AlertIOS.alert('wifi is connected, we scanned, check the chrome app')
+            resolve('show a chrome app messed up modal');
+          } else {
+            AlertIOS.alert('your wifi is not on')
+            resolve('show a connect to wifi modal');
+          }
+        }
+      })
+      p.catch(error => console.log(error))
     };
 
-    // TODO: 
-    // Promise race, if after 2000 it doesnt pair successfully, check to see if connected to wifi, if not, then notify the user
-    // NetInfo.fetch().done(
-    //   (connectionInfo) => { console.log(connectionInfo, 'connectionInfo') }
-    // );
-    // make instructions better with multiple click through steps and screenshots
-    // handle scans that work but no pairing happens/wifi issues
 
+
+    // TODO: 
+    // make instructions better with multiple click through steps and screenshots
+    
     // handle weird sizing of chrome app
     // pause sometimes doesnt pause
     // somehow send  close message immediatedly when chrome app x's out

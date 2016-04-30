@@ -1,5 +1,5 @@
 var webSocket = {
-  PairController(ipAddress, openJoyPadContainerCallback) {
+  PairController(ipAddress, openJoyPadContainerCallback, resolvecallback) {
     var url = 'ws://' + ipAddress + '/';
     global.ws = new WebSocket(url);
 
@@ -9,7 +9,7 @@ var webSocket = {
       // tell the emulator to go to the next screen
       ws.send('pair');
       // mount JoyPadContainer.js, turn off camera
-      openJoyPadContainerCallback();
+      openJoyPadContainerCallback(resolvecallback);
     }
 
     ws.onmessage = (e) => {
