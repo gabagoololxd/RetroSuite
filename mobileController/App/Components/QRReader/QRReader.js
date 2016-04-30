@@ -11,6 +11,9 @@ const FlashButtonArea = require('./FlashButtonArea');
 const CameraPermissionsModal = require('./CameraPermissionsModal');
 const PairingInstructions = require('./PairingInstructions');
 const SegmentedControl = require('./SegmentedControl');
+const WifiConnectedPairingErrorModal = require('./WifiConnectedPairingErrorModal');
+const WifiDisconnectedPairingErrorModal = require('./WifiDisconnectedPairingErrorModal');
+
 
 const webSocket = require('../../Utils/webSocketMethods');
 const JoyPadContainer = require('../JoyPad/JoyPadContainer');
@@ -43,17 +46,26 @@ class QRReader extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+
       appState: undefined,
       cameraPermissions: false,
+
       showCameraPermissionsModal: false,
+
       cameraOn: true,
       cameraTorchToggle: Camera.constants.TorchMode.off,
       handleFocusChanged: () => {},
+
       selectedIndex: 0,
+      
       showDisconnectedModal: false,
-      fadeAnim: new Animated.Value(0),
+      disconnectedModalFadeAnim: new Animated.Value(0),
+
       ipAddressFound: undefined,
-      connectionInfo: undefined
+      connectionInfo: undefined,
+
+      showWifiConnectedPairingErrorModal: false,
+      showWifiDisconnectedPairingErrorModal: false
     };
   }
 
@@ -136,18 +148,23 @@ class QRReader extends React.Component {
 
   _onBarCodeRead(e) {
     const ipAddress = e.data;
+    console.log('scanned a qr', ipAddress);
 
-    var self = this;
+    const self = this;
 
     const success = (resolveCallback) => {
+      // resolve the promise from pairController
       resolveCallback();
+
+      // reset ipAddressFound so when we pop back to the QRReader, we can scan the same QR again
       self.setState({ipAddressFound: undefined})
+
       const navigator = this.props.navigator;
       const _turnCameraOn = this._turnCameraOn.bind(this);
       const _turnCameraOff = this._turnCameraOff.bind(this);
-
       const _showDisconnectedModal = this._showDisconnectedModal.bind(this);
 
+      // turn the camera off when the JoyPad is mounted
       _turnCameraOff();
 
       //open up the JoyPadContainer
@@ -160,57 +177,65 @@ class QRReader extends React.Component {
           gestures: {} //disable ability to swipe to pop back from JoyPadContainer to QRReader once past the ip address page
         }
       });
-      global.JoyPadOpen = true;
+      global.JoyPadOpen = true; //set JoyPadOpen to true so that global.onClose will pop JoyPadContainer off back to QRReader
     }
-
     
-    console.log('scanned it!')
+    // if the QR just scanned is not the one that was just scanned, then send a pairing request to the websocket server
+    // this is done because otherwise the QRReader would scan multiple times and send multiple unecessary requests within a few seconds,
+    // and cause navigator to push JoyPadContainer multiple times
     if(this.state.ipAddressFound !== ipAddress) {
-      this.setState({ipAddressFound: ipAddress})
-      console.log('tryna send')
       
+      console.log('attempt to pair')
 
+      // remember the ipAddress that was just scanned so we can compare the next ipAddress scanned; 
+      // if its is the same one again, don't send another pairing request
+      this.setState({ipAddressFound: ipAddress})
+      
+      // see if the phone is connected to wifi or not; 
+      // this is preparation for showing a possible error message if the pairing request is unsuccessful
       NetInfo.fetch().done(
         (connectionInfo) => { self.setState({connectionInfo: connectionInfo}) }
       );
-      // Promise race, if after 2000 it doesnt pair successfully, check to see if connected to wifi, 
+
+      // Promise race, if after 1.5 seconds it doesnt pair successfully, check to see if connected to wifi, 
       // if it is not, then notify the user
       // if wifi is on but still can't pair, tell the user it tried to pair but still didn't work
-      var pairController = new Promise(function (resolve, reject) {
-        var resolveCallback = () => {
+      const pairController = new Promise(function (resolve, reject) {
+        const resolveCallback = () => {
           resolve('paired');
         };
         webSocket.PairController(ipAddress, success, resolveCallback);
       }); 
 
-      var showPairError = new Promise(function (resolve, reject) {
+      const showPairError = new Promise(function (resolve, reject) {
         setTimeout(() => {
           resolve('did not pair');
-        }, 2000);
+        }, 1500);
       });
 
-
-
-      var p = Promise.race([
+      const p = Promise.race([
         pairController,
         showPairError
       ])
       p.then((response) => {
-        AlertIOS.alert(response);
         if(response=='did not pair') {
           if(self.state.connectionInfo==='wifi') {
-            AlertIOS.alert('wifi is connected, we scanned, check the chrome app')
-            resolve('show a chrome app messed up modal');
+            // AlertIOS.alert('wifi is connected, we scanned, check the chrome app')
+            // The controller didn't pair, even though the phone is connceted to wifi
+            self.setState({showWifiConnectedPairingErrorModal: true});
+            self.setState({ipAddressFound: undefined}) // reset to scan again
+
           } else {
-            AlertIOS.alert('your wifi is not on')
-            resolve('show a connect to wifi modal');
+            // AlertIOS.alert('your wifi is not on')
+            // The controller didn't pair, and the phone is not connected to wifi
+            self.setState({showWifiDisconnectedPairingErrorModal: true});
+            self.setState({ipAddressFound: undefined}) // reset to scan again
+
           }
         }
       })
       p.catch(error => console.log(error))
     };
-
-
 
     // TODO: 
     // make instructions better with multiple click through steps and screenshots
@@ -222,7 +247,6 @@ class QRReader extends React.Component {
 
     // autofocus camera
     // ABXY overlap / touch radius options
-    // move components around?
   }
 
   _torchEnabled() {
@@ -265,6 +289,18 @@ class QRReader extends React.Component {
     Linking.openURL('app-settings:').catch(err => console.error('An error occurred', err));
   }
 
+  _openWifiPermissions() {
+    this.setState({showWifiDisconnectedPairingErrorModal: false});
+    this.setState({showWifiConnectedPairingErrorModal: false});
+    Linking.openURL('prefs:root=WIFI').catch(err => console.error('An error occurred', err));
+  }
+
+  _closePairingErrorModal() {
+    console.log('close click')
+    this.setState({showWifiDisconnectedPairingErrorModal: false});
+    this.setState({showWifiConnectedPairingErrorModal: false});
+  }
+
   render() {
     StatusBarIOS.setHidden('false');
     StatusBarIOS.setStyle('light-content');
@@ -305,7 +341,10 @@ class QRReader extends React.Component {
                 {this.state.selectedIndex===0 ? <FocusBrackets/> : null}
                 <FlashButtonArea cameraTorchToggle={this.state.cameraTorchToggle} _torchEnabled={this._torchEnabled.bind(this)}/>
 
-                <DisconnectedModal fadeAnim={this.state.fadeAnim} showDisconnectedModal={this.state.showDisconnectedModal}/>
+                <DisconnectedModal fadeAnim={this.state.disconnectedModalFadeAnim} showDisconnectedModal={this.state.showDisconnectedModal}/>
+                
+                <WifiConnectedPairingErrorModal showWifiConnectedPairingErrorModal={this.state.showWifiConnectedPairingErrorModal} _openWifiPermissions={this._openWifiPermissions.bind(this)} _closePairingErrorModal={this._closePairingErrorModal.bind(this)}/>
+                <WifiDisconnectedPairingErrorModal showWifiDisconnectedPairingErrorModal={this.state.showWifiDisconnectedPairingErrorModal} _openWifiPermissions={this._openWifiPermissions.bind(this)} _closePairingErrorModal={this._closePairingErrorModal.bind(this)}/>
 
               </DarkOverlays>
             </Camera>
@@ -327,9 +366,9 @@ class QRReader extends React.Component {
             </DarkOverlays>
           </View>
         );
-      } // end inside else block
+      } // end inside if-else block
 
-    } // end outside else block
+    } // end outside if-else block
   } // end render
  
 } // end constructor
