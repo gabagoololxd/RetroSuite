@@ -4,7 +4,14 @@ const _ = require('lodash');
 const Orientation = require('react-native-orientation');
 const IconIon = require('react-native-vector-icons/Ionicons');
 const Permissions = require('react-native-permissions');
-const { BlurView, VibrancyView } = require('react-native-blur');
+
+const DisconnectedModal = require('./DisconnectedModal');
+const FocusBrackets = require('./FocusBrackets');
+const DarkOverlays = require('./DarkOverlays');
+const FlashButtonArea = require('./FlashButtonArea');
+const CameraPermissionsModal = require('./CameraPermissionsModal');
+const PairingInstructions = require('./PairingInstructions');
+const SegmentedControl = require('./SegmentedControl');
 
 const webSocket = require('../../Utils/webSocketMethods');
 const JoyPadContainer = require('../JoyPad/JoyPadContainer');
@@ -55,6 +62,7 @@ class QRReader extends React.Component {
   }
 
   componentDidMount() {
+    console.log('cameraaaaa', this.state.cameraTorchToggle);
     Orientation.lockToPortrait(); //this will lock the view to Portrait
     AppStateIOS.addEventListener('change', this._handleAppStateChange.bind(this)); 
 
@@ -250,139 +258,32 @@ class QRReader extends React.Component {
               orientation={Camera.constants.Orientation.portrait}
               onFocusChanged={ this.state.handleFocusChanged }>
 
-              <View style={styles.overlayLeft}/> 
-              <View style={styles.overlayTop}/> 
-              <View style={styles.overlayRight}/> 
-              <View style={styles.overlayBottom}/> 
+              <DarkOverlays>
 
-              <SegmentedControlIOS 
-                values={['Scan QR', 'Instructions']} 
-                selectedIndex={this.state.selectedIndex} 
-                style={styles.segments} 
-                tintColor="white"
-                onChange={this._onChange.bind(this)}
-                />
+                <SegmentedControl selectedIndex={this.state.selectedIndex} _onChange={this._onChange.bind(this)}/>
+                {this.state.selectedIndex===0 ? <View style={styles.rectanglePlaceholder} pointerEvents='box-none'/> : <PairingInstructions/>}
+                {this.state.selectedIndex===0 ? <FocusBrackets/> : null}
+                <FlashButtonArea cameraTorchToggle={this.state.cameraTorchToggle} _torchEnabled={this._torchEnabled.bind(this)}/>
 
-              {this.state.selectedIndex===1 ? 
-                <ScrollView style={styles.instructions}>
-                  <Text style={{fontWeight: 'bold', fontSize: 18}} allowFontScaling={false}>Welcome to RetroSuite Controller!</Text>
-                  <Text style={{fontSize: 15}} allowFontScaling={false}></Text>
-                  <Text style={{fontWeight: 'bold', fontSize: 15}} allowFontScaling={false}>1.<Text style={{fontWeight: 'normal', fontSize: 15}} allowFontScaling={false}> Download the <Text style={{color: 'blue', textDecorationLine: 'underline'}} allowFontScaling={false} onPress={() =>  Linking.openURL('https://chrome.google.com/webstore/detail/retrosuite-emu/bnjapfbdmfjehbgohiebcnmombalmbfd').catch(err => console.error('An error occurred', err))}>RetroSuite EMU Chrome App</Text> to your computer.</Text></Text>
-                  <Text style={{fontSize: 15}} allowFontScaling={false}></Text>
-                  <Text style={{fontWeight: 'bold', fontSize: 15}} allowFontScaling={false}>2.<Text style={{fontWeight: 'normal', fontSize: 15}} allowFontScaling={false}> Make sure your computer and your phone are connected to the same Wi-Fi network. <Text style={{color: 'blue', textDecorationLine: 'underline'}} allowFontScaling={false} onPress={() =>  Linking.openURL('prefs:root=WIFI').catch(err => console.error('An error occurred', err))}>Click here</Text> to connect your iPhone to Wi-Fi.</Text></Text>
-                  <Text style={{fontSize: 15}} allowFontScaling={false}></Text>
-                  <Text style={{fontWeight: 'bold', fontSize: 15}} allowFontScaling={false}>3.<Text style={{fontWeight: 'normal', fontSize: 15}} allowFontScaling={false}> On your computer, select a game. On the next "Choose Your Controller" screen, click "Mobile Phone".</Text></Text>
-                  <Text style={{fontSize: 15}} allowFontScaling={false}></Text>
-                  <Text style={{fontWeight: 'bold', fontSize: 15}} allowFontScaling={false}>4.<Text style={{fontWeight: 'normal', fontSize: 15}} allowFontScaling={false}> On your phone, switch to "Scan QR" and point your camera at the QR code. Happy gaming; your phone is paired!</Text></Text>
-                  <Text style={{fontSize: 15}} allowFontScaling={false}></Text>
-                  <Text style={{fontSize: 15}} allowFontScaling={false}></Text>
-                  <Text style={{fontStyle: 'italic', fontSize: 15}} allowFontScaling={false}>*Remember: you can use your phone as a hotspot for your computer when Wi-Fi is spotty or nonexistant. <Text style={{color: 'blue', textDecorationLine: 'underline', fontStyle: 'normal'}} allowFontScaling={false} onPress={() =>  Linking.openURL('prefs:root=INTERNET_TETHERING').catch(err => console.error('An error occurred', err))}>Click here</Text> to turn on Personal Hotspot.</Text>
-                </ScrollView> :
-                <View style={styles.rectanglePlaceholder} pointerEvents='box-none'/>
-              }
+                <DisconnectedModal fadeAnim={this.state.fadeAnim} showDisconnectedModal={this.state.showDisconnectedModal}/>
 
-              {this.state.selectedIndex===0 ? 
-                <View style={styles.rectangleContainer} pointerEvents='box-none'>
-                  <View style={styles.rectangleTopLeft} pointerEvents='box-none'></View>
-                  <View style={styles.rectangleTopRight} pointerEvents='box-none'></View>
-                  <View style={styles.rectangleBottomLeft} pointerEvents='box-none'></View>
-                  <View style={styles.rectangleBottomRight} pointerEvents='box-none'></View>
-                </View>
-              :
-                null
-              }
-
-              <Modal animated={true}
-                     transparent={true}
-                     visible={this.state.showDisconnectedModal}>
-                <Animated.View style={{opacity: this.state.fadeAnim, flex: 1}}>
-                  <Image style={styles.disconnectedAlert}>
-                   <BlurView blurType="light" style={styles.blur}>
-                      <View style={styles.disconnectedIcons}>
-                        <View style={styles.desktopIcon}>
-                          <IconIon name="ios-monitor-outline" size={windowWidth * (85/375)} allowFontScaling={false} color="rgba(0,0,0,0.8)"/>
-                        </View>
-                        <View style={styles.disconnectedDashXDashIcon}>
-                          <IconIon name="ios-minus-empty" size={windowWidth * (60/375)} allowFontScaling={false} color="rgba(0,0,0,0.8)" style={styles.leftDashIcon} />
-                          <IconIon name="ios-close-empty" size={windowWidth * (60/375)} allowFontScaling={false} color="rgba(0,0,0,0.8)" style={styles.xIcon} />
-                          <IconIon name="ios-minus-empty" size={windowWidth * (60/375)} allowFontScaling={false} color="rgba(0,0,0,0.8)" style={styles.rightDashIcon} />
-                        </View>
-                        <View style={styles.controllerIcon}>
-                          <IconIon name="ios-game-controller-a-outline" size={windowWidth * (85/375)} allowFontScaling={false} color="rgba(0,0,0,0.8)" />
-                        </View>
-                      </View>
-                      <Text style={styles.disconnectedTitleText}>Controller Disconnected</Text>
-                    </BlurView>
-                  </Image>
-                </Animated.View>
-              </Modal>
-
-              <View style={styles.bottomButtonContainer}>
-                <TouchableWithoutFeedback onPress={this._torchEnabled.bind(this)}  underlayColor={'#FC9396'}>
-                  {this.state.cameraTorchToggle === Camera.constants.TorchMode.off ? 
-                    <View style={styles.flashButton}>
-                      <IconIon name="ios-bolt-outline" size={40} allowFontScaling={false} color="rgba(237,237,237,0.5)" style={styles.flashIcon} />
-                      <Text style={styles.flashButtonText} allowFontScaling={false}>Flash Off</Text>
-                    </View> 
-                  : 
-                    <View style={styles.flashButton}>
-                      <IconIon name="ios-bolt" size={40} allowFontScaling={false} color="rgba(237,237,237,0.5)" style={styles.flashIcon} />
-                      <Text style={styles.flashButtonText} allowFontScaling={false}>Flash On</Text>
-                    </View>
-                  }
-                </TouchableWithoutFeedback>
-              </View>
-
+              </DarkOverlays>
             </Camera>
           </View>
         )
       } else if(this.state.cameraPermissions === false) {
         return (
           <View style={styles.container}>
-            <View style={styles.overlayLeft}/> 
-            <View style={styles.overlayTop}/> 
-            <View style={styles.overlayRight}/> 
-            <View style={styles.overlayBottom}/> 
+            <DarkOverlays>
 
-            <SegmentedControlIOS 
-              values={['Scan QR', 'Instructions']} 
-              enabled={false}
-              selectedIndex={0} 
-              style={styles.segments} 
-              tintColor="white"/>
+              <SegmentedControl selectedIndex={this.state.selectedIndex} _onChange={this._onChange.bind(this)}/>
+              <View style={styles.rectanglePlaceholder} pointerEvents='box-none'/>
+              <FocusBrackets/>
+              <FlashButtonArea cameraTorchToggle={this.state.cameraTorchToggle} _torchEnabled={this._torchEnabled.bind(this)} />
 
-            <View style={styles.rectanglePlaceholder} pointerEvents='box-none'/>
-            <View style={styles.rectangleContainer} pointerEvents='box-none'>
-              <View style={[styles.rectangleTopLeft, {borderColor: "rgba(237,237,237,0.5)"}]} pointerEvents='box-none'></View>
-              <View style={[styles.rectangleTopRight, {borderColor: "rgba(237,237,237,0.5)"}]} pointerEvents='box-none'></View>
-              <View style={[styles.rectangleBottomLeft, {borderColor: "rgba(237,237,237,0.5)"}]} pointerEvents='box-none'></View>
-              <View style={[styles.rectangleBottomRight, {borderColor: "rgba(237,237,237,0.5)"}]} pointerEvents='box-none'></View>
-            </View>
+              <CameraPermissionsModal _openCameraPermissions={this._openCameraPermissions.bind(this)} showCameraPermissionsModal={this.state.showCameraPermissionsModal}/>
 
-            <Modal animated={true}
-                   transparent={true}
-                   visible={this.state.showCameraPermissionsModal}>
-              <View style={styles.cameraPermissionsAlert} pointerEvents='box-none'> 
-                <Text style={styles.useYourCameraTitleText}>Use your camera?</Text>
-                <View style={styles.line}/>
-                <Text style={styles.useYourCameraDescriptionText}>Pairing your controller requires access to your camera.</Text>
-
-                <TouchableHighlight style={styles.yesButton}
-                                    onPress={this._openCameraPermissions.bind(this)}
-                                    underlayColor='#8d4e91'>
-                  <Text style={styles.yesText}>Yes</Text>
-                </TouchableHighlight>
-              </View>
-            </Modal>
-
-            <View style={styles.bottomButtonContainer}>
-              <TouchableWithoutFeedback onPress={this._torchEnabled.bind(this)}  underlayColor={'#FC9396'}>
-                <View style={styles.flashButton}>
-                  <IconIon name="ios-bolt-outline" size={40} allowFontScaling={false} color="rgba(237,237,237,0.5)" style={styles.flashIcon} />
-                  <Text style={[styles.flashButtonText, {color: 'rgba(237,237,237,0.5)'}]} allowFontScaling={false}>Flash Off</Text>
-                </View> 
-              </TouchableWithoutFeedback>
-            </View>
+            </DarkOverlays>
           </View>
         );
       } //inside else block
@@ -402,247 +303,11 @@ const styles = StyleSheet.create({
     height: windowHeight,
     width: windowWidth,
   },
-  segments: {
-    marginTop: 25
-  },
   rectanglePlaceholder: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'transparent',
-  },
-
-  rectangleContainer: {
-    height: windowHeight,
-    width: windowWidth,
-    position: 'absolute',
-    left: 0,
-    top: 0,
-    borderColor: '#ededed',
-    backgroundColor: 'transparent',
-  },
-  rectangleTopLeft: {
-
-    height: 1/4 * windowWidth,
-    width: 1/4 * windowWidth,
-    position: 'absolute',
-    left: windowWidth - 311/375 * windowWidth - 7,
-    top: windowHeight * 0.25 - 7 ,
-    borderTopWidth: 2,
-    borderLeftWidth: 2,
-    borderColor: '#ededed',
-    backgroundColor: 'transparent',
-  },
-  rectangleTopRight: {
-
-    height: 1/4 * windowWidth,
-    width: 1/4 * windowWidth,
-    position: 'absolute',
-    top: windowHeight * 0.25 - 7,
-    right: windowWidth - 311/375 * windowWidth - 7,
-    borderTopWidth: 2,
-    borderRightWidth: 2,
-    borderColor: '#ededed',
-    backgroundColor: 'transparent',
-  },
-  rectangleBottomLeft: {
-
-    height: 1/4 * windowWidth,
-    width: 1/4 * windowWidth,
-    position: 'absolute',
-    left: windowWidth - 311/375 * windowWidth - 7,
-    bottom: windowHeight - windowHeight * 0.25 - windowWidth * 2/3 - 7,
-    borderBottomWidth: 2,
-    borderLeftWidth: 2,
-    borderColor: '#ededed',
-    backgroundColor: 'transparent',
-  },
-  rectangleBottomRight: {
-
-    height: 1/4 * windowWidth,
-    width: 1/4 * windowWidth,
-    position: 'absolute',
-    right: windowWidth - 311/375 * windowWidth - 7,
-    bottom: windowHeight - windowHeight * 0.25 - windowWidth * 2/3 - 7,
-    borderBottomWidth: 2,
-    borderRightWidth: 2,
-    borderColor: '#ededed',
-    backgroundColor: 'transparent',
-  },
-
-  bottomButtonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems:'center',
-    marginBottom: 15
-  },
-  flashButton: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'row'
-  },
-  flashIcon: {
-    flex: 1,
-    width: 52.5,
-    height: 55,
-    backgroundColor: 'transparent'
-  },
-  flashButtonText: {
-    flex: 1,
-    fontFamily: 'docker',
-    marginBottom: 10,
-    marginLeft: -20,
-    color: '#ededed',
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-
-  overlayTop: {
-    height: windowHeight * 0.25,
-    width: windowWidth,
-    backgroundColor: 'rgba(0,0,0,0.65)',
-    position: 'absolute',
-    left: 0,
-    top: 0,
-  },
-  overlayRight: {
-    height: windowWidth * 2/3,
-    width: windowWidth - 311/375 * windowWidth,
-    backgroundColor: 'rgba(0,0,0,0.65)',
-    position: 'absolute',
-    right: 0,
-    top: windowHeight * 0.25,
-  },
-  overlayLeft: {
-    height: windowWidth * 2/3,
-    width: windowWidth - 311/375 * windowWidth,
-    backgroundColor: 'rgba(0,0,0,0.65)',
-    position: 'absolute',
-    left: 0,
-    top: windowHeight * 0.25
-  },
-  overlayBottom: {
-    height: windowHeight - windowHeight * 0.25 - windowWidth * 2/3,
-    width: windowWidth,
-    backgroundColor: 'rgba(0,0,0,0.65)',
-    position: 'absolute',
-    left: 0,
-    bottom: 0,
-  },
-  instructions: {
-    flex: 1,
-    marginTop: windowWidth * (20/414),
-    marginBottom: windowWidth * (20/414),
-    marginHorizontal: windowWidth * (20/414),
-    backgroundColor: '#ffffff',
-    borderRadius:10,
-    padding: windowWidth * (20/414),
-  },
-  cameraPermissionsAlert: {
-    flex: 1,
-    marginTop: 0.32 * windowHeight,
-    marginBottom: windowWidth * (310/414),
-    marginHorizontal: windowWidth * (35/414),
-    backgroundColor: '#ffffff',
-    borderRadius: 10,
-    padding: windowWidth * (20/414),
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-  },
-  useYourCameraTitleText: {
-    textAlign: 'center',
-    fontWeight: 'bold',
-    fontSize: windowWidth * (20/414)
-  },
-  line: {
-    marginTop: windowWidth * (10/414),
-    width: windowWidth * (175/414),
-    height: 2,
-    backgroundColor: '#d3d3d3'
-  },
-  useYourCameraDescriptionText: {
-    marginTop: windowWidth * (10/414),
-    textAlign: 'center',
-    fontSize: windowWidth * (16/414),
-    lineHeight: windowWidth * (20/414),
-    fontWeight: '500'
-
-  },
-  yesButton: {
-    height: windowWidth * (50/414),
-    width: windowWidth * (180/375),
-    marginTop: windowWidth * (15/375),
-    borderRadius: windowWidth * (10/375),
-    backgroundColor: '#99559e',
-    flexDirection: 'column',
-    justifyContent: 'center'
-  },
-  yesText: {
-    fontSize: windowWidth * (18/414),
-    textAlign: 'center',
-    color: 'white',
-    fontWeight: 'bold'
-  },
-  disconnectedAlert: {
-    flex: 1,
-    marginTop: 0.32 * windowHeight,
-    marginBottom: windowWidth * (310/414),
-    marginHorizontal: windowWidth * (35/414),
-    backgroundColor: 'transparent',
-    borderRadius: 10,
-    flexDirection: 'column',
-    justifyContent: 'flex-start',
-  },
-
-  blur: {
-    flex: 1,
-    backgroundColor: 'transparent',
-    borderRadius: 10,
-    alignItems: 'center',
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-  },
-  disconnectedIcons: {
-    flex: 3,
-    backgroundColor: 'transparent',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingTop: windowWidth * (5/375)
-  },
-  controllerIcon: {
-    width: windowWidth * (90/375),
-    backgroundColor: 'transparent',
-    alignItems: 'center',
-    paddingRight: windowWidth * (0/375)
-  },
-  desktopIcon: {
-    width: windowWidth * (90/375),
-    backgroundColor: 'transparent',
-    alignItems: 'center',
-    paddingLeft: windowWidth * (0/375)
-  },
-  disconnectedDashXDashIcon: {
-    flexDirection: 'row',
-    backgroundColor: 'transparent',
-  },
-  leftDashIcon: {
-    backgroundColor: 'transparent',
-  },
-  xIcon: {
-    backgroundColor: 'transparent',
-  },
-  rightDashIcon: {
-    backgroundColor: 'transparent',
-  },
-  disconnectedTitleText: {
-    flex: 1,
-    backgroundColor: 'transparent',
-    textAlign: 'center',
-    fontWeight: 'bold',
-    fontSize: windowWidth * (22/414),
-    color: 'rgba(0,0,0,0.8)',
-    paddingBottom: windowWidth * (15/375)
   },
 });
 
