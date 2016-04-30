@@ -1,7 +1,6 @@
 const React = require('react-native');
 const IconIon = require('react-native-vector-icons/Ionicons');
 
-
 const {
   StyleSheet,
   Dimensions,
@@ -20,13 +19,13 @@ if (Dimensions.get('window').width===736) {
   windowHeight = Dimensions.get('window').height;
 }
 
-// This presentational component renders the brackets in the center of the camera
+// This presentational component renders the area on the bottom of the screen which contains the flash toggle
 class FlashButtonArea extends React.Component { 
   render() {
     return (
       <View style={styles.bottomButtonContainer}>
         <TouchableWithoutFeedback onPress={this.props._torchEnabled.bind(this)}  underlayColor={'#FC9396'}>
-          {this.props.cameraTorchToggle === 0 ? 
+          {this.props.cameraTorchToggle === 0 ? // 0 means flash is off
             <View style={styles.flashButton}>
               <IconIon name="ios-bolt-outline" size={40} allowFontScaling={false} color="rgba(237,237,237,0.5)" style={styles.flashIcon} />
               <Text style={styles.flashButtonText} allowFontScaling={false}>Flash Off</Text>

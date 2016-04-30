@@ -33,23 +33,20 @@ class DisconnectedModal extends React.Component {
         <Animated.View style={{opacity: this.props.fadeAnim, flex: 1}}>
           <Image style={styles.disconnectedAlert}>
            <BlurView blurType="light" style={styles.blur}>
-
-                <View style={styles.disconnectedIcons}>
-                  <View style={styles.desktopIcon}>
-                    <IconIon name="ios-monitor-outline" size={windowWidth * (85/375)} allowFontScaling={false} color="rgba(0,0,0,0.8)"/>
-                  </View>
-                  <View style={styles.disconnectedDashXDashIcon}>
-                    <IconIon name="ios-minus-empty" size={windowWidth * (60/375)} allowFontScaling={false} color="rgba(0,0,0,0.8)" style={styles.leftDashIcon} />
-                    <IconIon name="ios-close-empty" size={windowWidth * (60/375)} allowFontScaling={false} color="rgba(0,0,0,0.8)" style={styles.xIcon} />
-                    <IconIon name="ios-minus-empty" size={windowWidth * (60/375)} allowFontScaling={false} color="rgba(0,0,0,0.8)" style={styles.rightDashIcon} />
-                  </View>
-                  <View style={styles.controllerIcon}>
-                    <IconIon name="ios-game-controller-a-outline" size={windowWidth * (85/375)} allowFontScaling={false} color="rgba(0,0,0,0.8)" />
-                  </View>
-                </View>
-                <Text style={styles.disconnectedTitleText}>Controller Disconnected</Text>
-              
-
+            <View style={styles.disconnectedIcons}>
+              <View style={styles.desktopIcon}>
+                <IconIon name="ios-monitor-outline" size={windowWidth * (85/375)} allowFontScaling={false} color="rgba(0,0,0,0.8)"/>
+              </View>
+              <View style={styles.disconnectedDashXDashIcon}>
+                <IconIon name="ios-minus-empty" size={windowWidth * (60/375)} allowFontScaling={false} color="rgba(0,0,0,0.8)" style={styles.leftDashIcon} />
+                <IconIon name="ios-close-empty" size={windowWidth * (60/375)} allowFontScaling={false} color="rgba(0,0,0,0.8)" style={styles.xIcon} />
+                <IconIon name="ios-minus-empty" size={windowWidth * (60/375)} allowFontScaling={false} color="rgba(0,0,0,0.8)" style={styles.rightDashIcon} />
+              </View>
+              <View style={styles.controllerIcon}>
+                <IconIon name="ios-game-controller-a-outline" size={windowWidth * (85/375)} allowFontScaling={false} color="rgba(0,0,0,0.8)" />
+              </View>
+            </View>
+            <Text style={styles.disconnectedTitleText}>Controller Disconnected</Text>
             </BlurView>
           </Image>
         </Animated.View>

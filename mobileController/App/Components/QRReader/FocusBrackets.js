@@ -44,7 +44,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   rectangleTopLeft: {
-
     height: 1/4 * windowWidth,
     width: 1/4 * windowWidth,
     position: 'absolute',
@@ -56,7 +55,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   rectangleTopRight: {
-
     height: 1/4 * windowWidth,
     width: 1/4 * windowWidth,
     position: 'absolute',
@@ -68,7 +66,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   rectangleBottomLeft: {
-
     height: 1/4 * windowWidth,
     width: 1/4 * windowWidth,
     position: 'absolute',
@@ -80,7 +77,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   rectangleBottomRight: {
-
     height: 1/4 * windowWidth,
     width: 1/4 * windowWidth,
     position: 'absolute',
@@ -91,5 +87,4 @@ const styles = StyleSheet.create({
     borderColor: '#ededed',
     backgroundColor: 'transparent',
   },
-
 });

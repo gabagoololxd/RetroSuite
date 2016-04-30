@@ -19,7 +19,7 @@ if (Dimensions.get('window').width===736) {
   windowHeight = Dimensions.get('window').height;
 }
 
-// This presentational component renders the brackets in the center of the camera
+// This presentational component renders the modal that appears when the user does not give proper camera permissions
 class CameraPermissionsModal extends React.Component { 
   render() {
     return (
@@ -38,7 +38,6 @@ class CameraPermissionsModal extends React.Component {
           </TouchableHighlight>
         </View>
       </Modal>
-
     );
   }
 }

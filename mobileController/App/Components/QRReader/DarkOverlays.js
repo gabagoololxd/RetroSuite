@@ -16,7 +16,8 @@ if (Dimensions.get('window').width===736) {
   windowHeight = Dimensions.get('window').height;
 }
 
-// This presentational component renders the slightly dark overlays around the focus area
+// This presentational component renders the slightly dark overlays that cover the whole screen except for the focus area
+// Other camera components are rendered inside of it
 class DarkOverlays extends React.Component { 
   render() {
     return (

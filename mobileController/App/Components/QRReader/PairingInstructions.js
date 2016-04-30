@@ -17,7 +17,7 @@ if (Dimensions.get('window').width===736) {
   windowHeight = Dimensions.get('window').height;
 }
 
-// This presentational component renders the brackets in the center of the camera
+// This presentational component renders the pairing instructions that appear when SegmentedControl is on index 1
 class PairingInstructions extends React.Component { 
   render() {
     return (

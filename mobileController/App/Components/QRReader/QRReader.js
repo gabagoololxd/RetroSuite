@@ -2,7 +2,6 @@ const React = require('react-native');
 const Camera = require('react-native-camera').default;
 const _ = require('lodash');
 const Orientation = require('react-native-orientation');
-const IconIon = require('react-native-vector-icons/Ionicons');
 const Permissions = require('react-native-permissions');
 
 const DisconnectedModal = require('./DisconnectedModal');
@@ -19,19 +18,12 @@ const JoyPadContainer = require('../JoyPad/JoyPadContainer');
 const {
   Dimensions,
   StyleSheet,
-  Text,
   View,
-  TouchableWithoutFeedback,
   Navigator,
   StatusBarIOS,
-  SegmentedControlIOS,
   Linking,
-  ScrollView,
   NetInfo,
-  TouchableHighlight,
-  Modal,
   AppStateIOS,
-  Image,
   Animated
 } = React;
 
@@ -45,6 +37,7 @@ if (Dimensions.get('window').width===736) {
   windowHeight = Dimensions.get('window').height;
 }
 
+// This is the container component that holds the camera component and all the associated methods
 class QRReader extends React.Component {
   constructor(props) {
     super(props);
@@ -62,7 +55,6 @@ class QRReader extends React.Component {
   }
 
   componentDidMount() {
-    console.log('cameraaaaa', this.state.cameraTorchToggle);
     Orientation.lockToPortrait(); //this will lock the view to Portrait
     AppStateIOS.addEventListener('change', this._handleAppStateChange.bind(this)); 
 
@@ -227,7 +219,6 @@ class QRReader extends React.Component {
     this.setState({showCameraPermissionsModal: false});
     Linking.openURL('app-settings:').catch(err => console.error('An error occurred', err));
   }
-  
 
   render() {
     StatusBarIOS.setHidden('false');
@@ -235,15 +226,19 @@ class QRReader extends React.Component {
     console.log(this.state);
 
     if(this.state.cameraPermissions!==true) {
-      this._checkCameraPermissions();
+      // mimics an event listener for permissions: if the permissions are not set to true, keep checking to see if it changes
+      this._checkCameraPermissions(); 
     }
     
     if (!this.state.cameraOn) {
+      // turn the camera off when we go to the JoyPad
       return (
         <View style={styles.container}/>
       );
     } else if (this.state.cameraOn) {
+
       if(this.state.cameraPermissions !== false) {
+        // normal state of the app when on the pairing screen; shows a QR scanner with appropriate overlays/buttons/instructions
         return (
           <View >
             <Camera
@@ -271,7 +266,8 @@ class QRReader extends React.Component {
             </Camera>
           </View>
         )
-      } else if(this.state.cameraPermissions === false) {
+      } else if (this.state.cameraPermissions === false) {
+        // when the camera permissions are off, disable the camera and show a modal that requests permissions with a link to settings
         return (
           <View style={styles.container}>
             <DarkOverlays>
@@ -286,13 +282,12 @@ class QRReader extends React.Component {
             </DarkOverlays>
           </View>
         );
-      } //inside else block
+      } // end inside else block
 
-    } //outside else block
-
-  } //render
+    } // end outside else block
+  } // end render
  
-} //constructor
+} // end constructor
 
 const styles = StyleSheet.create({
   container: {
