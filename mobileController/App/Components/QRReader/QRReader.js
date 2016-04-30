@@ -51,7 +51,7 @@ class QRReader extends React.Component {
       selectedIndex: 0,
       showDisconnectedModal: false,
       fadeAnim: new Animated.Value(0),
-    }
+    };
   }
 
   componentDidMount() {
@@ -85,12 +85,13 @@ class QRReader extends React.Component {
     //     }
     //   });
     // }
+    // global.JoyPadOpen = true;
     // webSocket.PairController('10.0.0.215:1337', openJoyPadContainerCallback);
 
   }
 
   componentWillUnmount() {
-    AppStateIOS.removeEventListener('change', this._handleAppStateChange);
+    AppStateIOS.removeEventListener('change', this._handleAppStateChange.bind(this));
   }
 
   _handleAppStateChange(currentAppState) {
@@ -155,6 +156,7 @@ class QRReader extends React.Component {
           gestures: {} //disable ability to swipe to pop back from JoyPadContainer to QRReader once past the ip address page
         }
       });
+      global.JoyPadOpen = true;
     }
 
     // TODO: 
@@ -175,7 +177,6 @@ class QRReader extends React.Component {
     // pause sometimes doesnt pause
     // somehow send  close message when chrome app x's out
 
-    // controller disconnecred modal keeps popping up when we come back
     // pause modal 5s scale
 
     // autofocus camera
@@ -205,7 +206,7 @@ class QRReader extends React.Component {
     var self = this;
     setTimeout(() => {
       self._hideDisconnectedModal();
-    }, 2750);
+    }, 2900);
   }
 
   _hideDisconnectedModal() {

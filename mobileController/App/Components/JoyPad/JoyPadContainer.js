@@ -36,6 +36,7 @@ class JoyPadContainer extends React.Component {
     this.state = {
       // tracks if app has been closed; if it it closed and loses connection to the websocket server, then pop back to QRReader
       appState: undefined,
+      JoyPadOpen: true,
 
       // set to true when game is paused
       showPauseModal: false, 
@@ -103,16 +104,26 @@ class JoyPadContainer extends React.Component {
       _turnCameraOn = this.props.route._turnCameraOn.bind(this);
       _showDisconnectedModal = this.props.route._showDisconnectedModal.bind(this);
 
-      _showDisconnectedModal();
-      navigator.pop();
-      Orientation.lockToPortrait();
-      _turnCameraOn();
+      if(global.JoyPadOpen) {
+        _showDisconnectedModal();
+        navigator.pop();
+        Orientation.lockToPortrait();
+        _turnCameraOn();
+      }
     };
   }
 
   componentDidMount() {
+    console.log('mounted joypad')
+
     Orientation.lockToLandscapeRight(); // this will lock the view to Landscape
     AppStateIOS.addEventListener('change', this._handleAppStateChange.bind(this));  // tracks if app has been closed; if it it closed and loses connection to the websocket server, then pop back to QRReader
+  }
+
+  componentWillUnmount() {
+    console.log('unmount joypad');
+    AppStateIOS.removeEventListener('change', this._handleAppStateChange.bind(this));
+    global.JoyPadOpen = false;
   }
 
   _handleAppStateChange(currentAppState) {

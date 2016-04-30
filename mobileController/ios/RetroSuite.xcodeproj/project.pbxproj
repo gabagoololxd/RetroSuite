@@ -24,6 +24,7 @@
 		17FE73EC4E054438A64A73A9 /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 637382508C8349EB82EB98AF /* Foundation.ttf */; };
 		2D5E94291BB54CD581829DFA /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 416A2B79D2354123A943B626 /* Entypo.ttf */; };
 		4FDDA2DDE87F48338C75062C /* libRCTCamera.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C35EE180DA50442B9D5ECFBB /* libRCTCamera.a */; };
+		6EF98E880FD84C01B9172131 /* libRNBlur.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADDA1E807BAC41D6BD9C071D /* libRNBlur.a */; };
 		7C1338682D8A4E2D962EB04B /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 050F39807F4E4BDAA703DFDE /* FontAwesome.ttf */; };
 		7D79851386A64DD7A2F0B316 /* libRNVectorIcons.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5BC2EF8B90C043E18B4C7371 /* libRNVectorIcons.a */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
@@ -157,6 +158,13 @@
 			remoteGlobalIDString = 134814201AA4EA6300B7C361;
 			remoteInfo = RNModal;
 		};
+		DDCCE4431CD3945C00755CB0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 78D543792640432CABC08AD4 /* RNBlur.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = A68BD7BC1BC31318005F02DF;
+			remoteInfo = RNBlur;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -190,9 +198,11 @@
 		5C89DF25FF9846E090072884 /* RNModal.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNModal.xcodeproj; path = "../node_modules/react-native-modal/RNModal.xcodeproj"; sourceTree = "<group>"; };
 		637382508C8349EB82EB98AF /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
+		78D543792640432CABC08AD4 /* RNBlur.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNBlur.xcodeproj; path = "../node_modules/react-native-blur/ios/RNBlur.xcodeproj"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
 		9AD85620E35A47229F6C4BC4 /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
 		9EF113A0F8124B1F8D9B7AE2 /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
+		ADDA1E807BAC41D6BD9C071D /* libRNBlur.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNBlur.a; sourceTree = "<group>"; };
 		B35C2F29237D46E4A06E9601 /* RNVectorIcons.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNVectorIcons.xcodeproj; path = "../node_modules/react-native-vector-icons/RNVectorIcons.xcodeproj"; sourceTree = "<group>"; };
 		C35EE180DA50442B9D5ECFBB /* libRCTCamera.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRCTCamera.a; sourceTree = "<group>"; };
 		DD07C3B51CD023E300FD5E06 /* eurostile-bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "eurostile-bold.ttf"; path = "../App/Components/Assets/eurostile-bold.ttf"; sourceTree = "<group>"; };
@@ -234,6 +244,7 @@
 				4FDDA2DDE87F48338C75062C /* libRCTCamera.a in Frameworks */,
 				7D79851386A64DD7A2F0B316 /* libRNVectorIcons.a in Frameworks */,
 				FC9635D268B54774B8880A25 /* libReactNativePermissions.a in Frameworks */,
+				6EF98E880FD84C01B9172131 /* libRNBlur.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -376,6 +387,7 @@
 				5C89DF25FF9846E090072884 /* RNModal.xcodeproj */,
 				11BFEEF3D86B4995BB1FCB1E /* RNNetworkInfo.xcodeproj */,
 				10DF665F5FB649E79D325DE6 /* ReactNativePermissions.xcodeproj */,
+				78D543792640432CABC08AD4 /* RNBlur.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -541,6 +553,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		DDCCE4341CD3945C00755CB0 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				DDCCE4441CD3945C00755CB0 /* libRNBlur.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -657,6 +677,10 @@
 				{
 					ProductGroup = DD07C3A31CCF802A00FD5E06 /* Products */;
 					ProjectRef = 10DF665F5FB649E79D325DE6 /* ReactNativePermissions.xcodeproj */;
+				},
+				{
+					ProductGroup = DDCCE4341CD3945C00755CB0 /* Products */;
+					ProjectRef = 78D543792640432CABC08AD4 /* RNBlur.xcodeproj */;
 				},
 				{
 					ProductGroup = DD9F27D81CBF05DA009880C4 /* Products */;
@@ -785,6 +809,13 @@
 			remoteRef = DD9F27E61CBF05DA009880C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		DDCCE4441CD3945C00755CB0 /* libRNBlur.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNBlur.a;
+			remoteRef = DDCCE4431CD3945C00755CB0 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 /* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
@@ -891,6 +922,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/RetroSuite.app/RetroSuite";
@@ -911,6 +943,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -939,6 +972,7 @@
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
 					"$(SRCROOT)/../node_modules/react-native-network-info/ios",
 					"$(SRCROOT)/../node_modules/react-native-permissions",
+					"$(SRCROOT)/../node_modules/react-native-blur/ios",
 				);
 				INFOPLIST_FILE = mobileController/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
@@ -968,6 +1002,7 @@
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
 					"$(SRCROOT)/../node_modules/react-native-network-info/ios",
 					"$(SRCROOT)/../node_modules/react-native-permissions",
+					"$(SRCROOT)/../node_modules/react-native-blur/ios",
 				);
 				INFOPLIST_FILE = mobileController/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
@@ -1023,6 +1058,7 @@
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
 					"$(SRCROOT)/../node_modules/react-native-network-info/ios",
 					"$(SRCROOT)/../node_modules/react-native-permissions",
+					"$(SRCROOT)/../node_modules/react-native-blur/ios",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
 				MTL_ENABLE_DEBUG_INFO = YES;
@@ -1067,6 +1103,7 @@
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
 					"$(SRCROOT)/../node_modules/react-native-network-info/ios",
 					"$(SRCROOT)/../node_modules/react-native-permissions",
+					"$(SRCROOT)/../node_modules/react-native-blur/ios",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
 				MTL_ENABLE_DEBUG_INFO = NO;
