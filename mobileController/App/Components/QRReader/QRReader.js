@@ -51,6 +51,7 @@ class QRReader extends React.Component {
       selectedIndex: 0,
       showDisconnectedModal: false,
       fadeAnim: new Animated.Value(0),
+      ipAddressFound: undefined
     };
   }
 
@@ -134,7 +135,10 @@ class QRReader extends React.Component {
   _onBarCodeRead(e) {
     const ipAddress = e.data;
 
+
+
     const success = () => {
+      this.setState({ipAddressFound: undefined})
       const navigator = this.props.navigator;
       const _turnCameraOn = this._turnCameraOn.bind(this);
       const _turnCameraOff = this._turnCameraOff.bind(this);
@@ -156,18 +160,20 @@ class QRReader extends React.Component {
       global.JoyPadOpen = true;
     }
 
+    
+    console.log('scanned it!')
+    if(this.state.ipAddress !== ipAddress) {
+      this.setState({ipAddress: ipAddress})
+      console.log('tryna send')
+      webSocket.PairController(ipAddress, success);
+    };
+
     // TODO: 
     // Promise race, if after 2000 it doesnt pair successfully, check to see if connected to wifi, if not, then notify the user
-    // What if when we scan, wifi is on, but the chrome app's wifi is off?
-    NetInfo.fetch().done(
-      (connectionInfo) => { console.log(connectionInfo, 'connectionInfo') }
-    );
-    
-    webSocket.PairController(ipAddress, success);
-
-    // TODO:
+    // NetInfo.fetch().done(
+    //   (connectionInfo) => { console.log(connectionInfo, 'connectionInfo') }
+    // );
     // make instructions better with multiple click through steps and screenshots
-    // modularize qrreader
     // handle scans that work but no pairing happens/wifi issues
 
     // handle weird sizing of chrome app
