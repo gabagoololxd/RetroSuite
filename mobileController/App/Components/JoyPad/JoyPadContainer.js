@@ -106,7 +106,7 @@ class JoyPadContainer extends React.Component {
 
       if(global.JoyPadOpen) {
         _showDisconnectedModal();
-        navigator.pop();
+        navigator.popToTop();
         Orientation.lockToPortrait();
         _turnCameraOn();
       }
