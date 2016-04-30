@@ -59,7 +59,7 @@ class QRReader extends React.Component {
       selectedIndex: 0,
       
       showDisconnectedModal: false,
-      disconnectedModalFadeAnim: new Animated.Value(0),
+      fadeAnim: new Animated.Value(0),
 
       ipAddressFound: undefined,
       connectionInfo: undefined,
@@ -223,13 +223,13 @@ class QRReader extends React.Component {
             // AlertIOS.alert('wifi is connected, we scanned, check the chrome app')
             // The controller didn't pair, even though the phone is connceted to wifi
             self.setState({showWifiConnectedPairingErrorModal: true});
-            self.setState({ipAddressFound: undefined}) // reset to scan again
+            // self.setState({ipAddressFound: undefined}) // reset to scan again
 
           } else {
             // AlertIOS.alert('your wifi is not on')
             // The controller didn't pair, and the phone is not connected to wifi
             self.setState({showWifiDisconnectedPairingErrorModal: true});
-            self.setState({ipAddressFound: undefined}) // reset to scan again
+            // self.setState({ipAddressFound: undefined}) // reset to scan again
 
           }
         }
@@ -299,6 +299,7 @@ class QRReader extends React.Component {
     console.log('close click')
     this.setState({showWifiDisconnectedPairingErrorModal: false});
     this.setState({showWifiConnectedPairingErrorModal: false});
+    this.setState({ipAddressFound: undefined}) // reset to scan again
   }
 
   render() {
@@ -341,7 +342,7 @@ class QRReader extends React.Component {
                 {this.state.selectedIndex===0 ? <FocusBrackets/> : null}
                 <FlashButtonArea cameraTorchToggle={this.state.cameraTorchToggle} _torchEnabled={this._torchEnabled.bind(this)}/>
 
-                <DisconnectedModal fadeAnim={this.state.disconnectedModalFadeAnim} showDisconnectedModal={this.state.showDisconnectedModal}/>
+                <DisconnectedModal fadeAnim={this.state.fadeAnim} showDisconnectedModal={this.state.showDisconnectedModal}/>
                 
                 <WifiConnectedPairingErrorModal showWifiConnectedPairingErrorModal={this.state.showWifiConnectedPairingErrorModal} _openWifiPermissions={this._openWifiPermissions.bind(this)} _closePairingErrorModal={this._closePairingErrorModal.bind(this)}/>
                 <WifiDisconnectedPairingErrorModal showWifiDisconnectedPairingErrorModal={this.state.showWifiDisconnectedPairingErrorModal} _openWifiPermissions={this._openWifiPermissions.bind(this)} _closePairingErrorModal={this._closePairingErrorModal.bind(this)}/>
