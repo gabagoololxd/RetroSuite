@@ -56,10 +56,7 @@ class QRReader extends React.Component {
 
   componentDidMount() {
     Orientation.lockToPortrait(); //this will lock the view to Portrait
-
-    AppStateIOS.addEventListener('change', this._handleAppStateChange.bind(this));
-
-    // Animated.timing(this.state.fadeAnim, {toValue: 1}).start(); 
+    AppStateIOS.addEventListener('change', this._handleAppStateChange.bind(this)); 
 
     // Determine user permissions for the camera; if permission is authorized, use the camera/app; 
     // Otherwise, notify the user that they must allow camera access and provide a link to settings where they can do so
@@ -175,9 +172,8 @@ class QRReader extends React.Component {
 
     // handle weird sizing of chrome app
     // pause sometimes doesnt pause
-    // somehow send  close message when chrome app x's out
+    // somehow send  close message immediatedly when chrome app x's out
 
-    // pause modal 5s scale
 
     // autofocus camera
     // ABXY overlap / touch radius options
@@ -206,7 +202,7 @@ class QRReader extends React.Component {
     var self = this;
     setTimeout(() => {
       self._hideDisconnectedModal();
-    }, 2900);
+    }, 3000);
   }
 
   _hideDisconnectedModal() {
@@ -229,6 +225,10 @@ class QRReader extends React.Component {
     StatusBarIOS.setHidden('false');
     StatusBarIOS.setStyle('light-content');
     console.log(this.state);
+
+    if(this.state.cameraPermissions!==true) {
+      this._checkCameraPermissions();
+    }
     
     if (!this.state.cameraOn) {
       return (
