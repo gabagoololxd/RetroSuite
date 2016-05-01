@@ -27,35 +27,42 @@ if (Dimensions.get('window').width===736) { // iPhone 6+ landscape
 
 
 // This presentational component renders the modal that appears when the user does not give proper camera permissions
-class CameraPermissionsModal extends React.Component { 
+class WifiDisconnectedPairingErrorModal extends React.Component { 
   render() {
     return (
       <Modal animated={true}
              transparent={true}
-             visible={this.props.showCameraPermissionsModal}>
-        <View style={styles.cameraPermissionsAlert} pointerEvents='box-none'> 
-          <Text style={styles.useYourCameraTitleText}>Use your camera?</Text>
+             visible={this.props.showWifiDisconnectedPairingErrorModal}>
+        <View style={styles.alert} pointerEvents='box-none'> 
+          <Text style={styles.titleText}>Turn on Wi-Fi?</Text>
           <View style={styles.line}/>
-          <Text style={styles.useYourCameraDescriptionText}>Pairing your controller requires access to your camera.</Text>
+          <Text style={styles.descriptionText}>Pairing your controller requires your phone to be connected to the same {"\n"} Wi-Fi network as your computer.</Text>
 
-          <TouchableHighlight style={styles.yesButton}
-                              onPress={this.props._openCameraPermissions.bind(this)}
+          <TouchableHighlight style={styles.openWifiSettingsButton}
+                              onPress={this.props._openWifiPermissions.bind(this)}
                               underlayColor='#8d4e91'>
-            <Text style={styles.yesText}>Yes</Text>
+            <Text style={styles.buttonText}>Open Wi-Fi Settings</Text>
           </TouchableHighlight>
-        </View>
+
+          <TouchableHighlight style={styles.rescanButton}
+                              onPress={this.props._closePairingErrorModal.bind(this)}
+                              underlayColor='#8d4e91'>
+            <Text style={styles.buttonText}>Rescan</Text>
+          </TouchableHighlight>
+
+         </View>
       </Modal>
     );
   }
 }
 
-module.exports = CameraPermissionsModal;
+module.exports = WifiDisconnectedPairingErrorModal;
 
 const styles = StyleSheet.create({
-  cameraPermissionsAlert: {
+  alert: {
     flex: 1,
     marginTop: 0.32 * windowHeight,
-    marginBottom: windowWidth * (310/414),
+    marginBottom: windowWidth * (235/414),
     marginHorizontal: windowWidth * (35/414),
     backgroundColor: '#ffffff',
     borderRadius: 10,
@@ -63,35 +70,43 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-start',
   },
-  useYourCameraTitleText: {
+  titleText: {
     textAlign: 'center',
     fontWeight: 'bold',
     fontSize: windowWidth * (20/414)
   },
   line: {
     marginTop: windowWidth * (10/414),
-    width: windowWidth * (175/414),
+    width: windowWidth * (150/414),
     height: 2,
     backgroundColor: '#d3d3d3'
   },
-  useYourCameraDescriptionText: {
+  descriptionText: {
     marginTop: windowWidth * (10/414),
     textAlign: 'center',
     fontSize: windowWidth * (16/414),
     lineHeight: windowWidth * (20/414),
     fontWeight: '500'
-
   },
-  yesButton: {
+  openWifiSettingsButton: {
     height: windowWidth * (50/414),
-    width: windowWidth * (180/375),
+    width: windowWidth * (255/375),
     marginTop: windowWidth * (15/375),
     borderRadius: windowWidth * (10/375),
     backgroundColor: '#99559e',
     flexDirection: 'column',
     justifyContent: 'center'
   },
-  yesText: {
+  rescanButton: {
+    height: windowWidth * (50/414),
+    width: windowWidth * (255/375),
+    marginTop: windowWidth * (5/375),
+    borderRadius: windowWidth * (10/375),
+    backgroundColor: '#99559e',
+    flexDirection: 'column',
+    justifyContent: 'center'
+  },
+  buttonText: {
     fontSize: windowWidth * (18/414),
     textAlign: 'center',
     color: 'white',

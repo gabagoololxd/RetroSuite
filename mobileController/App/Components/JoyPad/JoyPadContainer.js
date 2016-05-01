@@ -21,13 +21,20 @@ const {
 
 // On the iPhone 6+, if the app is launched in landscape, Dimensions.get('window').width returns the height and vice versa for width so we fix that here
 var windowWidth, windowHeight;
-if (Dimensions.get('window').width===736) {
+if (Dimensions.get('window').width===736) { // iPhone 6+ landscape
   windowWidth = 414;
-  windowHeight = 736
-} else {
+  windowHeight = 736;
+} else if(Dimensions.get('window').width===667) { // iPhone 6 landscape
+  windowWidth = 375;
+  windowHeight = 667;
+} else if(Dimensions.get('window').width===568) { // iPhone 5 landscape
+  windowWidth = 320;
+  windowHeight = 568;
+} else { // launched in correct orientation
   windowWidth = Dimensions.get('window').width;
   windowHeight = Dimensions.get('window').height;
 }
+
 
 // This container component holds JoyPad methods, determines the touch areas of each button, determines which buttons are pressed, and what messages to send to the websocket server
 class JoyPadContainer extends React.Component {

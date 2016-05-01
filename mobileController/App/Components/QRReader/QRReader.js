@@ -33,10 +33,16 @@ const {
 
 // On the iPhone 6+, if the app is launched in landscape, Dimensions.get('window').width returns the height and vice versa for width so we fix that here
 var windowWidth, windowHeight;
-if (Dimensions.get('window').width===736) {
+if (Dimensions.get('window').width===736) { // iPhone 6+ landscape
   windowWidth = 414;
-  windowHeight = 736
-} else {
+  windowHeight = 736;
+} else if(Dimensions.get('window').width===667) { // iPhone 6 landscape
+  windowWidth = 375;
+  windowHeight = 667;
+} else if(Dimensions.get('window').width===568) { // iPhone 5 landscape
+  windowWidth = 320;
+  windowHeight = 568;
+} else { // launched in correct orientation
   windowWidth = Dimensions.get('window').width;
   windowHeight = Dimensions.get('window').height;
 }
@@ -67,6 +73,7 @@ class QRReader extends React.Component {
       showWifiConnectedPairingErrorModal: false,
       showWifiDisconnectedPairingErrorModal: false
     };
+    global.webSocketAlreadyConnected = false;
   }
 
   componentDidMount() {
@@ -220,33 +227,31 @@ class QRReader extends React.Component {
       p.then((response) => {
         if(response=='did not pair') {
           if(self.state.connectionInfo==='wifi') {
-            // AlertIOS.alert('wifi is connected, we scanned, check the chrome app')
-            // The controller didn't pair, even though the phone is connceted to wifi
+            // The controller didn't pair, even though the phone is connected to wifi
             self.setState({showWifiConnectedPairingErrorModal: true});
-            // self.setState({ipAddressFound: undefined}) // reset to scan again
-
           } else {
-            // AlertIOS.alert('your wifi is not on')
             // The controller didn't pair, and the phone is not connected to wifi
             self.setState({showWifiDisconnectedPairingErrorModal: true});
-            // self.setState({ipAddressFound: undefined}) // reset to scan again
-
           }
         }
       })
       p.catch(error => console.log(error))
     };
 
-    // TODO: 
+    // TODO:
+
+    // React native:
     // make instructions better with multiple click through steps and screenshots
+    // when chrome app wifi is off, every time we scan it still sends a request (clicking rescan resets ipaddressfound, which works for when wifi is turned off on the phone but not this way)
+      // causes pause to not pause because open chrome app has been called so many times
     
-    // handle weird sizing of chrome app
-    // pause sometimes doesnt pause
-    // somehow send  close message immediatedly when chrome app x's out
+    // Chrome app:
+      // handle weird sizing of chrome app
+      // somehow send  close message immediatedly when chrome app x's out
 
-
-    // autofocus camera
-    // ABXY overlap / touch radius options
+    // Nice to have:
+      // autofocus camera
+      // ABXY overlap / touch radius options
   }
 
   _torchEnabled() {
@@ -307,7 +312,7 @@ class QRReader extends React.Component {
     StatusBarIOS.setStyle('light-content');
     console.log(this.state);
 
-    if(this.state.cameraPermissions!==true) {
+    if(this.state.cameraPermissions!==true && this.state.appState==='active') {
       // mimics an event listener for permissions: if the permissions are not set to true, keep checking to see if it changes
       this._checkCameraPermissions(); 
     }
