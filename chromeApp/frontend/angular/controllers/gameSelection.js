@@ -157,6 +157,7 @@ app.controller('gameSelection', function($scope, $http) {
     }
     $scope.$apply();
 
+    // handle dymanic resizing of li tags
     var gamesListEntries = document.getElementsByClassName('gamesListEntry');
     var childrenLengthArray = [];
     Array.prototype.forEach.call(gamesListEntries, function(gamesListEntry) {
@@ -164,26 +165,14 @@ app.controller('gameSelection', function($scope, $http) {
       Array.prototype.forEach.call(gamesListEntry.children, function(child){
         childrenLength += child.clientWidth;
       })
-      console.log(childrenLength, '+', gamesListEntry);
       childrenLengthArray.push(childrenLength);
     });
-
-    // console.log('child array', childrenLengthArray)
-
     if(_.max(childrenLengthArray) > $('.gamesListEntry').width()) {
       $('.gamesListEntry').css('width', _.max(childrenLengthArray) + 80);
     }
-
-    // console.log('untouched width', $('.gamesListEntry').width());
-
-    // console.log('changed width', $('.gamesListEntry').width());
-
-
     $scope.$apply();
 
-
     chrome.app.window.current().onBoundsChanged.addListener(function() {
-      console.log('resize');
       var gamesListEntries = document.getElementsByClassName('gamesListEntry');
       var childrenLengthArray = [];
       Array.prototype.forEach.call(gamesListEntries, function(gamesListEntry) {
@@ -191,12 +180,20 @@ app.controller('gameSelection', function($scope, $http) {
         Array.prototype.forEach.call(gamesListEntry.children, function(child){
           childrenLength += child.clientWidth;
         })
-        console.log(childrenLength, '+', gamesListEntry);
         childrenLengthArray.push(childrenLength);
       });
 
       if(_.max(childrenLengthArray) > $('.gamesListEntry').width()) {
         $('.gamesListEntry').css('width', _.max(childrenLengthArray) + 80);
+      }
+
+      console.log('width', window.innerWidth)
+      console.log('Height', window.innerHeight)
+
+      if(window.innerWidth < 640 || window.innerHeight <500 ) {
+        $('#dragItHereContainer').css('background-image', 'none');
+      } else {
+        $('#dragItHereContainer').css('background-image', 'url(' + './frontend/img/snesconsole.png' + ')');
       }
          
     })
