@@ -26,6 +26,9 @@ app.controller('pauseScreen', function($scope) {
       });
 
     });
+    if($scope.ipFound === false) {
+      $('#qrInstructions2').text('No Wifi Address Found');
+    }
     qrScreen2.classList.remove('hidden');
   };
   window.closeQRScreen = $scope.closeQRScreen = function() {

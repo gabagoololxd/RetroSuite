@@ -33,17 +33,20 @@ class CameraPermissionsModal extends React.Component {
       <Modal animated={true}
              transparent={true}
              visible={this.props.showCameraPermissionsModal}>
-        <View style={styles.cameraPermissionsAlert} pointerEvents='box-none'> 
-          <Text style={styles.useYourCameraTitleText}>Use your camera?</Text>
-          <View style={styles.line}/>
-          <Text style={styles.useYourCameraDescriptionText}>Pairing your controller requires access to your camera.</Text>
+        <View style={styles.CameraPermissionsModal}>
+          <View style={styles.cameraPermissionsAlert} pointerEvents='box-none'> 
+            <Text style={styles.useYourCameraTitleText}>Use your camera?</Text>
+            <View style={styles.line}/>
+            <Text style={styles.useYourCameraDescriptionText}>Pairing your controller requires access to your camera.</Text>
 
-          <TouchableHighlight style={styles.yesButton}
-                              onPress={this.props._openCameraPermissions.bind(this)}
-                              underlayColor='#8d4e91'>
-            <Text style={styles.yesText}>Yes</Text>
-          </TouchableHighlight>
+            <TouchableHighlight style={styles.yesButton}
+                                onPress={this.props._openCameraPermissions.bind(this)}
+                                underlayColor='#8d4e91'>
+              <Text style={styles.yesText}>Yes</Text>
+            </TouchableHighlight>
+          </View>
         </View>
+
       </Modal>
     );
   }
@@ -52,11 +55,15 @@ class CameraPermissionsModal extends React.Component {
 module.exports = CameraPermissionsModal;
 
 const styles = StyleSheet.create({
-  cameraPermissionsAlert: {
+  CameraPermissionsModal: {
     flex: 1,
-    marginTop: 0.32 * windowHeight,
-    marginBottom: windowWidth * (310/414),
-    marginHorizontal: windowWidth * (35/414),
+    backgroundColor: 'transparent',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  cameraPermissionsAlert: {
+    width: windowWidth - windowWidth * (35/414) * 2,
+    height: windowHeight - 0.32 * windowHeight - windowWidth * (310/414),
     backgroundColor: '#ffffff',
     borderRadius: 10,
     padding: windowWidth * (20/414),

@@ -33,24 +33,27 @@ class WifiDisconnectedPairingErrorModal extends React.Component {
       <Modal animated={true}
              transparent={true}
              visible={this.props.showWifiDisconnectedPairingErrorModal}>
-        <View style={styles.alert} pointerEvents='box-none'> 
-          <Text style={styles.titleText}>Turn on Wi-Fi?</Text>
-          <View style={styles.line}/>
-          <Text style={styles.descriptionText}>Pairing your controller requires your phone to be connected to the same {"\n"} Wi-Fi network as your computer.</Text>
+        <View style={styles.WifiDisconnectedPairingErrorModal} pointerEvents='box-none'> 
+          <View style={styles.alert} pointerEvents='box-none'> 
+            <Text style={styles.titleText}>Turn on Wi-Fi?</Text>
+            <View style={styles.line}/>
+            <Text style={styles.descriptionText}>Pairing your controller requires your phone to be connected to the same {"\n"} Wi-Fi network as your computer.</Text>
 
-          <TouchableHighlight style={styles.openWifiSettingsButton}
-                              onPress={this.props._openWifiPermissions.bind(this)}
-                              underlayColor='#8d4e91'>
-            <Text style={styles.buttonText}>Open Wi-Fi Settings</Text>
-          </TouchableHighlight>
+            <TouchableHighlight style={styles.openWifiSettingsButton}
+                                onPress={this.props._openWifiPermissions.bind(this)}
+                                underlayColor='#8d4e91'>
+              <Text style={styles.buttonText}>Open Wi-Fi Settings</Text>
+            </TouchableHighlight>
 
-          <TouchableHighlight style={styles.rescanButton}
-                              onPress={this.props._closePairingErrorModal.bind(this)}
-                              underlayColor='#8d4e91'>
-            <Text style={styles.buttonText}>Rescan</Text>
-          </TouchableHighlight>
+            <TouchableHighlight style={styles.rescanButton}
+                                onPress={this.props._closePairingErrorModal.bind(this)}
+                                underlayColor='#8d4e91'>
+              <Text style={styles.buttonText}>Rescan</Text>
+            </TouchableHighlight>
 
-         </View>
+           </View>
+          </View>
+
       </Modal>
     );
   }
@@ -59,11 +62,15 @@ class WifiDisconnectedPairingErrorModal extends React.Component {
 module.exports = WifiDisconnectedPairingErrorModal;
 
 const styles = StyleSheet.create({
-  alert: {
+  WifiDisconnectedPairingErrorModal: {
     flex: 1,
-    marginTop: 0.32 * windowHeight,
-    marginBottom: windowWidth * (235/414),
-    marginHorizontal: windowWidth * (35/414),
+    backgroundColor: 'transparent',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  alert: {
+    width: windowWidth -  windowWidth * (35/414) * 2,
+    height: windowHeight - 0.32 * windowHeight - windowWidth * (235/414),
     backgroundColor: '#ffffff',
     borderRadius: 10,
     padding: windowWidth * (20/414),
