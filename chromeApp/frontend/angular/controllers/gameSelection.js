@@ -8,6 +8,29 @@ app.controller('gameSelection', function($scope, $http) {
   }
   window.toggleGameSelectionScreen = $scope.toggleGameSelectionScreen;
 
+
+
+
+
+  // $scope.resizeGamesListEntries = function () {
+  //   var gamesListEntries = document.getElementsByClassName('gamesListEntry');
+  //   console.log('gamesListEntries', gamesListEntries)
+  //   Array.prototype.forEach.call(gamesListEntries, function(gamesListEntry) {
+  //     console.log('let')
+  //     var childrenLength = 0;
+  //     Array.prototype.forEach.call(gamesListEntry.children, function(child){
+  //       console.log('you')
+  //       childrenLength += child.clientWidth;
+  //     })
+  //     console.log(childrenLength, '+', gamesListEntries[i]);
+  //   });
+
+
+
+  // }
+
+  // $scope.resizeGamesListEntries();
+
   document.getElementById('searchBar').addEventListener('focusin', function() {
     $("#searchBar").css("border-color", "#9767ab");
     $("#filterButton").css("border-left-color", "#9767ab");
@@ -133,6 +156,50 @@ app.controller('gameSelection', function($scope, $http) {
       console.log('adding userGames array from localForage to user library', value);
     }
     $scope.$apply();
+
+    var gamesListEntries = document.getElementsByClassName('gamesListEntry');
+    var childrenLengthArray = [];
+    Array.prototype.forEach.call(gamesListEntries, function(gamesListEntry) {
+      var childrenLength = 0;
+      Array.prototype.forEach.call(gamesListEntry.children, function(child){
+        childrenLength += child.clientWidth;
+      })
+      console.log(childrenLength, '+', gamesListEntry);
+      childrenLengthArray.push(childrenLength);
+    });
+
+    // console.log('child array', childrenLengthArray)
+
+    if(_.max(childrenLengthArray) > $('.gamesListEntry').width()) {
+      $('.gamesListEntry').css('width', _.max(childrenLengthArray) + 80);
+    }
+
+    // console.log('untouched width', $('.gamesListEntry').width());
+
+    // console.log('changed width', $('.gamesListEntry').width());
+
+
+    $scope.$apply();
+
+
+    chrome.app.window.current().onBoundsChanged.addListener(function() {
+      console.log('resize');
+      var gamesListEntries = document.getElementsByClassName('gamesListEntry');
+      var childrenLengthArray = [];
+      Array.prototype.forEach.call(gamesListEntries, function(gamesListEntry) {
+        var childrenLength = 0;
+        Array.prototype.forEach.call(gamesListEntry.children, function(child){
+          childrenLength += child.clientWidth;
+        })
+        console.log(childrenLength, '+', gamesListEntry);
+        childrenLengthArray.push(childrenLength);
+      });
+
+      if(_.max(childrenLengthArray) > $('.gamesListEntry').width()) {
+        $('.gamesListEntry').css('width', _.max(childrenLengthArray) + 80);
+      }
+         
+    })
   })
 
   //methods to filter and show games from the list
