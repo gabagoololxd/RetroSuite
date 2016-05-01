@@ -14,6 +14,38 @@ app.controller('inputSelection', function($scope) {
   }
   var qrScreen = document.getElementById('qrScreen');
   $scope.openQRScreen = function() {
+
+    chrome.system.network.getNetworkInterfaces(function (ipAddresses) {
+
+      // in case the user switches wifi networks midway through, the QR needs to reupdate
+      $scope.ipFound = false;
+      $('#qrCode').empty();
+
+      ipAddresses.forEach(function (ipAddress) {
+        console.log(ipAddress);
+        if (/^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/.test(ipAddress.address)) {
+
+          $scope.ipAddress = ip4 = ipAddress.address;
+          var toQ = $scope.ipAddress + ':' + window.port;
+
+          if($scope.ipFound === false) {
+            $scope.$apply(function() {
+              $('#qrInstructions').text('Scan Qr To Pair');
+              new QRCode(document.getElementById('qrCode'), toQ);
+              
+              $('#qrInstructions2').text('Scan Qr To Pair');
+              new QRCode(document.getElementById('qrCode2'), toQ);
+            });
+          }
+          $scope.ipFound = true;
+        }
+      });
+
+    });
+    if($scope.ipFound === false) {
+      $('#qrInstructions').text('No Wifi Address Found');
+      $('#qrInstructions2').text('No Wifi Address Found');
+    }
     qrScreen.classList.remove('hidden');
   };
   $scope.closeQRScreen = function() {
@@ -42,28 +74,5 @@ app.controller('inputSelection', function($scope) {
     $("#mobileIcon").css('background-image', 'url(' + './frontend/img/desktopwithmobileicondark.png' + ')');
   });
 
-
-  chrome.system.network.getNetworkInterfaces(function (ipAddresses) {
-    ipAddresses.forEach(function (ipAddress) {
-      console.log(ipAddress);
-      if (/^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/.test(ipAddress.address)) {
-        $scope.title = 'IP FOUND'
-
-        $scope.ipAddress = ip4 = ipAddress.address;
-        var toQ = $scope.ipAddress + ':' + window.port;
-
-        if($scope.ipFound === false) {
-          new QRCode(document.getElementById('qrCode'), toQ);
-          new QRCode(document.getElementById('qrCode2'), toQ);
-        }
-
-        $scope.ipFound = true;
-
-        // force scope to update
-        $scope.$apply()
-      }
-    });
-
-  });
 
 });

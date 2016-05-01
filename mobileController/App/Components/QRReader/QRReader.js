@@ -14,7 +14,6 @@ const SegmentedControl = require('./SegmentedControl');
 const WifiConnectedPairingErrorModal = require('./WifiConnectedPairingErrorModal');
 const WifiDisconnectedPairingErrorModal = require('./WifiDisconnectedPairingErrorModal');
 
-
 const webSocket = require('../../Utils/webSocketMethods');
 const JoyPadContainer = require('../JoyPad/JoyPadContainer');
 
@@ -242,8 +241,6 @@ class QRReader extends React.Component {
 
     // React native:
     // make instructions better with multiple click through steps and screenshots
-    // when chrome app wifi is off, every time we scan it still sends a request (clicking rescan resets ipaddressfound, which works for when wifi is turned off on the phone but not this way)
-      // causes pause to not pause because open chrome app has been called so many times
     
     // Chrome app:
       // handle weird sizing of chrome app
@@ -312,7 +309,7 @@ class QRReader extends React.Component {
     StatusBarIOS.setStyle('light-content');
     console.log(this.state);
 
-    if(this.state.cameraPermissions!==true && this.state.appState==='active') {
+    if(this.state.cameraPermissions!==true && this.state.appState!=='background') {
       // mimics an event listener for permissions: if the permissions are not set to true, keep checking to see if it changes
       this._checkCameraPermissions(); 
     }

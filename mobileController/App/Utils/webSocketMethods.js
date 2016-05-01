@@ -4,7 +4,7 @@ var webSocket = {
     
     try {
       global.ws = new WebSocket(url);
-    } catch(err) {}
+    } catch(err) {console.log(err)}
 
     ws.onopen = function(){
       // connection opened

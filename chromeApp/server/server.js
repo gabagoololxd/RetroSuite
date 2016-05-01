@@ -31,7 +31,8 @@ wsServer.addEventListener('request', function(req) {
   console.log('socket', socket)
 
   // Following code handles edge case where the user scans the qr, but the computer running the chrome app has wifi off
-  // When wifi turns on, multiple connections are made, but there should not be multiple messages telling the user the controller has connect
+  // When wifi turns on, multiple connections are made because the camera has scanned multiple times, 
+  // but there should not be multiple messages telling the user the controller has connected
   var newSocketPeerAddress;
   var existingPeerAddresses = [];
   chrome.sockets.tcp.getSockets(function (sockets) {
