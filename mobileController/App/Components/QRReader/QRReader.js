@@ -238,17 +238,12 @@ class QRReader extends React.Component {
     };
 
     // TODO:
-
-    // React native:
     // make instructions better with multiple click through steps and screenshots
-
-    // Chrome app:
-      // handle weird sizing of chrome app
+    // ABXY overlap / touch radius options
 
     // Nice to have:
       // somehow send  close message immediatedly when chrome app x's out
       // autofocus camera
-      // ABXY overlap / touch radius options
   }
 
   _torchEnabled() {

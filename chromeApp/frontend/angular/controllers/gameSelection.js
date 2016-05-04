@@ -8,29 +8,6 @@ app.controller('gameSelection', function($scope, $http) {
   }
   window.toggleGameSelectionScreen = $scope.toggleGameSelectionScreen;
 
-
-
-
-
-  // $scope.resizeGamesListEntries = function () {
-  //   var gamesListEntries = document.getElementsByClassName('gamesListEntry');
-  //   console.log('gamesListEntries', gamesListEntries)
-  //   Array.prototype.forEach.call(gamesListEntries, function(gamesListEntry) {
-  //     console.log('let')
-  //     var childrenLength = 0;
-  //     Array.prototype.forEach.call(gamesListEntry.children, function(child){
-  //       console.log('you')
-  //       childrenLength += child.clientWidth;
-  //     })
-  //     console.log(childrenLength, '+', gamesListEntries[i]);
-  //   });
-
-
-
-  // }
-
-  // $scope.resizeGamesListEntries();
-
   document.getElementById('searchBar').addEventListener('focusin', function() {
     $("#searchBar").css("border-color", "#9767ab");
     $("#filterButton").css("border-left-color", "#9767ab");
@@ -183,9 +160,16 @@ app.controller('gameSelection', function($scope, $http) {
         childrenLengthArray.push(childrenLength);
       });
 
+      console.log('_.max(childrenLengthArray)', _.max(childrenLengthArray))
+      console.log("$('.gamesListEntry').width()", $('.gamesListEntry').width())
+      console.log("$('.gamesList').width()", $('.gamesList').width())
+
       if(_.max(childrenLengthArray) > $('.gamesListEntry').width()) {
-        $('.gamesListEntry').css('width', _.max(childrenLengthArray) + 80);
+        $('.gamesListEntry').css('width', _.max(childrenLengthArray) + 80) ;
+      } else {
+        $('.gamesListEntry').css('width', $('.gamesList').width() - 12) ;
       }
+
 
       console.log('width', window.innerWidth)
       console.log('Height', window.innerHeight)

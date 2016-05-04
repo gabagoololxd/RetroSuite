@@ -131,6 +131,7 @@ class JoyPadContainer extends React.Component {
     console.log('unmount joypad');
     AppStateIOS.removeEventListener('change', this._handleAppStateChange.bind(this));
     global.JoyPadOpen = false;
+    global.webSocketAlreadyConnected = false;
   }
 
   _handleAppStateChange(currentAppState) {
