@@ -25,18 +25,17 @@ if (Dimensions.get('window').width===736) { // iPhone 6+ landscape
   windowHeight = Dimensions.get('window').height;
 }
 
-
 class PauseModal extends React.Component {
   render() {
     return (
       <View style={styles.pauseModal}>
         <Text allowFontScaling={false} style={styles.pauseText}>Your Game is Paused</Text>
         <TouchableOpacity style={styles.resume} onPress={this.props._resume.bind(this)}>
-          <Ionicon name="ios-play-outline" style={styles.resumeIcon} size={windowWidth * (50/375)} allowFontScaling={false} color="white"/>
+          <Ionicon name="play" style={styles.resumeIcon} size={windowWidth * (38/375)} allowFontScaling={false} color="white"/>
           <Text allowFontScaling={false} style={styles.resumeText}>Resume Game</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.pair} onPress={this.props._pairController.bind(this)}>
-          <Ionicon name="ios-barcode-outline" style={styles.pairIcon} size={windowWidth * (50/375)} allowFontScaling={false} color="white"/>
+          <Ionicon name="qr-scanner" style={styles.pairIcon} size={windowWidth * (38/375)} allowFontScaling={false} color="white"/>
           <Text allowFontScaling={false} style={styles.pairText}>Re-pair controller</Text>
         </TouchableOpacity>
       </View>
@@ -67,6 +66,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginTop: windowWidth * 0.2
   },
+  resumeIcon: {
+    marginTop: windowWidth * (5/375)
+  },
   resumeText: {
     fontFamily: 'docker',
     color: 'white',
@@ -78,6 +80,9 @@ const styles = StyleSheet.create({
   pair: {
     marginTop: windowWidth * 0.05,
     flexDirection: 'row',
+  },
+  pairIcon: {
+    marginTop: windowWidth * (6/375)
   },
   pairText: {
     fontFamily: 'docker',

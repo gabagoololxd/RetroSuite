@@ -32,13 +32,13 @@ class PairingInstructionsPage3 extends React.Component {
       <View style={styles.instructionsPage}>
         
         <View style={styles.iconContainer}>
-          <IconIon name="qr-scanner" size={300} allowFontScaling={false} color="rgba(132,99,135,.3)" style={styles.flashIcon} />
+          <IconIon name="qr-scanner" size={ windowWidth * (300/375)} allowFontScaling={false} color="rgba(132,99,135,.3)" style={styles.flashIcon} />
         </View>
           
         <View style={styles.text}>
           <Text style={styles.header}>{"4. Scan the QR"}</Text>
           <Text style={styles.header}>{""}</Text>
-          <Text style={{fontWeight: 'normal', fontSize: 14, fontWeight: '300', lineHeight: 18, color: '#353632'}} 
+          <Text style={{fontWeight: 'normal', fontSize:  windowWidth * (14/375), fontWeight: '300', lineHeight:  windowWidth * (18/375), color: '#353632'}} 
                 allowFontScaling={false}> 
                 {"On your phone, switch to \"Scan QR\" and point your camera at the QR code. \n\nYou're ready. Happy gaming!"}
           </Text>
@@ -53,26 +53,23 @@ module.exports = PairingInstructionsPage3;
 
 const styles = StyleSheet.create({
   instructionsPage: {
-    // backgroundColor: 'orange',
     flex: 1,
     marginHorizontal: windowWidth * (15/414),
-    borderRadius: 10,
+    borderRadius: windowWidth * (10/414),
     padding: windowWidth * (20/414),
   },
   iconContainer: {
     flex: 7,
     justifyContent: 'center',
     alignItems: 'center',
-    // backgroundColor: 'red'
   },
   text: {
     flex: 4,
     marginTop:  windowWidth * (10/414),
     marginHorizontal: windowWidth * (25/414),
-    // marginRight: windowWidth * (10/414),
   },
   header: {
-    fontSize: 18,
+    fontSize:  windowWidth * (18/375),
     fontWeight: 'bold',
     color: '#353632'
   },

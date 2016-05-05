@@ -32,13 +32,13 @@ class PairingInstructionsPage3 extends React.Component {
       <View style={styles.instructionsPage}>
         
         <View style={styles.iconContainer}>
-          <IconIon name="ios-game-controller-a-outline" size={315} allowFontScaling={false} color="rgba(132,99,135,.4)" style={styles.flashIcon} />
+          <IconIon name="ios-game-controller-a-outline" size={ windowWidth * (315/375)} allowFontScaling={false} color="rgba(132,99,135,.4)" style={styles.flashIcon} />
         </View>
           
         <View style={styles.text}>
           <Text style={styles.header}>{"3. Choose a game"}</Text>
           <Text style={styles.header}>{""}</Text>
-          <Text style={{fontWeight: 'normal', fontSize: 14, fontWeight: '300', lineHeight: 18, color: '#353632'}} 
+          <Text style={{fontWeight: 'normal', fontSize:  windowWidth * (14/375), fontWeight: '300', lineHeight:  windowWidth * (18/375), color: '#353632'}} 
                 allowFontScaling={false}> 
                 {'On your computer, select a game. \n\nNext, on the "Choose Your Controller" screen, click "Mobile Phone”.'}
           </Text>
@@ -53,28 +53,23 @@ module.exports = PairingInstructionsPage3;
 
 const styles = StyleSheet.create({
   instructionsPage: {
-    // backgroundColor: 'orange',
     flex: 1,
     marginHorizontal: windowWidth * (15/414),
-    borderRadius: 10,
+    borderRadius: windowWidth * (10/375),
     padding: windowWidth * (20/414),
   },
   iconContainer: {
     flex: 8,
     justifyContent: 'center',
     alignItems: 'center',
-    // backgroundColor: 'red'
-
   },
   text: {
     flex: 6,
     marginTop:  windowWidth * (10/414),
-
     marginHorizontal: windowWidth * (19/414),
-
   },
   header: {
-    fontSize: 18,
+    fontSize: windowWidth * (18/375),
     fontWeight: 'bold',
     color: '#353632'
   },

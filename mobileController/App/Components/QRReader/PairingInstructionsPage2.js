@@ -32,7 +32,7 @@ class PairingInstructionsPage2 extends React.Component {
       <View style={styles.instructionsPage}>
         
         <View style={styles.iconContainer}>
-          <IconIon name="wifi" size={315} allowFontScaling={false} color="rgba(132,99,135,.3)" style={styles.flashIcon} />
+          <IconIon name="wifi" size={windowWidth * (315/375)} allowFontScaling={false} color="rgba(132,99,135,.3)" style={styles.flashIcon} />
         </View>
         
           
@@ -40,7 +40,7 @@ class PairingInstructionsPage2 extends React.Component {
           <Text style={styles.header}>{"2. Connect to Wifi"}</Text>
           <Text style={styles.header}>{""}</Text>
           <Text 
-            style={{fontWeight: 'normal', fontSize: 14, fontWeight: '300', lineHeight: 18, color: '#353632'}} 
+            style={{fontWeight: 'normal', fontSize: windowWidth * (14/375), fontWeight: '300', lineHeight: windowWidth * (18/375), color: '#353632'}} 
             allowFontScaling={false}> 
             {"Make sure your computer and iPhone are connected to the same Wi-Fi network."}
 
@@ -84,28 +84,23 @@ module.exports = PairingInstructionsPage2;
 
 const styles = StyleSheet.create({
   instructionsPage: {
-    // backgroundColor: 'orange',
     flex: 1,
     marginHorizontal: windowWidth * (15/414),
-    borderRadius: 10,
+    borderRadius: windowWidth * (10/375),
     padding: windowWidth * (20/414),
   },
   iconContainer: {
     flex: 7,
     justifyContent: 'center',
     alignItems: 'center',
-    // backgroundColor: 'red'
   },
   text: {
     flex: 6,
     marginHorizontal: windowWidth * (15/414),
-
-    // backgroundColor: 'red'
   },
   header: {
-    fontSize: 18,
+    fontSize: windowWidth * (18/375),
     fontWeight: 'bold',
     color: '#353632'
-
   },
 });

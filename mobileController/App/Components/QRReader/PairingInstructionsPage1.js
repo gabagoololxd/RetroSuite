@@ -32,13 +32,13 @@ class PairingInstructionsPage1 extends React.Component {
       <View style={styles.instructionsPage}>
         
         <View style={styles.iconContainer}>
-          <IconIon name="social-chrome-outline" size={295} allowFontScaling={false} color="rgba(132,99,135,.3)" style={styles.flashIcon} />
+          <IconIon name="social-chrome-outline" size={windowWidth * (295/375)} allowFontScaling={false} color="rgba(132,99,135,.3)" style={styles.flashIcon} />
         </View>
           
         <View style={styles.text}>
           <Text style={styles.header}>{"1. Get the Chrome App"}</Text>
           <Text style={styles.header}>{""}</Text>
-          <Text style={{fontWeight: 'normal', fontSize: 14, fontWeight: '300', lineHeight: 18, color: '#353632'}} 
+          <Text style={{fontWeight: 'normal', fontSize: windowWidth * (14/375), fontWeight: '300', lineHeight: windowWidth * (18/375), color: '#353632'}} 
                 allowFontScaling={false}> 
                 {"On your computer, download the "}
             <Text style={{color: '#99559e'}} 
@@ -61,25 +61,21 @@ const styles = StyleSheet.create({
   instructionsPage: {
     flex: 1,
     marginHorizontal: windowWidth * (15/414),
-    borderRadius: 10,
+    borderRadius: windowWidth * (10/375),
     padding: windowWidth * (20/414),
-    // backgroundColor: 'blue'
   },
   iconContainer: {
     flex: 9,
     justifyContent: 'center', 
     alignItems: 'center',
-    // backgroundColor: 'red'
   },
   text: {
     flex: 3,
     marginHorizontal: windowWidth * (35/414),
     marginTop:  windowWidth * (10/414),
-
-
   },
   header: {
-    fontSize: 18,
+    fontSize: windowWidth * (18/375),
     fontWeight: 'bold',
     color: '#353632'
   },
