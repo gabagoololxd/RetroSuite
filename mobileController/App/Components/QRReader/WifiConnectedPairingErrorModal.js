@@ -78,7 +78,8 @@ const styles = StyleSheet.create({
   titleText: {
     textAlign: 'center',
     fontWeight: 'bold',
-    fontSize: windowWidth * (20/414)
+    fontSize: windowWidth * (20/414),
+    color: '#353632'
   },
   line: {
     marginTop: windowWidth * (10/414),
@@ -91,7 +92,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: windowWidth * (16/414),
     lineHeight: windowWidth * (20/414),
-    fontWeight: '500'
+    fontWeight: '500',
+    color: '#353632'
   },
   openWifiSettingsButton: {
     height: windowWidth * (50/414),

@@ -38,7 +38,7 @@ class PairingInstructionsNavBar extends React.Component {
           </TouchableOpacity>
           : 
           <TouchableOpacity style={styles.leftArrow} onPress={() => this.props.goToPage(this.props.activeTab-1)}>
-            <IconIon name="ios-arrow-left" size={25} allowFontScaling={false} color="#007aff" style={styles.flashIcon} />
+            <IconIon name="ios-arrow-left" size={25} allowFontScaling={false} color="#99559e" style={styles.flashIcon} />
           </TouchableOpacity>
         }
 
@@ -54,8 +54,8 @@ class PairingInstructionsNavBar extends React.Component {
             <IconIon name="ios-arrow-right" size={25} allowFontScaling={false} color="transparent" style={styles.flashIcon} />
           </TouchableOpacity>
           :
-          <TouchableOpacity style={styles.rightArrow} onPress={() => this.props.goToPage(this.props.activeTab+1)}>
-            <IconIon name="ios-arrow-right" size={25} allowFontScaling={false} color="#007aff" style={styles.flashIcon} />
+          <TouchableOpacity style={styles.rightArrow} onPress={() => this.props.goToPage(this.props.activeTab+1)} >
+            <IconIon name="ios-arrow-right" size={25} allowFontScaling={false} color="#99559e" style={styles.flashIcon} />
           </TouchableOpacity>
         }
 
@@ -71,13 +71,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row'
   },
   leftArrow: {
-    marginLeft: windowWidth * (10/375),
+    paddingLeft: windowWidth * (10/375),
+    paddingRight: windowWidth * (20/375),
+
   },
   rightArrow: {
-    marginRight: windowWidth * (10/375),
+    paddingLeft: windowWidth * (20/375),
+    paddingRight: windowWidth * (10/375),
   },
   dot: {
-    backgroundColor:'rgba(0,0,0,.2)', 
+    backgroundColor:'rgba(132,99,135,.4)', 
     width: windowWidth * (8/375),
     height: windowWidth * (8/375),
     borderRadius: windowWidth * (4/375),
@@ -87,7 +90,7 @@ const styles = StyleSheet.create({
     marginBottom: windowWidth * (3/375),
   },
   activeDot: {
-    backgroundColor:'#007aff', 
+    backgroundColor:'#99559e', 
     width: windowWidth * (8/375),
     height: windowWidth * (8/375),
     borderRadius: windowWidth * (4/375),

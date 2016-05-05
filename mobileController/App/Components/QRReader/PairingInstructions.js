@@ -7,16 +7,10 @@ const PairingInstructionsPage2 = require('./PairingInstructionsPage2')
 const PairingInstructionsPage3 = require('./PairingInstructionsPage3')
 const PairingInstructionsPage4 = require('./PairingInstructionsPage4')
 
-
-
 const {
   StyleSheet,
   Dimensions,
-  ScrollView,
-  Text,
   View,
-  Image,
-  TouchableOpacity
 } = React;  
 
 // On the iPhone 6+, if the app is launched in landscape, Dimensions.get('window').width returns the height and vice versa for width so we fix that here
@@ -69,22 +63,4 @@ const styles = StyleSheet.create({
     marginTop: windowWidth * (10/414),
     backgroundColor: 'transparent',
   },
-
-  thing1: {
-    flex: 1, 
-    backgroundColor: 'red', 
-  },
-  thing2: {
-    flex: 1, 
-    backgroundColor: 'green', 
-  },
-  thing3: {
-    flex: 1, 
-    backgroundColor: 'blue', 
-  },
-  thing4: {
-    flex: 1, 
-    backgroundColor: 'purple', 
-  },
-
 });

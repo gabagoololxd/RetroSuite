@@ -1,11 +1,13 @@
 const React = require('react-native');
+const IconIon = require('react-native-vector-icons/Ionicons');
 
 const {
   StyleSheet,
   Dimensions,
   View,
   Text,
-  Linking
+  Linking,
+  Image
 } = React;  
 
 // On the iPhone 6+, if the app is launched in landscape, Dimensions.get('window').width returns the height and vice versa for width so we fix that here
@@ -24,16 +26,55 @@ if (Dimensions.get('window').width===736) { // iPhone 6+ landscape
   windowHeight = Dimensions.get('window').height;
 }
 
-
-// This presentational component renders the pairing instructions that appear when SegmentedControl is on index 1
 class PairingInstructionsPage2 extends React.Component { 
   render() {
     return (
-      <View style={styles.instructions}>
-        <View>
-          <Text style={{fontWeight: 'bold', fontSize: 15}} allowFontScaling={false}>2.<Text style={{fontWeight: 'normal', fontSize: 15}} allowFontScaling={false}> Make sure your computer and your phone are connected to the same Wi-Fi network. <Text style={{color: 'blue', textDecorationLine: 'underline'}} allowFontScaling={false} onPress={() =>  Linking.openURL('prefs:root=WIFI').catch(err => console.error('An error occurred', err))}>Click here</Text> to connect your iPhone to Wi-Fi.</Text></Text>
-          <Text style={{fontStyle: 'italic', fontSize: 15}} allowFontScaling={false}>*Remember: you can use your phone as a hotspot for your computer when Wi-Fi is spotty or nonexistant. <Text style={{color: 'blue', textDecorationLine: 'underline', fontStyle: 'normal'}} allowFontScaling={false} onPress={() =>  Linking.openURL('prefs:root=INTERNET_TETHERING').catch(err => console.error('An error occurred', err))}>Click here</Text> to turn on Personal Hotspot.</Text>
+      <View style={styles.instructionsPage}>
+        
+        <View style={styles.iconContainer}>
+          <IconIon name="wifi" size={315} allowFontScaling={false} color="rgba(132,99,135,.3)" style={styles.flashIcon} />
         </View>
+        
+          
+        <View style={styles.text}>
+          <Text style={styles.header}>{"2. Connect to Wifi"}</Text>
+          <Text style={styles.header}>{""}</Text>
+          <Text 
+            style={{fontWeight: 'normal', fontSize: 14, fontWeight: '300', lineHeight: 18, color: '#353632'}} 
+            allowFontScaling={false}> 
+            {"Make sure your computer and iPhone are connected to the same Wi-Fi network."}
+
+            <Text>{'\n'}</Text>
+            <Text>{'\n'}</Text>
+
+
+            <Text 
+              style={{color: '#99559e'}} 
+              allowFontScaling={false} 
+              onPress={() =>  Linking.openURL('prefs:root=WIFI').catch(err => console.error('An error occurred', err))}>
+              {"Click here"}
+            </Text>  
+            {" to connect to Wi-Fi."}
+
+            <Text>{'\n'}</Text>
+            <Text>{'\n'}</Text>
+
+
+            <Text allowFontScaling={false} style={{fontStyle: 'italic'}} >
+              {'*Remember: you can'} 
+              <Text 
+                style={{color: '#99559e', fontStyle: 'normal'}} 
+                allowFontScaling={false} 
+                onPress={() =>  Linking.openURL('prefs:root=INTERNET_TETHERING').catch(err => console.error('An error occurred', err))}>
+                {' use your phone as a hotspot '}
+              </Text> 
+              {'when Wi-Fi is spotty or nonexistant.'}
+            </Text>
+
+
+          </Text>
+        </View>
+
       </View> 
     );
   }
@@ -42,5 +83,29 @@ class PairingInstructionsPage2 extends React.Component {
 module.exports = PairingInstructionsPage2;
 
 const styles = StyleSheet.create({
+  instructionsPage: {
+    // backgroundColor: 'orange',
+    flex: 1,
+    marginHorizontal: windowWidth * (15/414),
+    borderRadius: 10,
+    padding: windowWidth * (20/414),
+  },
+  iconContainer: {
+    flex: 7,
+    justifyContent: 'center',
+    alignItems: 'center',
+    // backgroundColor: 'red'
+  },
+  text: {
+    flex: 6,
+    marginHorizontal: windowWidth * (15/414),
 
+    // backgroundColor: 'red'
+  },
+  header: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#353632'
+
+  },
 });
