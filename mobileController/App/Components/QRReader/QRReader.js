@@ -83,7 +83,7 @@ class QRReader extends React.Component {
     // Otherwise, notify the user that they must allow camera access and provide a link to settings where they can do so
     this._checkCameraPermissions();
     
-    // // //for development purposes, simulates successful qr scan
+    // //for development purposes, simulates successful qr scan
     // const openJoyPadContainerCallback = () => {
     //   const navigator = this.props.navigator;
     //   const _turnCameraOn = this._turnCameraOn.bind(this);
@@ -238,7 +238,6 @@ class QRReader extends React.Component {
     };
 
     // TODO:
-    // make instructions better with multiple click through steps and screenshots
     // ABXY overlap / touch radius options
 
     // Nice to have:
@@ -367,6 +366,7 @@ class QRReader extends React.Component {
       } // end inside if-else block
 
     } // end outside if-else block
+    
   } // end render
  
 } // end constructor

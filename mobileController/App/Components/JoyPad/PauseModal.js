@@ -28,18 +28,6 @@ if (Dimensions.get('window').width===736) { // iPhone 6+ landscape
 }
 
 class PauseModal extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      value: 1
-    }
-  }
-
-  _onValueChange(value) {
-    console.log('valueeeee', value)
-    this.setState({value: value});
-  }
-
   render() {
     return (
       <View style={styles.pauseModal}>
@@ -54,61 +42,56 @@ class PauseModal extends React.Component {
         </TouchableOpacity>
 
         <View style={styles.setABXYOverlap}>
-
-
-          <View style={styles.setABXYOverlapTextSliderContainer}>
-            <Text allowFontScaling={false} style={styles.setABXYOverlapText}>Set ABXY Overlap Area:</Text>
-            <SliderIOS
-              style={{width: windowHeight/2}}
-              maximumValue={Math.sqrt(2)}
-              minimumValue={1}
-              onValueChange={ this._onValueChange.bind(this) }/>
-          </View>
-        
-
+          <Text allowFontScaling={false} style={styles.setABXYOverlapText}>Set ABXY Overlap Area:</Text>
+          <SliderIOS
+            style={{width: windowHeight/2}}
+            value={this.props.sliderValue}
+            maximumValue={Math.sqrt(2)}
+            minimumValue={1}
+            minimumTrackTintColor={'#99559e'}
+            maximumTrackTintColor={'white'}
+            onValueChange={ this.props._onValueChange.bind(this) }/>
         </View>
 
-          <View style={[styles.circleRepresentations, {transform: [{translate:[ windowWidth * 0.1* this.state.value/2 - windowWidth * 0.1* 1/2, windowWidth * 0.1* this.state.value/2 - windowWidth * 0.1* 1/2]} ] }]}>
-            <View 
-              style={{
-                position: 'absolute',
-                bottom: windowWidth * 0.28,
-                right: windowWidth * 0.2, 
-                width: windowWidth * 0.1 * this.state.value,
-                height: windowWidth * 0.1 * this.state.value,
-                borderRadius: windowWidth * 0.1 * this.state.value/2,
-                backgroundColor: 'aqua'}}/>
-            <View 
-              style={{
-                position: 'absolute',
-                bottom: windowWidth  * (0.28) - Math.sqrt(8* windowWidth * 0.1/2 * windowWidth * 0.1/2)/2,
-                right: windowWidth * 0.2 + Math.sqrt(8* windowWidth * 0.1/2 * windowWidth * 0.1/2)/2, 
-                width: windowWidth * 0.1* this.state.value,
-                height: windowWidth * 0.1* this.state.value,
-                borderRadius: windowWidth * 0.1* this.state.value/2,
-                backgroundColor: 'green'}}/>
-            <View 
-              style={{
-                position: 'absolute',
-                bottom: windowWidth  * (0.28) - Math.sqrt(8* windowWidth * 0.1/2 * windowWidth * 0.1/2)/2,
-                right: windowWidth * (0.2) - Math.sqrt(8* windowWidth * 0.1/2 * windowWidth * 0.1/2)/2, 
-                width: windowWidth * 0.1* this.state.value,
-                height: windowWidth * 0.1* this.state.value,
-                borderRadius: windowWidth * 0.1* this.state.value/2,
-                backgroundColor: 'red'}}/>
+        <View style={[styles.circleRepresentations, {transform: [{translate:[ windowWidth * 0.1* this.props.sliderValue/2 - windowWidth * 0.1* 1/2, windowWidth * 0.1* this.props.sliderValue/2 - windowWidth * 0.1* 1/2]} ] }]}>
+          <View 
+            style={{
+              position: 'absolute',
+              bottom: windowWidth * 0.28,
+              right: windowWidth * 0.2, 
+              width: windowWidth * 0.1 * this.props.sliderValue,
+              height: windowWidth * 0.1 * this.props.sliderValue,
+              borderRadius: windowWidth * 0.1 * this.props.sliderValue/2,
+              backgroundColor: 'rgba(124,112,147,0.8)'}}/>
+          <View 
+            style={{
+              position: 'absolute',
+              bottom: windowWidth  * (0.28) - Math.sqrt(8* windowWidth * 0.1/2 * windowWidth * 0.1/2)/2,
+              right: windowWidth * 0.2 + Math.sqrt(8* windowWidth * 0.1/2 * windowWidth * 0.1/2)/2, 
+              width: windowWidth * 0.1* this.props.sliderValue,
+              height: windowWidth * 0.1* this.props.sliderValue,
+              borderRadius: windowWidth * 0.1* this.props.sliderValue/2,
+              backgroundColor: 'rgba(124,112,147,0.8)'}}/>
+          <View 
+            style={{
+              position: 'absolute',
+              bottom: windowWidth  * (0.28) - Math.sqrt(8* windowWidth * 0.1/2 * windowWidth * 0.1/2)/2,
+              right: windowWidth * (0.2) - Math.sqrt(8* windowWidth * 0.1/2 * windowWidth * 0.1/2)/2, 
+              width: windowWidth * 0.1* this.props.sliderValue,
+              height: windowWidth * 0.1* this.props.sliderValue,
+              borderRadius: windowWidth * 0.1* this.props.sliderValue/2,
+              backgroundColor: 'rgba(124,112,147,0.8)'}}/>
 
-            <View 
-              style={{
-                position: 'absolute',
-                bottom: windowWidth  * (0.28) - Math.sqrt(8* windowWidth * 0.1/2 * windowWidth * 0.1/2),
-                right: windowWidth * 0.2, 
-                width: windowWidth * 0.1* this.state.value,
-                height: windowWidth * 0.1* this.state.value,
-                borderRadius: windowWidth * 0.1* this.state.value/2,
-                backgroundColor: 'blue'}}/>
-
-
-          </View>
+          <View 
+            style={{
+              position: 'absolute',
+              bottom: windowWidth  * (0.28) - Math.sqrt(8* windowWidth * 0.1/2 * windowWidth * 0.1/2),
+              right: windowWidth * 0.2, 
+              width: windowWidth * 0.1* this.props.sliderValue,
+              height: windowWidth * 0.1* this.props.sliderValue,
+              borderRadius: windowWidth * 0.1* this.props.sliderValue/2,
+              backgroundColor: 'rgba(124,112,147,0.8)'}}/>
+        </View>
 
       </View>
     )
@@ -132,7 +115,7 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: windowWidth * (30/375),
     fontWeight: 'bold',
-    marginTop: windowWidth * -0.15,
+    marginTop: windowWidth * -0.1,
   },
   resume: {
     flexDirection: 'row',
@@ -164,16 +147,12 @@ const styles = StyleSheet.create({
     marginLeft: windowWidth * 0.05,
     marginTop: windowWidth * 0.045
   },
-  setABXYOverlap: {
-    flexDirection: 'row'
-  },
   circleRepresentations: {
     position: 'absolute',
     bottom: windowWidth * -0,
     right: windowWidth * 0, 
   },
- 
-  setABXYOverlapTextSliderContainer: {
+  setABXYOverlap: {
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',

@@ -30,6 +30,18 @@ var utils = {
     } else {
       return false;
     };
+  },
+
+  rotatePoint(width, height, topLeft, point, angle) {
+    var pivot = [width/2 + topLeft[0], height/2 + topLeft[1]];
+    // Rotate clockwise, angle in radians
+    var x = Math.round((Math.cos(angle) * (point[0] - pivot[0])) -
+                       (Math.sin(angle) * (point[1] - pivot[1])) +
+                       pivot[0]),
+        y = Math.round((Math.sin(angle) * (point[0] - pivot[0])) +
+                       (Math.cos(angle) * (point[1] - pivot[1])) +
+                       pivot[1]);
+    return [x, y];
   }
 
 };
