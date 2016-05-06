@@ -35,7 +35,6 @@ if (Dimensions.get('window').width===736) { // iPhone 6+ landscape
   windowHeight = Dimensions.get('window').height;
 }
 
-
 // This container component holds JoyPad methods, determines the touch areas of each button, determines which buttons are pressed, and what messages to send to the websocket server
 class JoyPadContainer extends React.Component {
   constructor(props) {
@@ -46,7 +45,9 @@ class JoyPadContainer extends React.Component {
       JoyPadOpen: true,
 
       // set to true when game is paused
-      showPauseModal: false, 
+      showPauseModal: true,
+      // set to true when game is paused and settings are open
+      showSettings: false,  
 
       // stores the previous state of button presses; we compare to see if current button presses are different from previous
       // if so, then send a 'press' or 'release' message to the chrome app webSocket server
@@ -162,6 +163,14 @@ class JoyPadContainer extends React.Component {
       Orientation.lockToPortrait();
       _turnCameraOn();
     });
+  }
+
+  _openSettings() {
+    this.setState({showSettings: true})
+  }
+
+  _closeSettings() {
+    this.setState({showSettings: false})
   }
 
   // Sets the state of layout; when the view renders, pass the information to this.state so we can calculate whether touches are within certain button areas
@@ -389,11 +398,22 @@ class JoyPadContainer extends React.Component {
           <View style={styles.startArea} onLayout={this._onLayoutStart.bind(this)}/>
 
           <JoyPad currentButtonPresses={this.state.currentButtonPresses} latestDPadTouch={this.state.latestDPadTouch}/>
+
+
+          <View style={styles.downwardsDiagonal}/>
+          <View style={styles.upwardsDiagonal}/>
+
+
           <PauseButton _pause={this._pause.bind(this)}/>
 
         </View>
 
-        {this.state.showPauseModal ? <PauseModal _resume={this._resume.bind(this)} _pairController={this._pairController.bind(this)}/> : null}
+        {this.state.showPauseModal ? <PauseModal _resume={this._resume.bind(this)} 
+                                                 _pairController={this._pairController.bind(this)} 
+                                                 _openSettings={this._openSettings.bind(this)} 
+                                                 _closeSettings={this._closeSettings.bind(this)} 
+                                                 showSettings={this.state.showSettings}/> 
+        : null}
 
       </View>
     );
@@ -464,6 +484,35 @@ const styles = StyleSheet.create({
     height: windowWidth * 0.19,
     backgroundColor: 'transparent'
   },
+
+  downwardsDiagonal: {
+    position: 'absolute',
+    top: windowWidth * .15,
+    right: windowWidth * 0.4 - 50/2,
+    height: 0,
+    borderTopWidth: windowWidth * 0.425,
+    borderBottomWidth: windowWidth * 0.425,
+    width: 50,
+    borderTopColor: 'red',
+    borderBottomColor: 'blue',
+    transform: [
+      {rotate: '43.2642deg'}
+    ]
+  },
+  upwardsDiagonal: {
+    position: 'absolute',
+    top: windowWidth * .15,
+    right: windowWidth * 0.4 - 50/2,
+    height: 0,
+    borderTopWidth: windowWidth * 0.425,
+    borderBottomWidth: windowWidth * 0.425,
+    width: 50,
+    borderTopColor: 'green',
+    borderBottomColor: 'orange',
+    transform: [
+      {rotate: '-43.2642deg'}
+    ]
+  }
 });
 
 module.exports = JoyPadContainer;

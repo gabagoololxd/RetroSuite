@@ -77,6 +77,6 @@ const styles = StyleSheet.create({
   header: {
     fontSize: windowWidth * (18/375),
     fontWeight: 'bold',
-    color: '#353632'
+    color: '#353632',
   },
 });

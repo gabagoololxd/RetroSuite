@@ -7,6 +7,8 @@ const {
   Text,
   View,
   TouchableOpacity,
+  Switch,
+  SliderIOS
 } = React;
 
 // On the iPhone 6+, if the app is launched in landscape, Dimensions.get('window').width returns the height and vice versa for width so we fix that here
@@ -26,6 +28,18 @@ if (Dimensions.get('window').width===736) { // iPhone 6+ landscape
 }
 
 class PauseModal extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      value: 1
+    }
+  }
+
+  _onValueChange(value) {
+    console.log('valueeeee', value)
+    this.setState({value: value});
+  }
+
   render() {
     return (
       <View style={styles.pauseModal}>
@@ -38,8 +52,66 @@ class PauseModal extends React.Component {
           <Ionicon name="qr-scanner" style={styles.pairIcon} size={windowWidth * (38/375)} allowFontScaling={false} color="white"/>
           <Text allowFontScaling={false} style={styles.pairText}>Re-pair controller</Text>
         </TouchableOpacity>
+
+        <View style={styles.setABXYOverlap}>
+
+
+          <View style={styles.setABXYOverlapTextSliderContainer}>
+            <Text allowFontScaling={false} style={styles.setABXYOverlapText}>Set ABXY Overlap Area:</Text>
+            <SliderIOS
+              style={{width: windowHeight/2}}
+              maximumValue={Math.sqrt(2)}
+              minimumValue={1}
+              onValueChange={ this._onValueChange.bind(this) }/>
+          </View>
+        
+
+        </View>
+
+          <View style={[styles.circleRepresentations, {transform: [{translate:[ windowWidth * 0.1* this.state.value/2 - windowWidth * 0.1* 1/2, windowWidth * 0.1* this.state.value/2 - windowWidth * 0.1* 1/2]} ] }]}>
+            <View 
+              style={{
+                position: 'absolute',
+                bottom: windowWidth * 0.28,
+                right: windowWidth * 0.2, 
+                width: windowWidth * 0.1 * this.state.value,
+                height: windowWidth * 0.1 * this.state.value,
+                borderRadius: windowWidth * 0.1 * this.state.value/2,
+                backgroundColor: 'aqua'}}/>
+            <View 
+              style={{
+                position: 'absolute',
+                bottom: windowWidth  * (0.28) - Math.sqrt(8* windowWidth * 0.1/2 * windowWidth * 0.1/2)/2,
+                right: windowWidth * 0.2 + Math.sqrt(8* windowWidth * 0.1/2 * windowWidth * 0.1/2)/2, 
+                width: windowWidth * 0.1* this.state.value,
+                height: windowWidth * 0.1* this.state.value,
+                borderRadius: windowWidth * 0.1* this.state.value/2,
+                backgroundColor: 'green'}}/>
+            <View 
+              style={{
+                position: 'absolute',
+                bottom: windowWidth  * (0.28) - Math.sqrt(8* windowWidth * 0.1/2 * windowWidth * 0.1/2)/2,
+                right: windowWidth * (0.2) - Math.sqrt(8* windowWidth * 0.1/2 * windowWidth * 0.1/2)/2, 
+                width: windowWidth * 0.1* this.state.value,
+                height: windowWidth * 0.1* this.state.value,
+                borderRadius: windowWidth * 0.1* this.state.value/2,
+                backgroundColor: 'red'}}/>
+
+            <View 
+              style={{
+                position: 'absolute',
+                bottom: windowWidth  * (0.28) - Math.sqrt(8* windowWidth * 0.1/2 * windowWidth * 0.1/2),
+                right: windowWidth * 0.2, 
+                width: windowWidth * 0.1* this.state.value,
+                height: windowWidth * 0.1* this.state.value,
+                borderRadius: windowWidth * 0.1* this.state.value/2,
+                backgroundColor: 'blue'}}/>
+
+
+          </View>
+
       </View>
-    );
+    )
   }
 }
 
@@ -60,11 +132,11 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: windowWidth * (30/375),
     fontWeight: 'bold',
-    marginTop: windowWidth * -0.2,
+    marginTop: windowWidth * -0.15,
   },
   resume: {
     flexDirection: 'row',
-    marginTop: windowWidth * 0.2
+    marginTop: windowWidth * 0.15
   },
   resumeIcon: {
     marginTop: windowWidth * (5/375)
@@ -92,6 +164,27 @@ const styles = StyleSheet.create({
     marginLeft: windowWidth * 0.05,
     marginTop: windowWidth * 0.045
   },
+  setABXYOverlap: {
+    flexDirection: 'row'
+  },
+  circleRepresentations: {
+    position: 'absolute',
+    bottom: windowWidth * -0,
+    right: windowWidth * 0, 
+  },
+ 
+  setABXYOverlapTextSliderContainer: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  setABXYOverlapText: {
+    fontFamily: 'docker',
+    color: 'white',
+    fontSize: windowWidth * (20/375),
+    fontWeight: 'bold',
+    marginTop: windowWidth * 0.1
+  }
 });
 
 module.exports = PauseModal;
