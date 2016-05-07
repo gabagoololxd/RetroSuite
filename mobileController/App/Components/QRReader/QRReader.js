@@ -61,7 +61,7 @@ class QRReader extends React.Component {
       cameraTorchToggle: Camera.constants.TorchMode.off,
       handleFocusChanged: () => {},
 
-      selectedIndex: 0,
+      selectedIndex: 1,
       
       showDisconnectedModal: false,
       fadeAnim: new Animated.Value(0),

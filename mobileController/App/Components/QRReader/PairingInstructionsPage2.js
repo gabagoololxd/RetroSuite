@@ -32,8 +32,25 @@ class PairingInstructionsPage2 extends React.Component {
       <View style={styles.instructionsPage}>
         
         <View style={styles.iconContainer}>
-          <IconIon name="wifi" size={windowWidth * (315/375)} allowFontScaling={false} color="rgba(132,99,135,.3)" style={styles.flashIcon} />
+          <View style={styles.topIconContainer}>
+
+            <View style={styles.desktopIcon}>
+              <IconIon name="ios-monitor-outline" size={windowWidth * (200/375)} allowFontScaling={false} color="rgba(21,21,20,.5)" style={styles.flashIcon} />
+            </View>
+            <View style={styles.iphoneIcon}>
+              <IconIon name="iphone" size={windowWidth * (150/375)} allowFontScaling={false} color="rgba(21,21,20,.5)" style={styles.flashIcon} />
+            </View>
+          </View>
         </View>
+
+        <View style={styles.wifiIconDesktop}>
+          <IconIon name="wifi" size={windowWidth * (110/375)} allowFontScaling={false} color="rgba(132,99,135,.3)" style={styles.flashIcon} />
+        </View>
+        <View style={styles.wifiIconiPhone}>
+          <IconIon name="wifi" size={windowWidth * (40/375)} allowFontScaling={false} color="rgba(132,99,135,.3)" style={styles.flashIcon} />
+        </View>
+
+
         
           
         <View style={styles.text}>
@@ -90,12 +107,37 @@ const styles = StyleSheet.create({
     padding: windowWidth * (20/414),
   },
   iconContainer: {
-    flex: 7,
+    flex: 1,
+    flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
+    // backgroundColor: 'red'
+  },
+  topIconContainer: {
+    flex: 1,
+    flexDirection: 'row',
+      alignItems: 'center',
+  },
+  desktopIcon: {
+    marginLeft: windowWidth * (300/375),
+    marginRight: windowWidth * (10/375)
+  },
+  iphoneIcon: {
+    marginLeft: windowWidth * (10/375),
+    marginRight: windowWidth * (300/375)
+  },
+  wifiIconDesktop: {
+    position: 'absolute',
+    top: windowWidth * (55/375),
+    left: windowWidth * (70/375)
+  },
+  wifiIconiPhone: {
+    position: 'absolute',
+    top: windowWidth * (100/375),
+    right: windowWidth * (35/375)
   },
   text: {
-    flex: 6,
+    flex: 1,
     marginHorizontal: windowWidth * (15/414),
   },
   header: {

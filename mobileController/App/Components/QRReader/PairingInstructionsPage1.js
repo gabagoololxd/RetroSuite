@@ -32,8 +32,28 @@ class PairingInstructionsPage1 extends React.Component {
       <View style={styles.instructionsPage}>
         
         <View style={styles.iconContainer}>
-          <IconIon name="social-chrome-outline" size={windowWidth * (295/375)} allowFontScaling={false} color="rgba(132,99,135,.3)" style={styles.flashIcon} />
+          
+          <View style={styles.chromeIcon}>
+            <IconIon name="social-chrome-outline" size={windowWidth * (150/375)} allowFontScaling={false} color="rgba(132,99,135,.3)" style={styles.flashIcon} />
+          </View>
+
+          <View style={styles.downloadIcon}>
+            <View style={styles.arrowIcon}>
+              <IconIon name="arrow-down-c" size={windowWidth * (75/375)} allowFontScaling={false} color="rgba(21,21,20,.5)" style={styles.flashIcon} />
+            </View>
+            <View style={styles.minusIcon}>
+              <IconIon name="minus-round" size={windowWidth * (75/375)} allowFontScaling={false} color="rgba(21,21,20,.5)" style={styles.flashIcon} />
+            </View>
+          </View>
+
+          
+          <View style={styles.desktopIcon}>
+            <IconIon name="ios-monitor-outline" size={windowWidth * (150/375)} allowFontScaling={false} color="rgba(21,21,20,.5)" style={styles.flashIcon} />
+          </View>
+
         </View>
+
+
           
         <View style={styles.text}>
           <Text style={styles.header}>{"1. Get the Chrome App"}</Text>
@@ -59,18 +79,44 @@ module.exports = PairingInstructionsPage1;
 
 const styles = StyleSheet.create({
   instructionsPage: {
-    flex: 1,
     marginHorizontal: windowWidth * (15/414),
     borderRadius: windowWidth * (10/375),
     padding: windowWidth * (20/414),
+    justifyContent: 'center', 
+    alignItems: 'center',
+    flexDirection: 'column'
   },
   iconContainer: {
-    flex: 9,
+    marginTop: windowWidth * (5/375),
+    flex: 1,
     justifyContent: 'center', 
     alignItems: 'center',
   },
+  chromeIcon: {
+    marginTop: windowWidth * (-20/375)
+  },
+  downloadIcon: {
+    justifyContent: 'center', 
+    alignItems: 'center',
+    marginTop: windowWidth * (-20/375),
+  },
+  minusIcon: {
+    marginTop: windowWidth * (-50/375),
+    flexDirection: 'column', 
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  arrowIcon: {
+    marginTop: windowWidth * (0/375),
+    flexDirection: 'column', 
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  desktopIcon: {
+    marginTop: windowWidth * (-50/375),
+  },
   text: {
-    flex: 3,
+    flex: 1,
     marginHorizontal: windowWidth * (35/414),
     marginTop:  windowWidth * (10/414),
   },

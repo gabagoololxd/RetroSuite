@@ -27,7 +27,12 @@ if (Dimensions.get('window').width===736) { // iPhone 6+ landscape
   windowHeight = Dimensions.get('window').height;
 }
 
+var initialValue;
+
 class PauseModal extends React.Component {
+  componentDidMount() {
+    initialValue = this.props.sliderValue;
+  }
   render() {
     return (
       <View style={styles.pauseModal}>
@@ -45,7 +50,7 @@ class PauseModal extends React.Component {
           <Text allowFontScaling={false} style={styles.setABXYOverlapText}>Set ABXY Overlap Area:</Text>
           <SliderIOS
             style={{width: windowHeight/2}}
-            value={this.props.sliderValue}
+            value={initialValue}
             maximumValue={Math.sqrt(2)}
             minimumValue={1}
             minimumTrackTintColor={'#99559e'}
@@ -62,7 +67,7 @@ class PauseModal extends React.Component {
               width: windowWidth * 0.1 * this.props.sliderValue,
               height: windowWidth * 0.1 * this.props.sliderValue,
               borderRadius: windowWidth * 0.1 * this.props.sliderValue/2,
-              backgroundColor: 'rgba(124,112,147,0.8)'}}/>
+              backgroundColor: 'rgba(153,85,158,0.4)'}}/>
           <View 
             style={{
               position: 'absolute',
@@ -71,7 +76,7 @@ class PauseModal extends React.Component {
               width: windowWidth * 0.1* this.props.sliderValue,
               height: windowWidth * 0.1* this.props.sliderValue,
               borderRadius: windowWidth * 0.1* this.props.sliderValue/2,
-              backgroundColor: 'rgba(124,112,147,0.8)'}}/>
+              backgroundColor: 'rgba(153,85,158,0.4)'}}/>
           <View 
             style={{
               position: 'absolute',
@@ -80,7 +85,7 @@ class PauseModal extends React.Component {
               width: windowWidth * 0.1* this.props.sliderValue,
               height: windowWidth * 0.1* this.props.sliderValue,
               borderRadius: windowWidth * 0.1* this.props.sliderValue/2,
-              backgroundColor: 'rgba(124,112,147,0.8)'}}/>
+              backgroundColor: 'rgba(153,85,158,0.4)'}}/>
 
           <View 
             style={{
@@ -90,7 +95,7 @@ class PauseModal extends React.Component {
               width: windowWidth * 0.1* this.props.sliderValue,
               height: windowWidth * 0.1* this.props.sliderValue,
               borderRadius: windowWidth * 0.1* this.props.sliderValue/2,
-              backgroundColor: 'rgba(124,112,147,0.8)'}}/>
+              backgroundColor: 'rgba(153,85,158,0.4)'}}/>
         </View>
 
       </View>

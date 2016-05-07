@@ -94,8 +94,7 @@ class JoyPadContainer extends React.Component {
         rShoulder: undefined,
         start: undefined,
         select: undefined,
-        upwardsDiagonal: undefined,
-        downwardsDiagonal: undefined
+        ABXYOverlapAxis: undefined,
       }
     };
 
@@ -191,13 +190,9 @@ class JoyPadContainer extends React.Component {
   _onLayoutRShoulder(e) {
     this.setState({layout: _.extend(this.state.layout, {rShoulder: e.nativeEvent.layout})})
   }
-  _onLayoutUpwardsDiagonal(e) {
-    this.setState({layout: _.extend(this.state.layout, {upwardsDiagonal: e.nativeEvent.layout})})
+  _onLayoutABXYOverlapAxis(e) {
+    this.setState({layout: _.extend(this.state.layout, {ABXYOverlapAxis: e.nativeEvent.layout})})
     console.log('up', this.state)
-  }
-  _onLayoutDownwardsDiagonal(e) {
-    this.setState({layout: _.extend(this.state.layout, {downwardsDiagonal: e.nativeEvent.layout})})
-    console.log('dow', this.state)
   }
 
   // Touch helpers: returns true if a touch coordinate is within the area of the button
@@ -294,34 +289,34 @@ class JoyPadContainer extends React.Component {
   }
 
   _pressingAandB(coordinate) {
-    var rotatedCoordinate = utils.rotatePoint(this.state.layout.upwardsDiagonal.width, this.state.layout.upwardsDiagonal.height, [this.state.layout.downwardsDiagonal.x, this.state.layout.downwardsDiagonal.y], coordinate, -43.2642)
+    var rotatedCoordinate = utils.rotatePoint(this.state.layout.ABXYOverlapAxis.width, this.state.layout.ABXYOverlapAxis.height, [this.state.layout.ABXYOverlapAxis.x, this.state.layout.ABXYOverlapAxis.y], coordinate, -43.2642)
     return utils._pointInRectangle(rotatedCoordinate, 
-      [this.state.layout.upwardsDiagonal.x, this.state.layout.upwardsDiagonal.y + this.state.layout.upwardsDiagonal.height/2],
-      [this.state.layout.upwardsDiagonal.x + this.state.layout.upwardsDiagonal.width, this.state.layout.upwardsDiagonal.y + this.state.layout.upwardsDiagonal.height]
+      [this.state.layout.ABXYOverlapAxis.x, this.state.layout.ABXYOverlapAxis.y + this.state.layout.ABXYOverlapAxis.height/2],
+      [this.state.layout.ABXYOverlapAxis.x + this.state.layout.ABXYOverlapAxis.width, this.state.layout.ABXYOverlapAxis.y + this.state.layout.ABXYOverlapAxis.height]
     );
   }
 
   _pressingXandY(coordinate) {
-    var rotatedCoordinate = utils.rotatePoint(this.state.layout.upwardsDiagonal.width, this.state.layout.upwardsDiagonal.height, [this.state.layout.downwardsDiagonal.x, this.state.layout.downwardsDiagonal.y], coordinate, -43.2642)
+    var rotatedCoordinate = utils.rotatePoint(this.state.layout.ABXYOverlapAxis.width, this.state.layout.ABXYOverlapAxis.height, [this.state.layout.ABXYOverlapAxis.x, this.state.layout.ABXYOverlapAxis.y], coordinate, -43.2642)
     return utils._pointInRectangle(rotatedCoordinate, 
-      [this.state.layout.upwardsDiagonal.x, this.state.layout.upwardsDiagonal.y],
-      [this.state.layout.upwardsDiagonal.x + this.state.layout.upwardsDiagonal.width, this.state.layout.upwardsDiagonal.y + this.state.layout.upwardsDiagonal.height/2]
+      [this.state.layout.ABXYOverlapAxis.x, this.state.layout.ABXYOverlapAxis.y],
+      [this.state.layout.ABXYOverlapAxis.x + this.state.layout.ABXYOverlapAxis.width, this.state.layout.ABXYOverlapAxis.y + this.state.layout.ABXYOverlapAxis.height/2]
     );
   }
 
   _pressingYandB(coordinate) {
-    var rotatedCoordinate = utils.rotatePoint(this.state.layout.upwardsDiagonal.width, this.state.layout.upwardsDiagonal.height, [this.state.layout.downwardsDiagonal.x, this.state.layout.downwardsDiagonal.y], coordinate, 43.2642)
+    var rotatedCoordinate = utils.rotatePoint(this.state.layout.ABXYOverlapAxis.width, this.state.layout.ABXYOverlapAxis.height, [this.state.layout.ABXYOverlapAxis.x, this.state.layout.ABXYOverlapAxis.y], coordinate, 43.2642)
     return utils._pointInRectangle(rotatedCoordinate, 
-      [this.state.layout.upwardsDiagonal.x, this.state.layout.upwardsDiagonal.y + this.state.layout.upwardsDiagonal.height/2],
-      [this.state.layout.upwardsDiagonal.x + this.state.layout.upwardsDiagonal.width, this.state.layout.upwardsDiagonal.y + this.state.layout.upwardsDiagonal.height]
+      [this.state.layout.ABXYOverlapAxis.x, this.state.layout.ABXYOverlapAxis.y + this.state.layout.ABXYOverlapAxis.height/2],
+      [this.state.layout.ABXYOverlapAxis.x + this.state.layout.ABXYOverlapAxis.width, this.state.layout.ABXYOverlapAxis.y + this.state.layout.ABXYOverlapAxis.height]
     );
   }
 
   _pressingXandA(coordinate) {
-    var rotatedCoordinate = utils.rotatePoint(this.state.layout.upwardsDiagonal.width, this.state.layout.upwardsDiagonal.height, [this.state.layout.downwardsDiagonal.x, this.state.layout.downwardsDiagonal.y], coordinate, 43.2642)
+    var rotatedCoordinate = utils.rotatePoint(this.state.layout.ABXYOverlapAxis.width, this.state.layout.ABXYOverlapAxis.height, [this.state.layout.ABXYOverlapAxis.x, this.state.layout.ABXYOverlapAxis.y], coordinate, 43.2642)
     return utils._pointInRectangle(rotatedCoordinate, 
-      [this.state.layout.upwardsDiagonal.x, this.state.layout.upwardsDiagonal.y],
-      [this.state.layout.upwardsDiagonal.x + this.state.layout.upwardsDiagonal.width, this.state.layout.upwardsDiagonal.y + this.state.layout.upwardsDiagonal.height/2]
+      [this.state.layout.ABXYOverlapAxis.x, this.state.layout.ABXYOverlapAxis.y],
+      [this.state.layout.ABXYOverlapAxis.x + this.state.layout.ABXYOverlapAxis.width, this.state.layout.ABXYOverlapAxis.y + this.state.layout.ABXYOverlapAxis.height/2]
     );
   }
 
@@ -445,13 +440,12 @@ class JoyPadContainer extends React.Component {
           <JoyPad currentButtonPresses={this.state.currentButtonPresses} latestDPadTouch={this.state.latestDPadTouch}/>
 
           <View 
-            onLayout={this._onLayoutUpwardsDiagonal.bind(this)}
+            onLayout={this._onLayoutABXYOverlapAxis.bind(this)}
             style={[styles.upwardsDiagonalABXYOverlap, {
               right: windowWidth * 0.4 - 150 * (this.state.sliderValue/Math.sqrt(2) - 1/Math.sqrt(2))/2,
               width: 150 * (this.state.sliderValue/Math.sqrt(2) - 1/Math.sqrt(2)),
             }]}/>
           <View 
-            onLayout={this._onLayoutDownwardsDiagonal.bind(this)}
             style={[styles.downwardsDiagonalABXYOverlap, {
               right: windowWidth * 0.4 - 150 * (this.state.sliderValue/Math.sqrt(2) - 1/Math.sqrt(2))/2,
               width: 150 * (this.state.sliderValue/Math.sqrt(2) - 1/Math.sqrt(2)),

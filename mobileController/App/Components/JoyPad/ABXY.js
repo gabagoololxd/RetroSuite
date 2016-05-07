@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
     width: windowWidth * 0.155,
     height: windowWidth * 0.155,
     borderRadius: windowWidth * 0.155/2,
-    backgroundColor: '#2d1c40',
+    backgroundColor: '#443266',
   },
   AText: {
     position: 'absolute',
@@ -162,7 +162,7 @@ const styles = StyleSheet.create({
     width: windowWidth * 0.155,
     height: windowWidth * 0.155,
     borderRadius: windowWidth * 0.155/2,
-    backgroundColor: '#2d1c40',
+    backgroundColor: '#443266',
     transform: [
       {rotate: '-45deg'},
       {translate: [-1 * windowWidth * 0.18, windowWidth * 0.18]}
