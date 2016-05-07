@@ -34,7 +34,7 @@ class PairingInstructionsPage3 extends React.Component {
           
           <View style={styles.topButtonContainer}>
             <View style={styles.gamesListIcon}>
-              <IconIon name="ios-list-outline" size={ windowWidth * (150/375)} allowFontScaling={false} color="rgba(21,21,20,.5)" style={styles.flashIcon} />
+              <IconIon name="navicon" size={ windowWidth * (240/375)} allowFontScaling={false} color="rgba(21,21,20,.5)" style={styles.flashIcon} />
             </View>
 
             <View style={styles.arrowIcon}>
@@ -90,35 +90,41 @@ const styles = StyleSheet.create({
     padding: windowWidth * (20/414),
   },
   topButtonContainer: {
+    marginTop: windowWidth * (-20/375),
     borderBottomColor: 'rgba(21,21,20,.5)',
     borderBottomWidth: 2,
     justifyContent: 'space-between',
     alignItems: 'flex-start',
     flexDirection: 'row',
     flex: 1,
-    paddingBottom: windowWidth * (30/375),
+    paddingBottom: windowWidth * (35/375),
   },
   gamesListIcon: {
+    marginTop: windowWidth * (-30/375),
     marginLeft: windowWidth * (20/375),
     marginRight: windowWidth * (10/375),
+    transform: [
+      {scaleX: 0.9}
+    ]
   },
   arrowIcon: {
-    marginTop: windowWidth * (10/375),
+    marginTop: windowWidth * (25/375),
     marginLeft: windowWidth * (10/375),
-    marginRight: windowWidth * (45/375),
+    marginRight: windowWidth * (48/375),
   },
   dragBox: {
-    width: windowWidth * (90/375),
+    width: windowWidth * (60  /375),
     height: windowWidth * (45/375),
     position: 'absolute',
-    top: windowWidth * (103/375),
-    right: windowWidth * (40/375),
-    borderWidth: 4,
+    top: windowWidth * (96/375),
+    right: windowWidth * (52/375),
+    borderWidth: 2,
     borderColor: 'rgba(21,21,20,.5)',
     borderStyle: 'dashed'
   },
   buttomButtonContainer: {
     flex: 1,
+    paddingTop: windowWidth * (20/375)
   },
   circleIcons: {
     paddingTop: windowWidth * (30/375),
@@ -137,10 +143,10 @@ const styles = StyleSheet.create({
   },
   controllerCord: {
     position: 'absolute',
-    top: windowWidth * (10/375),
+    top: windowWidth * (22/375),
     left: windowWidth * (135/375),
     width: windowWidth * (5/375),
-    height:  windowWidth * (55/375),
+    height:  windowWidth * (63/375),
     backgroundColor: 'rgba(21,21,20,.5)'
   },
   controllerIcon: {

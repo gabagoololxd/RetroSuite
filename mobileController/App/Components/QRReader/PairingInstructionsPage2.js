@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
   topIconContainer: {
     flex: 1,
     flexDirection: 'row',
-      alignItems: 'center',
+    alignItems: 'center',
   },
   desktopIcon: {
     marginLeft: windowWidth * (300/375),

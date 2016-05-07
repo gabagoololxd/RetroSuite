@@ -34,21 +34,21 @@ class PairingInstructionsPage1 extends React.Component {
         <View style={styles.iconContainer}>
           
           <View style={styles.chromeIcon}>
-            <IconIon name="social-chrome-outline" size={windowWidth * (150/375)} allowFontScaling={false} color="rgba(132,99,135,.3)" style={styles.flashIcon} />
+            <IconIon name="social-chrome-outline" size={windowWidth * (135/375)} allowFontScaling={false} color="rgba(132,99,135,.3)" style={styles.flashIcon} />
           </View>
 
           <View style={styles.downloadIcon}>
             <View style={styles.arrowIcon}>
-              <IconIon name="arrow-down-c" size={windowWidth * (75/375)} allowFontScaling={false} color="rgba(21,21,20,.5)" style={styles.flashIcon} />
+              <IconIon name="arrow-down-c" size={windowWidth * (50/375)} allowFontScaling={false} color="rgba(21,21,20,.5)" style={styles.flashIcon} />
             </View>
             <View style={styles.minusIcon}>
-              <IconIon name="minus-round" size={windowWidth * (75/375)} allowFontScaling={false} color="rgba(21,21,20,.5)" style={styles.flashIcon} />
+              <IconIon name="minus" size={windowWidth * (50/375)} allowFontScaling={false} color="rgba(21,21,20,.5)" style={styles.flashIcon} />
             </View>
           </View>
 
           
           <View style={styles.desktopIcon}>
-            <IconIon name="ios-monitor-outline" size={windowWidth * (150/375)} allowFontScaling={false} color="rgba(21,21,20,.5)" style={styles.flashIcon} />
+            <IconIon name="ios-monitor-outline" size={windowWidth * (200/375)} allowFontScaling={false} color="rgba(21,21,20,.5)" style={styles.flashIcon} />
           </View>
 
         </View>
@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column'
   },
   iconContainer: {
-    marginTop: windowWidth * (5/375),
+    marginTop: windowWidth * (20/375),
     flex: 1,
     justifyContent: 'center', 
     alignItems: 'center',
@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
     marginTop: windowWidth * (-20/375),
   },
   minusIcon: {
-    marginTop: windowWidth * (-50/375),
+    marginTop: windowWidth * (-33/375),
     flexDirection: 'column', 
     justifyContent: 'center',
     alignItems: 'center',
@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
   text: {
     flex: 1,
     marginHorizontal: windowWidth * (35/414),
-    marginTop:  windowWidth * (10/414),
+    marginTop:  windowWidth * (-20/414),
   },
   header: {
     fontSize: windowWidth * (18/375),
