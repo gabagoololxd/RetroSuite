@@ -35,22 +35,23 @@ class PairingInstructionsPage3 extends React.Component {
         
         <View style={styles.iconContainer}>
           <View style={styles.desktopIcon}>
-            <IconIon name="ios-monitor-outline" size={ windowWidth * (200/375)} allowFontScaling={false} color="rgba(21,21,20,.5)" style={styles.flashIcon} />
+            <IconIon name="ios-monitor-outline" size={ windowWidth * (200/375)} allowFontScaling={false} color="rgba(21,21,20,1)" style={styles.flashIcon} />
           </View>
+          
+          <View style={styles.scanner}/>
 
           <View style={styles.iphoneIcon}>
-            <IconIon name="iphone" size={ windowWidth * (150/375)} allowFontScaling={false} color="rgba(21,21,20,.5)" style={styles.flashIcon} />
+            <IconIon name="iphone" size={ windowWidth * (150/375)} allowFontScaling={false} color="rgba(21,21,20,1)"/>
           </View>
         </View>
 
         <View style={styles.qrCodeIcon}>
-          <FontAwesomeIcon name="qrcode" size={ windowWidth * (50/375)} allowFontScaling={false} color="rgba(132,99,135,.3)" style={styles.flashIcon} />
+          <FontAwesomeIcon name="qrcode" size={ windowWidth * (50/375)} allowFontScaling={false} color="rgba(21,21,20,0.6)" style={styles.flashIcon} />
         </View>
         <View style={styles.qrScannerIcon}>
-          <IconIon name="qr-scanner" size={ windowWidth * (40/375)} allowFontScaling={false} color="rgba(132,99,135,.3)" style={styles.flashIcon} />
+          <IconIon name="qr-scanner" size={ windowWidth * (40/375)} allowFontScaling={false} color="rgba(21,21,20,0.6)" style={styles.flashIcon} />
         </View>
 
-        <View style={styles.scanner}/>
           
         <View style={styles.text}>
           <Text style={styles.header}>{"4. Scan the QR"}</Text>
@@ -87,35 +88,37 @@ const styles = StyleSheet.create({
 
   iphoneIcon: {
     marginTop: windowWidth * (-50/375),
+    marginLeft: windowWidth * (-30/375),
+
   },
 
   qrCodeIcon: {
     position: 'absolute',
-    top: windowWidth * (55/375),
+    top: windowWidth * (50/375),
     left: windowWidth * (135/375)
   },
 
   qrScannerIcon: {
     position: 'absolute',
     top: windowWidth * (215/375),
-    left: windowWidth * (139/375)
+    left: windowWidth * (124/375)
   },
   scanner: {
     position: 'absolute',
-    top: windowWidth * (103/375),
-    left: windowWidth * (73/375),
+    top: windowWidth * (80/375),
+    left: windowWidth * (44/375),
 
     width: 0,
     height: 0,
-    borderRadius: windowWidth *0.22,
-    borderTopWidth: windowWidth *0.22,
-    borderTopColor: 'rgba(132,99,135,.3)',
+    borderRadius: windowWidth *0.25,
+    borderTopWidth: windowWidth *0.25,
+    borderTopColor: 'rgba(132,99,135,.6)',
     borderLeftColor: 'transparent',
-    borderLeftWidth: windowWidth *0.22,
+    borderLeftWidth: windowWidth *0.25,
     borderRightColor: 'transparent',
-    borderRightWidth: windowWidth *0.22,
+    borderRightWidth: windowWidth *0.25,
     borderBottomColor: 'transparent',
-    borderBottomWidth: windowWidth *0.22,
+    borderBottomWidth: windowWidth *0.25,
   },
 
 

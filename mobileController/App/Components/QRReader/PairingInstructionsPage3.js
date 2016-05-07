@@ -32,36 +32,24 @@ class PairingInstructionsPage3 extends React.Component {
       <View style={styles.instructionsPage}>
         
           
-          <View style={styles.topButtonContainer}>
-            <View style={styles.gamesListIcon}>
-              <IconIon name="navicon" size={ windowWidth * (240/375)} allowFontScaling={false} color="rgba(21,21,20,.5)" style={styles.flashIcon} />
-            </View>
-
-            <View style={styles.arrowIcon}>
-              <IconIon name="arrow-down-c" size={ windowWidth * (75/375)} allowFontScaling={false} color="rgba(21,21,20,.5)" style={styles.flashIcon} />
-            </View>
+        <View style={styles.desktopIcon}>
+          <IconIon name="ios-monitor-outline" size={ windowWidth * (200/375)} allowFontScaling={false} color="rgba(21,21,20,1)" style={styles.flashIcon} />
+          <View style={styles.leftCircleIcon}>
+            <IconIon name="ios-circle-outline" size={ windowWidth * (40/375)} allowFontScaling={false} color="rgba(21,21,20,0.6)" style={styles.flashIcon} />
+          </View>
+          <View style={styles.rightCircleIcon}>
+            <IconIon name="ios-circle-filled" size={ windowWidth * (40/375)} allowFontScaling={false} color="rgba(132,99,135,.6)" style={styles.flashIcon} />
           </View>
 
-          <View style={styles.dragBox}/>
-
-
-          <View style={styles.buttomButtonContainer}>
-
-            <View style={styles.circleIcons}>
-              <View style={styles.leftCircleIcon}>
-                <IconIon name="ios-circle-outline" size={ windowWidth * (40/375)} allowFontScaling={false} color="rgba(21,21,20,.5)" style={styles.flashIcon} />
-              </View>
-              <View style={styles.rightCircleIcon}>
-                <IconIon name="ios-circle-filled" size={ windowWidth * (40/375)} allowFontScaling={false} color="rgba(132,99,135,.4)" style={styles.flashIcon} />
-              </View>
-            </View>
-
-            <View style={styles.controllerCord}/>
-            <View style={styles.controllerIcon}>
-              <IconIon name="ios-game-controller-a-outline" size={ windowWidth * (110/375)} allowFontScaling={false} color="rgba(21,21,20,.5)" style={styles.flashIcon} />
-            </View>
-
+          <View style={styles.controllerCord}/>
+          <View style={styles.controllerIcon}>
+            <IconIon name="ios-game-controller-a-outline" size={ windowWidth * (75/375)} allowFontScaling={false} color="rgba(21,21,20,0.6)" style={styles.flashIcon} />
           </View>
+        </View>
+
+ 
+
+
 
 
 
@@ -89,69 +77,31 @@ const styles = StyleSheet.create({
     borderRadius: windowWidth * (10/375),
     padding: windowWidth * (20/414),
   },
-  topButtonContainer: {
-    marginTop: windowWidth * (-20/375),
-    borderBottomColor: 'rgba(21,21,20,.5)',
-    borderBottomWidth: 2,
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    flexDirection: 'row',
-    flex: 1,
-    paddingBottom: windowWidth * (35/375),
-  },
-  gamesListIcon: {
-    marginTop: windowWidth * (-30/375),
-    marginLeft: windowWidth * (20/375),
-    marginRight: windowWidth * (10/375),
-    transform: [
-      {scaleX: 0.9}
-    ]
-  },
-  arrowIcon: {
-    marginTop: windowWidth * (25/375),
-    marginLeft: windowWidth * (10/375),
-    marginRight: windowWidth * (48/375),
-  },
-  dragBox: {
-    width: windowWidth * (60  /375),
-    height: windowWidth * (45/375),
-    position: 'absolute',
-    top: windowWidth * (96/375),
-    right: windowWidth * (52/375),
-    borderWidth: 2,
-    borderColor: 'rgba(21,21,20,.5)',
-    borderStyle: 'dashed'
-  },
-  buttomButtonContainer: {
-    flex: 1,
-    paddingTop: windowWidth * (20/375)
-  },
-  circleIcons: {
-    paddingTop: windowWidth * (30/375),
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    marginBottom: windowWidth * (-40/375)
+  desktopIcon: {
+    alignSelf: 'center'
   },
   leftCircleIcon: {
-    marginLeft: windowWidth * (50/375),
-    marginRight: windowWidth * (50/375),
+    position: 'absolute',
+    left: windowWidth * (30/375),
+    top: windowWidth * (65/375)
   },
   rightCircleIcon: {
-    marginLeft: windowWidth * (50/375),
-    marginRight: windowWidth * (50/375),
+    position: 'absolute',
+    right: windowWidth * (30/375),
+    top: windowWidth * (65/375)
   },
   controllerCord: {
     position: 'absolute',
-    top: windowWidth * (22/375),
-    left: windowWidth * (135/375),
-    width: windowWidth * (5/375),
-    height:  windowWidth * (63/375),
-    backgroundColor: 'rgba(21,21,20,.5)'
+    top: windowWidth * (43/375),
+    left: windowWidth * (91/375),
+    width: windowWidth * (3/375),
+    height:  windowWidth * (59/375),
+    backgroundColor: 'rgba(21,21,20,0.6)'
   },
   controllerIcon: {
-    alignSelf: 'center',
-    marginBottom: windowWidth * (-40/375)
+    position: 'absolute',
+    left: windowWidth * (60/375),
+    top: windowWidth * (80/375)
   },
   text: {
     flex: 1,

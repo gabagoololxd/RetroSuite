@@ -35,19 +35,19 @@ class PairingInstructionsPage2 extends React.Component {
           <View style={styles.topIconContainer}>
 
             <View style={styles.desktopIcon}>
-              <IconIon name="ios-monitor-outline" size={windowWidth * (200/375)} allowFontScaling={false} color="rgba(21,21,20,.5)" style={styles.flashIcon} />
+              <IconIon name="ios-monitor-outline" size={windowWidth * (200/375)} allowFontScaling={false} color="rgba(21,21,20,1)" style={styles.flashIcon} />
             </View>
             <View style={styles.iphoneIcon}>
-              <IconIon name="iphone" size={windowWidth * (150/375)} allowFontScaling={false} color="rgba(21,21,20,.5)" style={styles.flashIcon} />
+              <IconIon name="iphone" size={windowWidth * (150/375)} allowFontScaling={false} color="rgba(21,21,20,1)" style={styles.flashIcon} />
             </View>
           </View>
         </View>
 
         <View style={styles.wifiIconDesktop}>
-          <IconIon name="wifi" size={windowWidth * (110/375)} allowFontScaling={false} color="rgba(132,99,135,.3)" style={styles.flashIcon} />
+          <IconIon name="wifi" size={windowWidth * (110/375)} allowFontScaling={false} color="rgba(132,99,135,.6)" style={styles.flashIcon} />
         </View>
         <View style={styles.wifiIconiPhone}>
-          <IconIon name="wifi" size={windowWidth * (40/375)} allowFontScaling={false} color="rgba(132,99,135,.3)" style={styles.flashIcon} />
+          <IconIon name="wifi" size={windowWidth * (40/375)} allowFontScaling={false} color="rgba(132,99,135,.6)" style={styles.flashIcon} />
         </View>
 
 
