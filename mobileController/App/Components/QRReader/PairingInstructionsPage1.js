@@ -48,7 +48,7 @@ class PairingInstructionsPage1 extends React.Component {
 
           
           <View style={styles.desktopIcon}>
-            <IconIon name="ios-monitor-outline" size={windowWidth * (200/375)} allowFontScaling={false} color="rgba(21,21,20,1)" style={styles.flashIcon} />
+            <IconIon name="ios-monitor-outline" size={windowWidth * (200/375)} allowFontScaling={false} color="rgba(21,21,20,0.6)" style={styles.flashIcon} />
           </View>
 
         </View>
@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
   instructionsPage: {
     marginHorizontal: windowWidth * (15/414),
     borderRadius: windowWidth * (10/375),
-    padding: windowWidth * (20/414),
+    padding: windowWidth===320 ? windowWidth * (5/414) : windowWidth * (20/414),
     justifyContent: 'center', 
     alignItems: 'center',
     flexDirection: 'column'

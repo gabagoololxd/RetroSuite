@@ -33,7 +33,7 @@ class PairingInstructionsPage3 extends React.Component {
         
           
         <View style={styles.desktopIcon}>
-          <IconIon name="ios-monitor-outline" size={ windowWidth * (200/375)} allowFontScaling={false} color="rgba(21,21,20,1)" style={styles.flashIcon} />
+          <IconIon name="ios-monitor-outline" size={ windowWidth * (200/375)} allowFontScaling={false} color="rgba(21,21,20,0.6)" style={styles.flashIcon} />
           <View style={styles.leftCircleIcon}>
             <IconIon name="ios-circle-outline" size={ windowWidth * (40/375)} allowFontScaling={false} color="rgba(21,21,20,0.6)" style={styles.flashIcon} />
           </View>
@@ -92,10 +92,10 @@ const styles = StyleSheet.create({
   },
   controllerCord: {
     position: 'absolute',
-    top: windowWidth * (43/375),
+    top: windowWidth * (44/375),
     left: windowWidth * (91/375),
     width: windowWidth * (3/375),
-    height:  windowWidth * (59/375),
+    height:  windowWidth * (58/375),
     backgroundColor: 'rgba(21,21,20,0.6)'
   },
   controllerIcon: {

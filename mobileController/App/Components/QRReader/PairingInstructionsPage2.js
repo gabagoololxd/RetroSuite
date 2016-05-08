@@ -35,10 +35,10 @@ class PairingInstructionsPage2 extends React.Component {
           <View style={styles.topIconContainer}>
 
             <View style={styles.desktopIcon}>
-              <IconIon name="ios-monitor-outline" size={windowWidth * (200/375)} allowFontScaling={false} color="rgba(21,21,20,1)" style={styles.flashIcon} />
+              <IconIon name="ios-monitor-outline" size={windowWidth * (200/375)} allowFontScaling={false} color="rgba(21,21,20,0.6)" style={styles.flashIcon} />
             </View>
             <View style={styles.iphoneIcon}>
-              <IconIon name="iphone" size={windowWidth * (150/375)} allowFontScaling={false} color="rgba(21,21,20,1)" style={styles.flashIcon} />
+              <IconIon name="iphone" size={windowWidth * (150/375)} allowFontScaling={false} color="rgba(21,21,20,0.6)" style={styles.flashIcon} />
             </View>
           </View>
         </View>
@@ -99,6 +99,8 @@ class PairingInstructionsPage2 extends React.Component {
 
 module.exports = PairingInstructionsPage2;
 
+console.log(windowWidth)
+
 const styles = StyleSheet.create({
   instructionsPage: {
     flex: 1,
@@ -111,7 +113,6 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    // backgroundColor: 'red'
   },
   topIconContainer: {
     flex: 1,
@@ -128,12 +129,12 @@ const styles = StyleSheet.create({
   },
   wifiIconDesktop: {
     position: 'absolute',
-    top: windowWidth * (55/375),
+    top: windowWidth===375 ? windowWidth * (55/375) : (windowWidth===414 ? windowWidth * (60/375) : windowWidth * (50/375)),
     left: windowWidth * (70/375)
   },
   wifiIconiPhone: {
     position: 'absolute',
-    top: windowWidth * (100/375),
+    top: windowWidth===320 ? windowWidth * (97/414) : windowWidth * (100/375),
     right: windowWidth * (35/375)
   },
   text: {

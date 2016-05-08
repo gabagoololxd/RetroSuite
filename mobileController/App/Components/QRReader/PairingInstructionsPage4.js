@@ -35,13 +35,15 @@ class PairingInstructionsPage3 extends React.Component {
         
         <View style={styles.iconContainer}>
           <View style={styles.desktopIcon}>
-            <IconIon name="ios-monitor-outline" size={ windowWidth * (200/375)} allowFontScaling={false} color="rgba(21,21,20,1)" style={styles.flashIcon} />
+            <IconIon name="ios-monitor-outline" size={ windowWidth * (200/375)} allowFontScaling={false} color="rgba(21,21,20,0.6)" style={styles.flashIcon} />
           </View>
           
           <View style={styles.scanner}/>
+          <View style={styles.whiteSpace}/>
+
 
           <View style={styles.iphoneIcon}>
-            <IconIon name="iphone" size={ windowWidth * (150/375)} allowFontScaling={false} color="rgba(21,21,20,1)"/>
+            <IconIon name="iphone" size={ windowWidth * (150/375)} allowFontScaling={false} color="rgba(21,21,20,0.6)"/>
           </View>
         </View>
 
@@ -87,25 +89,25 @@ const styles = StyleSheet.create({
   },
 
   iphoneIcon: {
-    marginTop: windowWidth * (-50/375),
+    marginTop: windowWidth===375 ? windowWidth * (-50/375) : (windowWidth===414 ? windowWidth * (-58/375) : windowWidth * (-58/375)),
     marginLeft: windowWidth * (-30/375),
 
   },
 
   qrCodeIcon: {
     position: 'absolute',
-    top: windowWidth * (50/375),
+    top:  windowWidth===375 ? windowWidth * (50/375) : (windowWidth===414 ? windowWidth * (52/375) : windowWidth * (40/375)),
     left: windowWidth * (135/375)
   },
 
   qrScannerIcon: {
     position: 'absolute',
-    top: windowWidth * (215/375),
+    top: windowWidth===320 ? windowWidth * (223/414) : windowWidth * (215/375),
     left: windowWidth * (124/375)
   },
   scanner: {
     position: 'absolute',
-    top: windowWidth * (80/375),
+    top: windowWidth===320 ? windowWidth * (75/414) : windowWidth * (80/375),
     left: windowWidth * (44/375),
 
     width: 0,
@@ -120,9 +122,14 @@ const styles = StyleSheet.create({
     borderBottomColor: 'transparent',
     borderBottomWidth: windowWidth *0.25,
   },
-
-
-
+  whiteSpace: {
+    position: 'absolute',
+    top: windowWidth===320 ? windowWidth * (169/414) : windowWidth * (167/375),
+    left: windowWidth * (100/375),
+    width: windowWidth * (60/375),
+    height: windowWidth * (60/375),
+    backgroundColor: 'white'
+  },
   text: {
     flex: 4,
     marginTop:  windowWidth * (60/414),
