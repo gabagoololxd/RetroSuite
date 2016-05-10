@@ -28,11 +28,39 @@ wsServer.addEventListener('request', function(req) {
   console.log('Client connected');
   var socket = req.accept();
   connectedSockets.push(socket);
-  // alert the user that their controller connected
-  document.getElementById('controllerConnectedHintBubble').classList.remove('hidden');
-  setTimeout(function(){
-    $( "#controllerConnectedHintBubble" ).show().fadeOut( "slow", function() {});
-  },4000)
+  console.log('socket', socket)
+
+  // Following code handles edge case where the user scans the qr, but the computer running the chrome app has wifi off
+  // When wifi turns on, multiple connections are made because the camera has scanned multiple times, 
+  // but there should not be multiple messages telling the user the controller has connected
+  var newSocketPeerAddress;
+  var existingPeerAddresses = [];
+  chrome.sockets.tcp.getSockets(function (sockets) {
+    sockets.forEach(function(socket) {
+      existingPeerAddresses.push(socket.peerAddress);
+    });
+    console.log('existing peerAddresses', existingPeerAddresses);
+    chrome.sockets.tcp.getInfo(socket.pSocket_.socketId, function (information) {
+      console.log('new socket peerAddress', information.peerAddress);
+      newSocketPeerAddress = information.peerAddress;
+
+      var newSocketPeerAddressCount = _.filter(existingPeerAddresses, function(address){
+        return address === newSocketPeerAddress;
+      });
+
+
+      if(newSocketPeerAddressCount.length > 1) {
+        console.log('same controller connected multiple times');
+      } else {
+        console.log('new controller connected');
+        // alert the user that their controller connected
+        document.getElementById('controllerConnectedHintBubble').classList.remove('hidden');
+        setTimeout(function(){
+          $( "#controllerConnectedHintBubble" ).show().fadeOut( "slow", function() {});
+        },4000)
+      }
+    });
+  });
 
   // Listen for button presses and respond accordingly
   socket.addEventListener('message', function(e) {

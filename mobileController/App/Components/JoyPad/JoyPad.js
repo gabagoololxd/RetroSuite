@@ -1,11 +1,11 @@
-var React = require('react-native');
+const React = require('react-native');
 
-var DPad = require('./DPad');
-var ABXY = require('./ABXY');
-var LRShoulders = require('./LRShoulders');
-var SelectStart = require('./SelectStart');
+const DPad = require('./DPad');
+const ABXY = require('./ABXY');
+const LRShoulders = require('./LRShoulders');
+const SelectStart = require('./SelectStart');
 
-var {
+const {
   View,
 } = React;  
 
@@ -13,10 +13,10 @@ var {
 class JoyPad extends React.Component { 
   render() {
     return (
-      <View style={{flex: 1}} >   
+      <View style={{flex: 1, backgroundColor: '#a69f9a'}} >   
         <LRShoulders currentButtonPresses={this.props.currentButtonPresses}/>
         <ABXY currentButtonPresses={this.props.currentButtonPresses}/>
-        <DPad currentButtonPresses={this.props.currentButtonPresses}/>
+        <DPad currentButtonPresses={this.props.currentButtonPresses} latestDPadTouch={this.props.latestDPadTouch}/>
         <SelectStart currentButtonPresses={this.props.currentButtonPresses}/>
       </View>   
     );

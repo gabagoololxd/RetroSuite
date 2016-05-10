@@ -133,6 +133,54 @@ app.controller('gameSelection', function($scope, $http) {
       console.log('adding userGames array from localForage to user library', value);
     }
     $scope.$apply();
+
+    // handle dymanic resizing of li tags
+    var gamesListEntries = document.getElementsByClassName('gamesListEntry');
+    var childrenLengthArray = [];
+    Array.prototype.forEach.call(gamesListEntries, function(gamesListEntry) {
+      var childrenLength = 0;
+      Array.prototype.forEach.call(gamesListEntry.children, function(child){
+        childrenLength += child.clientWidth;
+      })
+      childrenLengthArray.push(childrenLength);
+    });
+    if(_.max(childrenLengthArray) > $('.gamesListEntry').width()) {
+      $('.gamesListEntry').css('width', _.max(childrenLengthArray) + 80);
+    }
+    $scope.$apply();
+
+    chrome.app.window.current().onBoundsChanged.addListener(function() {
+      var gamesListEntries = document.getElementsByClassName('gamesListEntry');
+      var childrenLengthArray = [];
+      Array.prototype.forEach.call(gamesListEntries, function(gamesListEntry) {
+        var childrenLength = 0;
+        Array.prototype.forEach.call(gamesListEntry.children, function(child){
+          childrenLength += child.clientWidth;
+        })
+        childrenLengthArray.push(childrenLength);
+      });
+
+      console.log('_.max(childrenLengthArray)', _.max(childrenLengthArray))
+      console.log("$('.gamesListEntry').width()", $('.gamesListEntry').width())
+      console.log("$('.gamesList').width()", $('.gamesList').width())
+
+      if(_.max(childrenLengthArray) > $('.gamesListEntry').width()) {
+        $('.gamesListEntry').css('width', _.max(childrenLengthArray) + 80) ;
+      } else {
+        $('.gamesListEntry').css('width', $('.gamesList').width() - 12) ;
+      }
+
+
+      console.log('width', window.innerWidth)
+      console.log('Height', window.innerHeight)
+
+      if(window.innerWidth < 640 || window.innerHeight <500 ) {
+        $('#dragItHereContainer').css('background-image', 'none');
+      } else {
+        $('#dragItHereContainer').css('background-image', 'url(' + './frontend/img/snesconsole.png' + ')');
+      }
+         
+    })
   })
 
   //methods to filter and show games from the list

@@ -1,15 +1,26 @@
 var webSocket = {
-  PairController(ipAddress, openControllerViewCallback) {
+  PairController(ipAddress, openJoyPadContainerCallback, resolvecallback) {
     var url = 'ws://' + ipAddress + '/';
-    global.ws = new WebSocket(url);
+    
+    try {
+      global.ws = new WebSocket(url);
+    } catch(err) {console.log(err)}
 
     ws.onopen = function(){
       // connection opened
       console.log('ws open');
-      // tell the emulator to go to the next screen
-      ws.send('pair');
-      // mount ControllerView.js, turn off camera
-      openControllerViewCallback();
+      
+      if(global.webSocketAlreadyConnected != true) { 
+        console.log('ws pairing')
+
+        // prevent another ws from the same controller while this one is paired
+        global.webSocketAlreadyConnected = true;
+
+        // tell the emulator to go to the next screen
+        ws.send('pair');
+        // mount JoyPadContainer.js, turn off camera
+        openJoyPadContainerCallback(resolvecallback);
+      }
     }
 
     ws.onmessage = (e) => {
@@ -30,6 +41,7 @@ var webSocket = {
     ws.onclose = (e) => {
       // connection closed
       console.log('ws close', e.code, e.reason);
+      global.webSocketAlreadyConnected = false;
       global.onclose();
     };
   },
@@ -55,6 +67,7 @@ var webSocket = {
   RePairController(callback) {
     ws.send('re-pair');
     ws.close();
+    global.webSocketAlreadyConnected = false;
     callback();
   },
 

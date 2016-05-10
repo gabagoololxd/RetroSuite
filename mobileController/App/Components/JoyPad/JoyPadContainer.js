@@ -1,31 +1,52 @@
-var React = require('react-native');
-var FontAwesomeIcon = require('react-native-vector-icons/FontAwesome');
-var Orientation = require('react-native-orientation');
-var _ = require('lodash');
+const React = require('react-native');
+const Orientation = require('react-native-orientation');
+const _ = require('lodash');
 
-var webSocket = require('../../Utils/webSocketMethods');
-var utils = require('../../Utils/utils');
-var PauseModal = require('./PauseModal');
-var JoyPad = require('./JoyPad');
-var SelectStart = require('./SelectStart');
+const webSocket = require('../../Utils/webSocketMethods');
+const utils = require('../../Utils/utils');
+const PauseModal = require('./PauseModal');
+const JoyPad = require('./JoyPad');
+const SelectStart = require('./SelectStart');
+const PauseButton = require('./PauseButton');
 
-var {
+const {
   Dimensions,
   StyleSheet,
   Text,
   View,
   Image,
-  TouchableOpacity,
   StatusBarIOS,
+  AppStateIOS,
 } = React;
 
-// This container component holds all the methods, determines the touch areas of each button, determines which buttons are pressed, and what messages to send to the websocket server
+// On the iPhone 6+, if the app is launched in landscape, Dimensions.get('window').width returns the height and vice versa for width so we fix that here
+var windowWidth, windowHeight;
+if (Dimensions.get('window').width===736) { // iPhone 6+ landscape
+  windowWidth = 414;
+  windowHeight = 736;
+} else if(Dimensions.get('window').width===667) { // iPhone 6 landscape
+  windowWidth = 375;
+  windowHeight = 667;
+} else if(Dimensions.get('window').width===568) { // iPhone 5 landscape
+  windowWidth = 320;
+  windowHeight = 568;
+} else { // launched in correct orientation
+  windowWidth = Dimensions.get('window').width;
+  windowHeight = Dimensions.get('window').height;
+}
+
+// This container component holds JoyPad methods, determines the touch areas of each button, determines which buttons are pressed, and what messages to send to the websocket server
 class JoyPadContainer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      // tracks if app has been closed; if it it closed and loses connection to the websocket server, then pop back to QRReader
+      appState: undefined,
+      JoyPadOpen: true,
+
       // set to true when game is paused
-      showPauseModal: false, 
+      showPauseModal: false,
+      sliderValue: ( Math.sqrt(2) + 1 )/2,  
 
       // stores the previous state of button presses; we compare to see if current button presses are different from previous
       // if so, then send a 'press' or 'release' message to the chrome app webSocket server
@@ -60,6 +81,9 @@ class JoyPadContainer extends React.Component {
         select: false
       },
 
+      // the most recent DPad arrow button pressed; used to solve rendering conflicts if user presses multiple DPad buttons
+      latestDPadTouch: undefined,
+
       // information about the current layout of each button/set of buttons: x coord, y coord, width, height
       // used to determine which area of the screen each button is taking up so later we can calculate if a touch is within the area of the button
       // filled in by _onLayout methods below
@@ -69,9 +93,11 @@ class JoyPadContainer extends React.Component {
         lShoulder: undefined,
         rShoulder: undefined,
         start: undefined,
-        select: undefined
+        select: undefined,
+        ABXYOverlapAxis: undefined,
       }
     };
+
 
     // functions used by webSocketMethods.js defined here:
     global.pause = () => {
@@ -80,40 +106,68 @@ class JoyPadContainer extends React.Component {
     global.resume = () => {
       this.setState({showPauseModal: false});
     };
+
+    // TODO: notify user that they were disconnected
     global.onclose = () => {
       navigator = this.props.navigator;
-      turnCameraOn = this.props.route.turnCameraOn.bind(this);
-      navigator.pop();
-      Orientation.lockToPortrait();
-      turnCameraOn();
+      _turnCameraOn = this.props.route._turnCameraOn.bind(this);
+      _showDisconnectedModal = this.props.route._showDisconnectedModal.bind(this);
+
+      if(global.JoyPadOpen) {
+        _showDisconnectedModal();
+        navigator.popToTop();
+        Orientation.lockToPortrait();
+        _turnCameraOn();
+      }
     };
   }
 
   componentDidMount() {
+    console.log('mounted joypad')
+
     Orientation.lockToLandscapeRight(); // this will lock the view to Landscape
+    AppStateIOS.addEventListener('change', this._handleAppStateChange.bind(this));  // tracks if app has been closed; if it it closed and loses connection to the websocket server, then pop back to QRReader
+  }
+
+  componentWillUnmount() {
+    console.log('unmount joypad');
+    AppStateIOS.removeEventListener('change', this._handleAppStateChange.bind(this));
+    global.JoyPadOpen = false;
+    global.webSocketAlreadyConnected = false;
+  }
+
+  _handleAppStateChange(currentAppState) {
+    this.setState({ appState : currentAppState });
+    if(ws.readyState !== 1) {
+      global.onclose();
+    }
   }
 
   // Method used to pause the game and methods used while the game is paused:
   _pause() {
-    var controller = this;
+    const controller = this;
     webSocket.Pause(function() {
       controller.setState({showPauseModal: true});
     });
   }
   _resume() {
-    var controller = this;
+    const controller = this;
     webSocket.Resume(function() {
       controller.setState({showPauseModal: false});
     });
   }
   _pairController() {
     navigator = this.props.navigator;
-    turnCameraOn = this.props.route.turnCameraOn.bind(this);
+    _turnCameraOn = this.props.route._turnCameraOn.bind(this);
     webSocket.RePairController(function() {
-      navigator.pop();
+      navigator.popToTop();
       Orientation.lockToPortrait();
-      turnCameraOn();
+      _turnCameraOn();
     });
+  }
+  _onValueChange(value) {
+    console.log('valueeeee', value)
+    this.setState({sliderValue: value});
   }
 
   // Sets the state of layout; when the view renders, pass the information to this.state so we can calculate whether touches are within certain button areas
@@ -135,6 +189,10 @@ class JoyPadContainer extends React.Component {
   }
   _onLayoutRShoulder(e) {
     this.setState({layout: _.extend(this.state.layout, {rShoulder: e.nativeEvent.layout})})
+  }
+  _onLayoutABXYOverlapAxis(e) {
+    this.setState({layout: _.extend(this.state.layout, {ABXYOverlapAxis: e.nativeEvent.layout})})
+    console.log('up', this.state)
   }
 
   // Touch helpers: returns true if a touch coordinate is within the area of the button
@@ -230,16 +288,52 @@ class JoyPadContainer extends React.Component {
     );
   }
 
+  _pressingAandB(coordinate) {
+    var rotatedCoordinate = utils.rotatePoint(this.state.layout.ABXYOverlapAxis.width, this.state.layout.ABXYOverlapAxis.height, [this.state.layout.ABXYOverlapAxis.x, this.state.layout.ABXYOverlapAxis.y], coordinate, -43.2642)
+    return utils._pointInRectangle(rotatedCoordinate, 
+      [this.state.layout.ABXYOverlapAxis.x, this.state.layout.ABXYOverlapAxis.y + this.state.layout.ABXYOverlapAxis.height/2],
+      [this.state.layout.ABXYOverlapAxis.x + this.state.layout.ABXYOverlapAxis.width, this.state.layout.ABXYOverlapAxis.y + this.state.layout.ABXYOverlapAxis.height]
+    );
+  }
+
+  _pressingXandY(coordinate) {
+    var rotatedCoordinate = utils.rotatePoint(this.state.layout.ABXYOverlapAxis.width, this.state.layout.ABXYOverlapAxis.height, [this.state.layout.ABXYOverlapAxis.x, this.state.layout.ABXYOverlapAxis.y], coordinate, -43.2642)
+    return utils._pointInRectangle(rotatedCoordinate, 
+      [this.state.layout.ABXYOverlapAxis.x, this.state.layout.ABXYOverlapAxis.y],
+      [this.state.layout.ABXYOverlapAxis.x + this.state.layout.ABXYOverlapAxis.width, this.state.layout.ABXYOverlapAxis.y + this.state.layout.ABXYOverlapAxis.height/2]
+    );
+  }
+
+  _pressingYandB(coordinate) {
+    var rotatedCoordinate = utils.rotatePoint(this.state.layout.ABXYOverlapAxis.width, this.state.layout.ABXYOverlapAxis.height, [this.state.layout.ABXYOverlapAxis.x, this.state.layout.ABXYOverlapAxis.y], coordinate, 43.2642)
+    return utils._pointInRectangle(rotatedCoordinate, 
+      [this.state.layout.ABXYOverlapAxis.x, this.state.layout.ABXYOverlapAxis.y + this.state.layout.ABXYOverlapAxis.height/2],
+      [this.state.layout.ABXYOverlapAxis.x + this.state.layout.ABXYOverlapAxis.width, this.state.layout.ABXYOverlapAxis.y + this.state.layout.ABXYOverlapAxis.height]
+    );
+  }
+
+  _pressingXandA(coordinate) {
+    var rotatedCoordinate = utils.rotatePoint(this.state.layout.ABXYOverlapAxis.width, this.state.layout.ABXYOverlapAxis.height, [this.state.layout.ABXYOverlapAxis.x, this.state.layout.ABXYOverlapAxis.y], coordinate, 43.2642)
+    return utils._pointInRectangle(rotatedCoordinate, 
+      [this.state.layout.ABXYOverlapAxis.x, this.state.layout.ABXYOverlapAxis.y],
+      [this.state.layout.ABXYOverlapAxis.x + this.state.layout.ABXYOverlapAxis.width, this.state.layout.ABXYOverlapAxis.y + this.state.layout.ABXYOverlapAxis.height/2]
+    );
+  }
+
   // This is the main function used to determine what new messages need to be sent to the chrome app websockets server
   // Called any time there is a new touch, a touch has moved, and when a touch is released
   _determinePressesAndReleases(e) {
     // List the coordinates of all the active touches on the screen
-    var touchCoordinates = _.map(e.nativeEvent.touches, function(touch) {
-      return [touch.pageX, touch.pageY];
+    const touchCoordinates = _.map(e.nativeEvent.touches, function(touch) {
+      return {
+        x: touch.pageX,
+        y: touch.pageY,
+        identifier: touch.identifier
+      };
     });
 
     // Set previousButtonPresses to be what was currentButtonPresses and re-initialize currentButtonPresses as all false
-    var self = this;
+    const self = this;
     self.setState({previousButtonPresses: self.state.currentButtonPresses});
     self.setState({currentButtonPresses: {
       a: false,
@@ -257,22 +351,43 @@ class JoyPadContainer extends React.Component {
     }});
     
     // Look through each touchCoordinate; if any touchCoordinate is pressing any button, set that button to true
+    // For the DPad buttons, set the button to be the touch identifier # so we know what order the DPad buttons were pressed in; when we render the DPad view, 
+    // only one button can be shown as pressed at one time so we need to keep track of which is the most recent one pressed, next most recent one pressed when the most recent one is released, etc.
     _.each(touchCoordinates, function(touchCoordinate) {
-      self._pressingA(touchCoordinate) ? self.setState({currentButtonPresses: _.extend(self.state.currentButtonPresses, {a: true})}) : null;
-      self._pressingB(touchCoordinate) ? self.setState({currentButtonPresses: _.extend(self.state.currentButtonPresses, {b: true})}) : null;
-      self._pressingX(touchCoordinate) ? self.setState({currentButtonPresses: _.extend(self.state.currentButtonPresses, {x: true})}) : null;
-      self._pressingY(touchCoordinate) ? self.setState({currentButtonPresses: _.extend(self.state.currentButtonPresses, {y: true})}) : null;
-      self._pressingRight(touchCoordinate) ? self.setState({currentButtonPresses: _.extend(self.state.currentButtonPresses, {right: true})}) : null;
-      self._pressingDown(touchCoordinate) ? self.setState({currentButtonPresses: _.extend(self.state.currentButtonPresses, {down: true})}) : null;
-      self._pressingUp(touchCoordinate) ? self.setState({currentButtonPresses: _.extend(self.state.currentButtonPresses, {up: true})}) : null;
-      self._pressingLeft(touchCoordinate) ? self.setState({currentButtonPresses: _.extend(self.state.currentButtonPresses, {left: true})}) : null;
-      self._pressingLShoulder(touchCoordinate) ? self.setState({currentButtonPresses: _.extend(self.state.currentButtonPresses, {lShoulder: true})}) : null;
-      self._pressingRShoulder(touchCoordinate) ? self.setState({currentButtonPresses: _.extend(self.state.currentButtonPresses, {rShoulder: true})}) : null;
-      self._pressingSelect(touchCoordinate) ? self.setState({currentButtonPresses: _.extend(self.state.currentButtonPresses, {select: true})}) : null;
-      self._pressingStart(touchCoordinate) ? self.setState({currentButtonPresses: _.extend(self.state.currentButtonPresses, {start: true})}) : null;
-    });
+      // console.log(touchCoordinate.x);
+      self._pressingAandB([touchCoordinate.x, touchCoordinate.y]) ? self.setState({currentButtonPresses: _.extend(self.state.currentButtonPresses, {a: true, b: true})}) : null;
+      self._pressingXandY([touchCoordinate.x, touchCoordinate.y]) ? self.setState({currentButtonPresses: _.extend(self.state.currentButtonPresses, {x: true, y: true})}) : null;
+      self._pressingXandA([touchCoordinate.x, touchCoordinate.y]) ? self.setState({currentButtonPresses: _.extend(self.state.currentButtonPresses, {x: true, a: true})}) : null;
+      self._pressingYandB([touchCoordinate.x, touchCoordinate.y]) ? self.setState({currentButtonPresses: _.extend(self.state.currentButtonPresses, {y: true, b: true})}) : null;
 
-    console.log('state', self.state.currentButtonPresses);
+
+      self._pressingA([touchCoordinate.x, touchCoordinate.y]) ? self.setState({currentButtonPresses: _.extend(self.state.currentButtonPresses, {a: true})}) : null;
+      self._pressingB([touchCoordinate.x, touchCoordinate.y]) ? self.setState({currentButtonPresses: _.extend(self.state.currentButtonPresses, {b: true})}) : null;
+      self._pressingX([touchCoordinate.x, touchCoordinate.y]) ? self.setState({currentButtonPresses: _.extend(self.state.currentButtonPresses, {x: true})}) : null;
+      self._pressingY([touchCoordinate.x, touchCoordinate.y]) ? self.setState({currentButtonPresses: _.extend(self.state.currentButtonPresses, {y: true})}) : null;
+      self._pressingRight([touchCoordinate.x, touchCoordinate.y]) ? self.setState({currentButtonPresses: _.extend(self.state.currentButtonPresses, {right: touchCoordinate.identifier})}) : null;
+      self._pressingDown([touchCoordinate.x, touchCoordinate.y]) ? self.setState({currentButtonPresses: _.extend(self.state.currentButtonPresses, {down: touchCoordinate.identifier})}) : null;
+      self._pressingUp([touchCoordinate.x, touchCoordinate.y]) ? self.setState({currentButtonPresses: _.extend(self.state.currentButtonPresses, {up: touchCoordinate.identifier})}) : null;
+      self._pressingLeft([touchCoordinate.x, touchCoordinate.y]) ? self.setState({currentButtonPresses: _.extend(self.state.currentButtonPresses, {left: touchCoordinate.identifier})}) : null;
+      self._pressingLShoulder([touchCoordinate.x, touchCoordinate.y]) ? self.setState({currentButtonPresses: _.extend(self.state.currentButtonPresses, {lShoulder: true})}) : null;
+      self._pressingRShoulder([touchCoordinate.x, touchCoordinate.y]) ? self.setState({currentButtonPresses: _.extend(self.state.currentButtonPresses, {rShoulder: true})}) : null;
+      self._pressingSelect([touchCoordinate.x, touchCoordinate.y]) ? self.setState({currentButtonPresses: _.extend(self.state.currentButtonPresses, {select: true})}) : null;
+      self._pressingStart([touchCoordinate.x, touchCoordinate.y]) ? self.setState({currentButtonPresses: _.extend(self.state.currentButtonPresses, {start: true})}) : null;
+    });
+    // console.log('state', self.state.currentButtonPresses);
+
+    // Figure out which DPad button was the most recent one hit so that if the user hits two DPad buttons at the same time, there won't be strange rendering
+    var DPadTouches = {
+      'up' : self.state.currentButtonPresses.up,
+      'down' : self.state.currentButtonPresses.down,
+      'left' : self.state.currentButtonPresses.left,
+      'right' : self.state.currentButtonPresses.right,
+    }
+    var largestTouchIdentifier = Object.keys(DPadTouches).reduce(function(m, k){ return DPadTouches[k] > m ? DPadTouches[k] : m }, -Infinity);
+    var latestDPadTouch = _.findKey(DPadTouches, (DPadTouch) => {
+      return DPadTouch === largestTouchIdentifier;
+    });
+    this.setState({latestDPadTouch: latestDPadTouch});
 
     // Compare previousButtonPresses with currentButtonPresses; if there is a change, then tell the chrome app webSocket server (either press or release)
     this.state.currentButtonPresses.a !== this.state.previousButtonPresses.a ? (this.state.currentButtonPresses.a ? webSocket.Press('a') : webSocket.Release('a')) : null;
@@ -290,7 +405,9 @@ class JoyPadContainer extends React.Component {
   }
 
   // Touch events
+  // Call _determinePressesAndRelease any time there is a new touch, a touch has moved, and when a touch is released
   _onTouchStart(e) {
+    console.log(e.nativeEvent)
     console.log('Touch Start');
     this._determinePressesAndReleases(e);
   }
@@ -305,11 +422,13 @@ class JoyPadContainer extends React.Component {
     this._determinePressesAndReleases(e);
   } 
 
+  // Render the transparent View tags that represent the area that each button takes up, as well as the presentational JoyPad component the user sees
+  // Render the pause modal if the user clicks the pause button
   render() {
     StatusBarIOS.setHidden('true');
+
     return (
-      <View style={styles.imageContainer}>
-       
+      <View style={{flex: 1}}>
         <View style={{flex: 1}} onTouchStart={this._onTouchStart.bind(this)} onTouchMove={this._onTouchMove.bind(this)} onTouchEnd={this._onTouchEnd.bind(this)}>
           <View style={styles.DPadArea} onLayout={this._onLayoutDPad.bind(this)}/>
           <View style={styles.ABXYArea} onLayout={this._onLayoutABXY.bind(this)}/>
@@ -318,15 +437,29 @@ class JoyPadContainer extends React.Component {
           <View style={styles.selectArea} onLayout={this._onLayoutSelect.bind(this)}/>
           <View style={styles.startArea} onLayout={this._onLayoutStart.bind(this)}/>
 
-          <JoyPad currentButtonPresses={this.state.currentButtonPresses}/>
+          <JoyPad currentButtonPresses={this.state.currentButtonPresses} latestDPadTouch={this.state.latestDPadTouch}/>
+
+          <View 
+            onLayout={this._onLayoutABXYOverlapAxis.bind(this)}
+            style={[styles.upwardsDiagonalABXYOverlap, {
+              right: windowWidth * 0.4 - 150 * (this.state.sliderValue/Math.sqrt(2) - 1/Math.sqrt(2))/2,
+              width: 150 * (this.state.sliderValue/Math.sqrt(2) - 1/Math.sqrt(2)),
+            }]}/>
+          <View 
+            style={[styles.downwardsDiagonalABXYOverlap, {
+              right: windowWidth * 0.4 - 150 * (this.state.sliderValue/Math.sqrt(2) - 1/Math.sqrt(2))/2,
+              width: 150 * (this.state.sliderValue/Math.sqrt(2) - 1/Math.sqrt(2)),
+            }]}/>
+
+          <PauseButton _pause={this._pause.bind(this)}/>
 
         </View>
 
-        <TouchableOpacity style={styles.pauseButton} onPress={this._pause.bind(this)}>
-          <FontAwesomeIcon name="pause-circle" size={Dimensions.get('window').width* 0.106} allowFontScaling={false} color="#353632"/>
-        </TouchableOpacity>
-
-        {this.state.showPauseModal ? <PauseModal _resume={this._resume.bind(this)} _pairController={this._pairController.bind(this)}/> : null}
+        {this.state.showPauseModal ? <PauseModal _resume={this._resume.bind(this)} 
+                                                 _pairController={this._pairController.bind(this)} 
+                                                 sliderValue={this.state.sliderValue}
+                                                 _onValueChange={this._onValueChange.bind(this)}/>
+        : null}
 
       </View>
     );
@@ -334,78 +467,93 @@ class JoyPadContainer extends React.Component {
 }
 
 // Define the touch areas of each button (these are not the actual views the user sees, but the hit areas: lots of hit slop relative to the size of the rendered button views so there is room for user error)
-var styles = StyleSheet.create({
-  imageContainer: {
-    flex: 1,
-    backgroundColor: '#a69f9a'
-  },
+const styles = StyleSheet.create({
   DPadArea: {
     position: 'absolute',
-    top: Dimensions.get('window').width * .15,
+    top: windowWidth * .15,
     left: 0, 
     width: 0,
     height: 0,
-    borderTopWidth: Dimensions.get('window').width * 0.33,
+    borderTopWidth: windowWidth * 0.33,
     borderTopColor: 'transparent',
     borderLeftColor: 'transparent',
-    borderLeftWidth: Dimensions.get('window').width * 0.4,
+    borderLeftWidth: windowWidth * 0.4,
     borderRightColor: 'transparent',
-    borderRightWidth: Dimensions.get('window').width * 0.4,
+    borderRightWidth: windowWidth * 0.4,
     borderBottomColor: 'transparent',
-    borderBottomWidth: Dimensions.get('window').width * 0.33,
+    borderBottomWidth: windowWidth * 0.33,
   },
   ABXYArea: {
     position: 'absolute',
-    top: Dimensions.get('window').width * .15,
+    top: windowWidth * .15,
     right: 0, 
     width: 0,
     height: 0,
-    borderTopWidth: Dimensions.get('window').width * 0.425,
+    borderTopWidth: windowWidth * 0.425,
     borderTopColor: 'transparent',
     borderLeftColor: 'transparent',
-    borderLeftWidth: Dimensions.get('window').width * 0.4,
+    borderLeftWidth: windowWidth * 0.4,
     borderRightColor: 'transparent',
-    borderRightWidth: Dimensions.get('window').width * 0.4,
+    borderRightWidth: windowWidth * 0.4,
     borderBottomColor: 'transparent',
-    borderBottomWidth: Dimensions.get('window').width * 0.425,
+    borderBottomWidth: windowWidth * 0.425,
   },
   lShoulderArea: {
     position: 'absolute',
     top: 0,
     left: 0, 
-    width: Dimensions.get('window').height * 0.45,
-    height: Dimensions.get('window').width * 0.15,
+    width: windowHeight * 0.45,
+    height: windowWidth * 0.15,
     backgroundColor: 'transparent'
   },
   rShoulderArea: {
     position: 'absolute',
     top: 0,
     right: 0, 
-    width: Dimensions.get('window').height * 0.45,
-    height: Dimensions.get('window').width * 0.15,
+    width: windowHeight * 0.45,
+    height: windowWidth * 0.15,
     backgroundColor: 'transparent'
   },
   selectArea: {
     position: 'absolute',
     bottom: 0,
     left: 0, 
-    width: (Dimensions.get('window').width * 0.8 ) / 2,
-    height: Dimensions.get('window').width * 0.19,
+    width: (windowWidth * 0.8 ) / 2,
+    height: windowWidth * 0.19,
     backgroundColor: 'transparent'
   },
   startArea: {
     position: 'absolute',
     bottom: 0,
-    left: (Dimensions.get('window').width * 0.8 ) / 2, 
-    width: (Dimensions.get('window').width * 0.8 ) / 2,
-    height: Dimensions.get('window').width * 0.19,
+    left: (windowWidth * 0.8 ) / 2, 
+    width: (windowWidth * 0.8 ) / 2,
+    height: windowWidth * 0.19,
     backgroundColor: 'transparent'
   },
-  pauseButton: {
+  upwardsDiagonalABXYOverlap: {
     position: 'absolute',
-    bottom: 5,
-    right: 10,
+    top: windowWidth * .15,
+    height: 0,
+    borderTopWidth: windowWidth * 0.425,
+    borderBottomWidth: windowWidth * 0.425,
+    borderTopColor: 'transparent',
+    borderBottomColor: 'transparent',
+    transform: [
+      {rotate: '43.2642deg'}
+    ]
   },
+  downwardsDiagonalABXYOverlap: {
+    position: 'absolute',
+    top: windowWidth * .15,
+    height: 0,
+    borderTopWidth: windowWidth * 0.425,
+    borderBottomWidth: windowWidth * 0.425,
+    borderTopColor: 'transparent',
+    borderBottomColor: 'transparent',
+    transform: [
+      {rotate: '-43.2642deg'}
+    ]
+  }
 });
 
 module.exports = JoyPadContainer;
