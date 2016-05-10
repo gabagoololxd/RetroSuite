@@ -3,25 +3,32 @@ app.controller('pauseScreen', function($scope) {
   var qrScreen2 = document.getElementById('qrScreen2');
   window.openQRScreen = $scope.openQRScreen = function() {
     chrome.system.network.getNetworkInterfaces(function (ipAddresses) {
+
+      // in case the user switches wifi networks midway through, the QR needs to reupdate
+      $scope.ipFound = false;
+      $('#qrCode2').empty();
+
       ipAddresses.forEach(function (ipAddress) {
         console.log(ipAddress);
         if (/^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/.test(ipAddress.address)) {
-          $scope.title = 'IP FOUND'
 
           $scope.ipAddress = ip4 = ipAddress.address;
-          var toQ = $scope.ipAddress + ':' + port;
+          var toQ = $scope.ipAddress + ':' + window.port;
 
           if($scope.ipFound == false) {
-            new QRCode(document.getElementById('qrCode'), toQ);
-            new QRCode(document.getElementById('qrCode2'), toQ);
+            $scope.$apply(function() {
+              $('#qrInstructions2').text('Scan Qr To Pair');
+              new QRCode(document.getElementById('qrCode2'), toQ);
+            });
           }
-
           $scope.ipFound = true;
-
         }
       });
 
     });
+    if($scope.ipFound === false) {
+      $('#qrInstructions2').text('No Wifi Address Found');
+    }
     qrScreen2.classList.remove('hidden');
   };
   window.closeQRScreen = $scope.closeQRScreen = function() {

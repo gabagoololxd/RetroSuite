@@ -1,94 +1,277 @@
-var React = require('react-native');
-var Camera = require('react-native-camera').default;
-var _ = require('lodash');
-var Orientation = require('react-native-orientation');
-var IconIon = require('react-native-vector-icons/Ionicons');
+const React = require('react-native');
+const Camera = require('react-native-camera').default;
+const _ = require('lodash');
+const Orientation = require('react-native-orientation');
+const Permissions = require('react-native-permissions');
 
-var webSocket = require('../../Utils/webSocketMethods');
-var JoyPadContainer = require('../JoyPad/JoyPadContainer');
+const DisconnectedModal = require('./DisconnectedModal');
+const FocusBrackets = require('./FocusBrackets');
+const DarkOverlays = require('./DarkOverlays');
+const FlashButtonArea = require('./FlashButtonArea');
+const CameraPermissionsModal = require('./CameraPermissionsModal');
+const PairingInstructions = require('./PairingInstructions');
+const SegmentedControl = require('./SegmentedControl');
+const WifiConnectedPairingErrorModal = require('./WifiConnectedPairingErrorModal');
+const WifiDisconnectedPairingErrorModal = require('./WifiDisconnectedPairingErrorModal');
 
-var {
+const webSocket = require('../../Utils/webSocketMethods');
+const JoyPadContainer = require('../JoyPad/JoyPadContainer');
+
+const {
   Dimensions,
   StyleSheet,
-  Text,
   View,
-  TouchableWithoutFeedback,
   Navigator,
   StatusBarIOS,
-  SegmentedControlIOS,
   Linking,
-  ScrollView,
-  NetInfo
+  NetInfo,
+  AppStateIOS,
+  Animated,
+  AlertIOS
 } = React;
 
+// On the iPhone 6+, if the app is launched in landscape, Dimensions.get('window').width returns the height and vice versa for width so we fix that here
+var windowWidth, windowHeight;
+if (Dimensions.get('window').width===736) { // iPhone 6+ landscape
+  windowWidth = 414;
+  windowHeight = 736;
+} else if(Dimensions.get('window').width===667) { // iPhone 6 landscape
+  windowWidth = 375;
+  windowHeight = 667;
+} else if(Dimensions.get('window').width===568) { // iPhone 5 landscape
+  windowWidth = 320;
+  windowHeight = 568;
+} else { // launched in correct orientation
+  windowWidth = Dimensions.get('window').width;
+  windowHeight = Dimensions.get('window').height;
+}
+
+// This is the container component that holds the camera component and all the associated methods
 class QRReader extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+
+      appState: undefined,
+      cameraPermissions: false,
+
+      showCameraPermissionsModal: false,
+
+      cameraOn: true,
       cameraTorchToggle: Camera.constants.TorchMode.off,
       handleFocusChanged: () => {},
-      cameraOn: true,
+
       selectedIndex: 0,
-    }
+      
+      showDisconnectedModal: false,
+      fadeAnim: new Animated.Value(0),
+
+      ipAddressFound: undefined,
+      connectionInfo: undefined,
+
+      showWifiConnectedPairingErrorModal: false,
+      showWifiDisconnectedPairingErrorModal: false
+    };
+    global.webSocketAlreadyConnected = false;
   }
 
   componentDidMount() {
     Orientation.lockToPortrait(); //this will lock the view to Portrait
+    AppStateIOS.addEventListener('change', this._handleAppStateChange.bind(this)); 
 
-    NetInfo.fetch().done(
-        (connectionInfo) => { console.log(connectionInfo, 'connectionInfo') }
-    );
+    // Determine user permissions for the camera; if permission is authorized, use the camera/app; 
+    // Otherwise, notify the user that they must allow camera access and provide a link to settings where they can do so
+    this._checkCameraPermissions();
     
-    //for development purposes, simulates successful qr scan
-    var openJoyPadContainerCallback = () => {
-      var navigator = this.props.navigator;
-      var turnCameraOn = this.turnCameraOn.bind(this);
-      var turnCameraOff = this.turnCameraOff.bind(this);
-      turnCameraOff();
-      //open up the JoyPadContainer
-      navigator.push({
-        component: JoyPadContainer,
-        turnCameraOn: turnCameraOn.bind(this),
-        sceneConfig: {
-          ...Navigator.SceneConfigs.FloatFromBottom,
-          gestures: {} //disable ability to swipe to pop back from JoyPadContainer to QRReader once past the ip address page
+    // //for development purposes, simulates successful qr scan
+    // const openJoyPadContainerCallback = () => {
+    //   const navigator = this.props.navigator;
+    //   const _turnCameraOn = this._turnCameraOn.bind(this);
+    //   const _turnCameraOff = this._turnCameraOff.bind(this);
+
+    //   const _showDisconnectedModal = this._showDisconnectedModal.bind(this);
+
+    //   _turnCameraOff();
+    //   //open up the JoyPadContainer
+    //   navigator.push({
+    //     component: JoyPadContainer,
+    //     _turnCameraOn: _turnCameraOn.bind(this),
+    //     _showDisconnectedModal: _showDisconnectedModal.bind(this),
+    //     sceneConfig: {
+    //       ...Navigator.SceneConfigs.FloatFromBottom,
+    //       gestures: {} //disable ability to swipe to pop back from JoyPadContainer to QRReader once past the ip address page
+    //     }
+    //   });
+    // }
+    // global.JoyPadOpen = true;
+    // webSocket.PairController('10.0.0.215:1337', openJoyPadContainerCallback);
+
+  }
+
+  componentWillUnmount() {
+    AppStateIOS.removeEventListener('change', this._handleAppStateChange.bind(this));
+  }
+
+  _handleAppStateChange(currentAppState) {
+    this.setState({ appState : currentAppState });
+    // Check camera permissions again if the user switched away and came back to the app
+    // handles edge case where user clicks "Yes" button, but doesn't actually give permissions, then comes back to the app
+    if(currentAppState==='active') {
+      this._checkCameraPermissions();
+    }
+  }
+
+  _checkCameraPermissions() {
+    Permissions.cameraPermissionStatus()
+      .then(response => {
+        if (response == Permissions.StatusUndetermined) {
+          this.setState({
+            cameraPermissions: undefined,
+            showCameraPermissionsModal: false,
+          });
+          console.log("Undetermined");
+        } else if (response == Permissions.StatusDenied) {
+          this.setState({
+            cameraPermissions: false,
+            showCameraPermissionsModal: true,
+          });
+          console.log("Denied");
+        } else if (response == Permissions.StatusAuthorized) {
+          this.setState({
+            cameraPermissions: true,
+            showCameraPermissionsModal: false,
+          });
+          console.log("Authorized");
+        } else if (response == Permissions.StatusRestricted) {
+          this.setState({
+            cameraPermissions: false,
+            showCameraPermissionsModal: true,
+          });
+          console.log("Restricted");
         }
       });
-    }
-    webSocket.PairController('10.0.0.215:1337', openJoyPadContainerCallback);
   }
 
   _onBarCodeRead(e) {
-    var ipAddress = e.data;
+    const ipAddress = e.data;
+    console.log('scanned a qr', ipAddress);
 
-    var success = () => {
-      var navigator = this.props.navigator;
-      var turnCameraOn = this.turnCameraOn.bind(this);
-      var turnCameraOff = this.turnCameraOff.bind(this);
-      turnCameraOff();
+    const self = this;
+
+    const success = (resolveCallback) => {
+      // resolve the promise from pairController
+      resolveCallback();
+
+      // reset ipAddressFound so when we pop back to the QRReader, we can scan the same QR again
+      self.setState({ipAddressFound: undefined})
+
+      const navigator = this.props.navigator;
+      const _turnCameraOn = this._turnCameraOn.bind(this);
+      const _turnCameraOff = this._turnCameraOff.bind(this);
+      const _showDisconnectedModal = this._showDisconnectedModal.bind(this);
+
+      // turn the camera off when the JoyPad is mounted
+      _turnCameraOff();
+
       //open up the JoyPadContainer
       navigator.push({
         component: JoyPadContainer,
-        turnCameraOn: turnCameraOn.bind(this),
+        _turnCameraOn: _turnCameraOn.bind(this),
+        _showDisconnectedModal: _showDisconnectedModal.bind(this),
         sceneConfig: {
           ...Navigator.SceneConfigs.FloatFromBottom,
           gestures: {} //disable ability to swipe to pop back from JoyPadContainer to QRReader once past the ip address page
         }
       });
+      global.JoyPadOpen = true; //set JoyPadOpen to true so that global.onClose will pop JoyPadContainer off back to QRReader
     }
+    
+    // if the QR just scanned is not the one that was just scanned, then send a pairing request to the websocket server
+    // this is done because otherwise the QRReader would scan multiple times and send multiple unecessary requests within a few seconds,
+    // and cause navigator to push JoyPadContainer multiple times
+    if(this.state.ipAddressFound !== ipAddress) {
+      
+      console.log('attempt to pair')
 
-    webSocket.PairController(ipAddress, success);
+      // remember the ipAddress that was just scanned so we can compare the next ipAddress scanned; 
+      // if its is the same one again, don't send another pairing request
+      this.setState({ipAddressFound: ipAddress})
+      
+      // see if the phone is connected to wifi or not; 
+      // this is preparation for showing a possible error message if the pairing request is unsuccessful
+      NetInfo.fetch().done(
+        (connectionInfo) => { self.setState({connectionInfo: connectionInfo}) }
+      );
+
+      // Promise race, if after 1.5 seconds it doesnt pair successfully, check to see if connected to wifi, 
+      // if it is not, then notify the user
+      // if wifi is on but still can't pair, tell the user it tried to pair but still didn't work
+      const pairController = new Promise(function (resolve, reject) {
+        const resolveCallback = () => {
+          resolve('paired');
+        };
+        webSocket.PairController(ipAddress, success, resolveCallback);
+      }); 
+
+      const showPairError = new Promise(function (resolve, reject) {
+        setTimeout(() => {
+          resolve('did not pair');
+        }, 1500);
+      });
+
+      const p = Promise.race([
+        pairController,
+        showPairError
+      ])
+      p.then((response) => {
+        if(response=='did not pair') {
+          if(self.state.connectionInfo==='wifi') {
+            // The controller didn't pair, even though the phone is connected to wifi
+            self.setState({showWifiConnectedPairingErrorModal: true});
+          } else {
+            // The controller didn't pair, and the phone is not connected to wifi
+            self.setState({showWifiDisconnectedPairingErrorModal: true});
+          }
+        }
+      })
+      p.catch(error => console.log(error))
+    };
+
+    // TODO:
+    // ABXY overlap / touch radius options
+
+    // Nice to have:
+      // somehow send  close message immediatedly when chrome app x's out
+      // autofocus camera
   }
 
   _torchEnabled() {
     this.state.cameraTorchToggle === Camera.constants.TorchMode.on ? this.setState({ cameraTorchToggle: Camera.constants.TorchMode.off }) : this.setState({ cameraTorchToggle: Camera.constants.TorchMode.on });
   }
 
-  turnCameraOff() { //we want to turn the camera off once the JoyPadContainer mounts because the camera is no longer necessary (until the user has to re-pair with the websockets server)
+  _turnCameraOff() { //we want to turn the camera off once the JoyPadContainer mounts because the camera is no longer necessary (until the user has to re-pair with the websockets server)
     this.setState({cameraOn:false})
   }
-  turnCameraOn() {
+  _turnCameraOn() {
     this.setState({cameraOn:true})
+  }
+
+  _showDisconnectedModal() {
+    Animated.timing(this.state.fadeAnim, {duration: 500, toValue: 1}).start(); 
+    this.setState({showDisconnectedModal:true});
+
+    setTimeout(() => {
+      Animated.timing(this.state.fadeAnim, {duration: 750, toValue: 0}).start(); 
+    }, 2000);
+
+    var self = this;
+    setTimeout(() => {
+      self._hideDisconnectedModal();
+    }, 3000);
+  }
+
+  _hideDisconnectedModal() {
+    this.setState({showDisconnectedModal:false});
   }
 
   _onChange(event) {
@@ -97,234 +280,112 @@ class QRReader extends React.Component {
     });
   }
 
+  _openCameraPermissions() {
+    this.setState({showCameraPermissionsModal: false});
+    Linking.openURL('app-settings:').catch(err => console.error('An error occurred', err));
+  }
+
+  _openWifiPermissions() {
+    this.setState({showWifiDisconnectedPairingErrorModal: false});
+    this.setState({showWifiConnectedPairingErrorModal: false});
+    Linking.openURL('prefs:root=WIFI').catch(err => console.error('An error occurred', err));
+  }
+
+  _closePairingErrorModal() {
+    console.log('close click')
+    this.setState({showWifiDisconnectedPairingErrorModal: false});
+    this.setState({showWifiConnectedPairingErrorModal: false});
+    this.setState({ipAddressFound: undefined}) // reset to scan again
+  }
+
   render() {
     StatusBarIOS.setHidden('false');
     StatusBarIOS.setStyle('light-content');
-    if (this.state.cameraOn) {
-      return (
-        <View >
-          <Camera
-            ref={(cam) => {
-              this.camera = cam;
-            }}
-            style={styles.camera}
-            torchMode={this.state.cameraTorchToggle}
-            aspect={Camera.constants.Aspect.Fill}
-            onBarCodeRead={_.once(this._onBarCodeRead.bind(this))}
-            defaultOnFocusComponent={true}
-            orientation={Camera.constants.Orientation.portrait}
-            onFocusChanged={ this.state.handleFocusChanged }>
+    console.log(this.state);
 
-            <View style={styles.overlayLeft}/> 
-            <View style={styles.overlayTop}/> 
-            <View style={styles.overlayRight}/> 
-            <View style={styles.overlayBottom}/> 
-
-            <SegmentedControlIOS 
-              values={['Scan QR', 'Instructions']} 
-              selectedIndex={this.state.selectedIndex} 
-              style={styles.segments} 
-              tintColor="white"
-              onChange={this._onChange.bind(this)}
-              />
-
-            {this.state.selectedIndex===1 ? 
-              <ScrollView style={styles.modal}>
-                <Text style={{fontWeight: 'bold', fontSize: 18}} allowFontScaling={false}>Welcome to RetroSuite Controller!</Text>
-                <Text style={{fontSize: 15}} allowFontScaling={false}></Text>
-                <Text style={{fontWeight: 'bold', fontSize: 15}} allowFontScaling={false}>1.<Text style={{fontWeight: 'normal', fontSize: 15}} allowFontScaling={false}> Download the <Text style={{color: 'blue', textDecorationLine: 'underline'}} allowFontScaling={false} onPress={() =>  Linking.openURL('https://chrome.google.com/webstore/detail/retrosuite-emu/bnjapfbdmfjehbgohiebcnmombalmbfd').catch(err => console.error('An error occurred', err))}>RetroSuite EMU Chrome App</Text> to your computer.</Text></Text>
-                <Text style={{fontSize: 15}} allowFontScaling={false}></Text>
-                <Text style={{fontWeight: 'bold', fontSize: 15}} allowFontScaling={false}>2.<Text style={{fontWeight: 'normal', fontSize: 15}} allowFontScaling={false}> Make sure your computer and your phone are connected to the same Wi-Fi network. <Text style={{color: 'blue', textDecorationLine: 'underline'}} allowFontScaling={false} onPress={() =>  Linking.openURL('prefs:root=WIFI').catch(err => console.error('An error occurred', err))}>Click here</Text> to connect your iPhone to Wi-Fi.</Text></Text>
-                <Text style={{fontSize: 15}} allowFontScaling={false}></Text>
-                <Text style={{fontWeight: 'bold', fontSize: 15}} allowFontScaling={false}>3.<Text style={{fontWeight: 'normal', fontSize: 15}} allowFontScaling={false}> On your computer, select a game. On the next "Choose Your Controller" screen, click "Mobile Phone".</Text></Text>
-                <Text style={{fontSize: 15}} allowFontScaling={false}></Text>
-                <Text style={{fontWeight: 'bold', fontSize: 15}} allowFontScaling={false}>4.<Text style={{fontWeight: 'normal', fontSize: 15}} allowFontScaling={false}> On your phone, switch to "Scan QR" and point your camera at the QR code. Happy gaming; your phone is paired!</Text></Text>
-                <Text style={{fontSize: 15}} allowFontScaling={false}></Text>
-                <Text style={{fontSize: 15}} allowFontScaling={false}></Text>
-                <Text style={{fontStyle: 'italic', fontSize: 15}} allowFontScaling={false}>*Remember: you can use your phone as a hotspot for your computer when Wi-Fi is spotty or nonexistant. <Text style={{color: 'blue', textDecorationLine: 'underline', fontStyle: 'normal'}} allowFontScaling={false} onPress={() =>  Linking.openURL('prefs:root=INTERNET_TETHERING').catch(err => console.error('An error occurred', err))}>Click here</Text> to turn on Personal Hotspot.</Text>
-              </ScrollView> :
-              <View style={styles.rectanglePlaceholder} pointerEvents='box-none'/>
-            }
-
-            {this.state.selectedIndex===0 ? 
-              <View style={styles.rectangleContainer} pointerEvents='box-none'>
-                <View style={styles.rectangleTopLeft} pointerEvents='box-none'></View>
-                <View style={styles.rectangleTopRight} pointerEvents='box-none'></View>
-                <View style={styles.rectangleBottomLeft} pointerEvents='box-none'></View>
-                <View style={styles.rectangleBottomRight} pointerEvents='box-none'></View>
-              </View>
-            :
-              null
-            }
-
-            <View style={styles.bottomButtonContainer}>
-              <TouchableWithoutFeedback onPress={this._torchEnabled.bind(this)}  underlayColor={'#FC9396'}>
-                {this.state.cameraTorchToggle === Camera.constants.TorchMode.off ? 
-                  <View style={styles.flashButton}>
-                    <IconIon name="ios-bolt-outline" size={40} allowFontScaling={false} color="rgba(237,237,237,0.5)" style={styles.flashIcon} />
-                    <Text style={styles.flashButtonText} allowFontScaling={false}>Flash Off</Text>
-                  </View> 
-                : 
-                  <View style={styles.flashButton}>
-                    <IconIon name="ios-bolt" size={40} allowFontScaling={false} color="rgba(237,237,237,0.5)" style={styles.flashIcon} />
-                    <Text style={styles.flashButtonText} allowFontScaling={false}>Flash On</Text>
-                  </View>
-                }
-              </TouchableWithoutFeedback>
-            </View>
-
-          </Camera>
-        </View>
-
-      );
-    } else {
-      return null;
+    if(this.state.cameraPermissions!==true && this.state.appState!=='background') {
+      // mimics an event listener for permissions: if the permissions are not set to true, keep checking to see if it changes
+      this._checkCameraPermissions(); 
     }
-  }
-}
+    
+    if (!this.state.cameraOn) {
+      // turn the camera off when we go to the JoyPad
+      return (
+        <View style={styles.container}/>
+      );
+    } else if (this.state.cameraOn) {
 
-var styles = StyleSheet.create({
+      if(this.state.cameraPermissions !== false) {
+        // normal state of the app when on the pairing screen; shows a QR scanner with appropriate overlays/buttons/instructions
+        return (
+          <View >
+            <Camera
+              ref={(cam) => {
+                this.camera = cam;
+              }}
+              style={styles.camera}
+              torchMode={this.state.cameraTorchToggle}
+              aspect={Camera.constants.Aspect.Fill}
+              onBarCodeRead={_.throttle(this._onBarCodeRead.bind(this), 1000, {'leading': true, 'trailing': false})}
+              defaultOnFocusComponent={true}
+              orientation={Camera.constants.Orientation.portrait}
+              onFocusChanged={ this.state.handleFocusChanged }>
+
+              <DarkOverlays>
+
+                <SegmentedControl selectedIndex={this.state.selectedIndex} _onChange={this._onChange.bind(this)}/>
+                {this.state.selectedIndex===0 ? <View style={styles.rectanglePlaceholder} pointerEvents='box-none'/> : <PairingInstructions/>}
+                {this.state.selectedIndex===0 ? <FocusBrackets/> : null}
+                <FlashButtonArea cameraTorchToggle={this.state.cameraTorchToggle} _torchEnabled={this._torchEnabled.bind(this)}/>
+
+                <DisconnectedModal fadeAnim={this.state.fadeAnim} showDisconnectedModal={this.state.showDisconnectedModal}/>
+                
+                <WifiConnectedPairingErrorModal showWifiConnectedPairingErrorModal={this.state.showWifiConnectedPairingErrorModal} _openWifiPermissions={this._openWifiPermissions.bind(this)} _closePairingErrorModal={this._closePairingErrorModal.bind(this)}/>
+                <WifiDisconnectedPairingErrorModal showWifiDisconnectedPairingErrorModal={this.state.showWifiDisconnectedPairingErrorModal} _openWifiPermissions={this._openWifiPermissions.bind(this)} _closePairingErrorModal={this._closePairingErrorModal.bind(this)}/>
+
+              </DarkOverlays>
+            </Camera>
+          </View>
+        )
+      } else if (this.state.cameraPermissions === false) {
+        // when the camera permissions are off, disable the camera and show a modal that requests permissions with a link to settings
+        return (
+          <View style={styles.container}>
+            <DarkOverlays>
+
+              <SegmentedControl selectedIndex={this.state.selectedIndex} _onChange={this._onChange.bind(this)}/>
+              <View style={styles.rectanglePlaceholder} pointerEvents='box-none'/>
+              <FocusBrackets/>
+              <FlashButtonArea cameraTorchToggle={this.state.cameraTorchToggle} _torchEnabled={this._torchEnabled.bind(this)} />
+
+              <CameraPermissionsModal _openCameraPermissions={this._openCameraPermissions.bind(this)} showCameraPermissionsModal={this.state.showCameraPermissionsModal}/>
+
+            </DarkOverlays>
+          </View>
+        );
+      } // end inside if-else block
+
+    } // end outside if-else block
+    
+  } // end render
+ 
+} // end constructor
+
+const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: 'black'
   },
   camera: {
-    height: Dimensions.get('window').height,
-    width: Dimensions.get('window').width,
+    height: windowHeight,
+    width: windowWidth,
   },
-  segments: {
-    marginTop: 25
-  },
-
   rectanglePlaceholder: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'transparent',
   },
-
-  rectangleContainer: {
-    height: Dimensions.get('window').height,
-    width: Dimensions.get('window').width,
-    position: 'absolute',
-    left: 0,
-    top: 0,
-    borderColor: '#ededed',
-    backgroundColor: 'transparent',
-  },
-  rectangleTopLeft: {
-    height: 1/4 * Dimensions.get('window').width,
-    width: 1/4 * Dimensions.get('window').width,
-    position: 'absolute',
-    left: Dimensions.get('window').width - 311/375 * Dimensions.get('window').width - 7,
-    top: Dimensions.get('window').height * 0.25 - 7 ,
-    borderTopWidth: 2,
-    borderLeftWidth: 2,
-    borderColor: '#ededed',
-    backgroundColor: 'transparent',
-  },
-  rectangleTopRight: {
-    height: 1/4 * Dimensions.get('window').width,
-    width: 1/4 * Dimensions.get('window').width,
-    position: 'absolute',
-    top: Dimensions.get('window').height * 0.25 - 7,
-    right: Dimensions.get('window').width - 311/375 * Dimensions.get('window').width - 7,
-    borderTopWidth: 2,
-    borderRightWidth: 2,
-    borderColor: '#ededed',
-    backgroundColor: 'transparent',
-  },
-  rectangleBottomLeft: {
-    height: 1/4 * Dimensions.get('window').width,
-    width: 1/4 * Dimensions.get('window').width,
-    position: 'absolute',
-    left: Dimensions.get('window').width - 311/375 * Dimensions.get('window').width - 7,
-    bottom: Dimensions.get('window').height - Dimensions.get('window').height * 0.25 - Dimensions.get('window').width * 2/3 - 7,
-    borderBottomWidth: 2,
-    borderLeftWidth: 2,
-    borderColor: '#ededed',
-    backgroundColor: 'transparent',
-  },
-  rectangleBottomRight: {
-    height: 1/4 * Dimensions.get('window').width,
-    width: 1/4 * Dimensions.get('window').width,
-    position: 'absolute',
-    right: Dimensions.get('window').width - 311/375 * Dimensions.get('window').width - 7,
-    bottom: Dimensions.get('window').height - Dimensions.get('window').height * 0.25 - Dimensions.get('window').width * 2/3 - 7,
-    borderBottomWidth: 2,
-    borderRightWidth: 2,
-    borderColor: '#ededed',
-    backgroundColor: 'transparent',
-  },
-
-  bottomButtonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems:'center',
-    marginBottom: 15
-  },
-  flashButton: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'row'
-  },
-  flashIcon: {
-    flex: 1,
-    width: 52.5,
-    height: 55,
-    backgroundColor: 'transparent'
-  },
-  flashButtonText: {
-    flex: 1,
-    fontFamily: 'docker',
-    marginBottom: 10,
-    marginLeft: -20,
-    color: 'white',
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-
-  overlayTop: {
-    height: Dimensions.get('window').height * 0.25,
-    width: Dimensions.get('window').width,
-    backgroundColor: 'rgba(0,0,0,0.65)',
-    position: 'absolute',
-    left: 0,
-    top: 0,
-  },
-  overlayRight: {
-    height: Dimensions.get('window').width * 2/3,
-    width: Dimensions.get('window').width - 311/375 * Dimensions.get('window').width,
-    backgroundColor: 'rgba(0,0,0,0.65)',
-    position: 'absolute',
-    right: 0,
-    top: Dimensions.get('window').height * 0.25,
-  },
-  overlayLeft: {
-    height: Dimensions.get('window').width * 2/3,
-    width: Dimensions.get('window').width - 311/375 * Dimensions.get('window').width,
-    backgroundColor: 'rgba(0,0,0,0.65)',
-    position: 'absolute',
-    left: 0,
-    top: Dimensions.get('window').height * 0.25
-  },
-  overlayBottom: {
-    height: Dimensions.get('window').height - Dimensions.get('window').height * 0.25 - Dimensions.get('window').width * 2/3,
-    width: Dimensions.get('window').width,
-    backgroundColor: 'rgba(0,0,0,0.65)',
-    position: 'absolute',
-    left: 0,
-    bottom: 0,
-  },
-
-  modal: {
-    flex: 1,
-    marginTop: 20,
-    marginBottom: 20,
-    marginHorizontal: 20,
-    backgroundColor: '#ffffff',
-    borderRadius: 3,
-    padding: 20,
-  }
 });
 
 module.exports = QRReader;

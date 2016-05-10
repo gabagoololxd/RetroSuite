@@ -376,7 +376,7 @@ body {
   margin-bottom: 40px;
 
   background: transparent url(../img/snesConsole.png) no-repeat center calc(25vh);
-  background-size: calc(30vh), calc(30vw);
+  background-size: calc(29vh), calc(29vw);
   width: calc(33.33vw - 65px + 50px);
 
 }

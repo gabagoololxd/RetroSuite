@@ -1,7 +1,7 @@
-var React = require('react-native');
-var QRReader = require('./App/Components/QRReader/QRReader');
+const React = require('react-native');
+const QRReader = require('./App/Components/QRReader/QRReader');
 
-var {
+const {
   AppRegistry,
   Navigator
 } = React;
