@@ -56,8 +56,8 @@ class PairingInstructionsPage1 extends React.Component {
 
           
         <View style={styles.text}>
-          <Text style={styles.header}>{"1. Get the Chrome App"}</Text>
-          <Text style={styles.header}>{""}</Text>
+          <Text style={styles.header} allowFontScaling={false} >{"1. Get the Chrome App"}</Text>
+          <Text style={styles.header} allowFontScaling={false} >{""}</Text>
           <Text style={{fontWeight: 'normal', fontSize: windowWidth * (14/375), fontWeight: '300', lineHeight: windowWidth * (18/375), color: '#353632'}} 
                 allowFontScaling={false}> 
                 {"On your computer, download the "}

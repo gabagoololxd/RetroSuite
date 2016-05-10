@@ -54,8 +54,8 @@ class PairingInstructionsPage2 extends React.Component {
         
           
         <View style={styles.text}>
-          <Text style={styles.header}>{"2. Connect to Wi-Fi"}</Text>
-          <Text style={styles.header}>{""}</Text>
+          <Text style={styles.header} allowFontScaling={false} >{"2. Connect to Wi-Fi"}</Text>
+          <Text style={styles.header} allowFontScaling={false} >{""}</Text>
           <Text 
             style={{fontWeight: 'normal', fontSize: windowWidth * (14/375), fontWeight: '300', lineHeight: windowWidth * (18/375), color: '#353632'}} 
             allowFontScaling={false}> 
@@ -73,8 +73,8 @@ class PairingInstructionsPage2 extends React.Component {
             </Text>  
             {" to connect to Wi-Fi."}
 
-            <Text>{'\n'}</Text>
-            <Text>{'\n'}</Text>
+            <Text allowFontScaling={false} >{'\n'}</Text>
+            <Text allowFontScaling={false} >{'\n'}</Text>
 
 
             <Text allowFontScaling={false} style={{fontStyle: 'italic'}} >

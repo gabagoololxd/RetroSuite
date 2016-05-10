@@ -56,8 +56,8 @@ class PairingInstructionsPage3 extends React.Component {
 
           
         <View style={styles.text}>
-          <Text style={styles.header}>{"4. Scan the QR"}</Text>
-          <Text style={styles.header}>{""}</Text>
+          <Text style={styles.header} allowFontScaling={false} >{"4. Scan the QR"}</Text>
+          <Text style={styles.header} allowFontScaling={false} >{""}</Text>
           <Text style={{fontWeight: 'normal', fontSize:  windowWidth * (14/375), fontWeight: '300', lineHeight:  windowWidth * (18/375), color: '#353632'}} 
                 allowFontScaling={false}> 
                 {"On your phone, switch to \"Scan QR\" and point your camera at the QR code. \n\nYou're ready. Happy gaming!"}

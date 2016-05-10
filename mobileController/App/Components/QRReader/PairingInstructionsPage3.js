@@ -55,8 +55,8 @@ class PairingInstructionsPage3 extends React.Component {
 
           
         <View style={styles.text}>
-          <Text style={styles.header}>{"3. Choose a game"}</Text>
-          <Text style={styles.header}>{""}</Text>
+          <Text style={styles.header} allowFontScaling={false} >{"3. Choose a game"}</Text>
+          <Text style={styles.header} allowFontScaling={false} >{""}</Text>
           <Text style={{fontWeight: 'normal', fontSize:  windowWidth * (14/375), fontWeight: '300', lineHeight:  windowWidth * (18/375), color: '#353632'}} 
                 allowFontScaling={false}> 
                 {'On your computer, select a game. \n\nNext, on the "Choose Your Controller" screen, click "Mobile Phone”.'}
