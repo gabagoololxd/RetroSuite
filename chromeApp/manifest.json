@@ -14,8 +14,8 @@
       }
    },
    "icons": {
-      "16": "/frontEnd/img/icon/snes_16.png",
-      "128": "/frontEnd/img/icon/snes_128.png"
+      "16": "/frontend/img/icon/snes_16.png",
+      "128": "/frontend/img/icon/snes_128.png"
    },
    "manifest_version": 2,
    "name": "RetroSuite EMU",
